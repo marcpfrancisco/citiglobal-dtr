@@ -2,7 +2,8 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "baseUrl": "./",
+    "baseUrl": ".",
+    "rootDir": ".",
     "outDir": "./dist/out-tsc",
     "forceConsistentCasingInFileNames": true,
     "strict": true,
@@ -18,10 +19,26 @@
     "importHelpers": true,
     "target": "es2020",
     "module": "es2020",
-    "lib": [
-      "es2020",
-      "dom"
-    ]
+    "lib": ["es2020", "dom"],
+    "paths": {
+      // Shared Files
+      "@components": ["src/app/shared/components/index.ts"],
+      "@constants": ["src/app/shared/components/index.ts"],
+      "@directives": ["src/app/shared/components/index.ts"],
+      "@pipes": ["src/app/shared/components/index.ts"],
+
+      // Main Modules
+      "@main": ["src/app/main/index.ts"],
+
+      // Services
+      "@services": ["src/app/services/index.ts"],
+
+      // Layout
+      "@layout": ["src/app/layout/index.ts"],
+
+      // NgRX Store
+      "@stores": ["src/app/stores/index.ts"]
+    }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
