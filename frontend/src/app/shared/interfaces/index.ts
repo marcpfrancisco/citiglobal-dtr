@@ -7,3 +7,4 @@ export * from './user/find-all-users-dto.interface';
 export * from './user/find-user-dto.interface';
 
 export * from './pagination/pagination-option.interface';
+export * from './pagination/pagination-result.interface';
