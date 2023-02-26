@@ -1,0 +1,41 @@
+/* To learn more about this file see: https://angular.io/config/tsconfig. */
+{
+    "compileOnSave": false,
+    "compilerOptions": {
+        "allowSyntheticDefaultImports": true,
+        "baseUrl": ".",
+        "rootDir": ".",
+        "outDir": "./dist/out-tsc",
+        "sourceMap": true,
+        "declaration": false,
+        "downlevelIteration": true,
+        "experimentalDecorators": true,
+        "moduleResolution": "node",
+        "importHelpers": true,
+        "target": "es2017",
+        "module": "es2020",
+        "lib": ["es2018", "dom"],
+        "paths": {
+            // Shared Files
+            "@components": ["src/app/shared/components/index.ts"],
+            "@constants": ["src/app/shared/components/index.ts"],
+            "@directives": ["src/app/shared/components/index.ts"],
+            "@pipes": ["src/app/shared/components/index.ts"],
+
+            // Main Modules
+            "@main": ["src/app/main/index.ts"],
+
+            // Services
+            "@services": ["src/app/services/index.ts"],
+
+            // Layout
+            "@layout": ["src/app/layout/index.ts"],
+
+            // NgRX Store
+            "@stores": ["src/app/stores/index.ts"]
+        }
+    },
+    "angularCompilerOptions": {
+        "enableI18nLegacyMessageIdFormat": false
+    }
+}
