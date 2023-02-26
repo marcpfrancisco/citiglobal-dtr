@@ -1,5 +1,15 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { AuthGuard, PermissionsGuard } from './guards';
+import {
+    ACTION_LIST,
+    ACTION_READ,
+    SUBJECT_DASHBOARD,
+    SUBJECT_SECTIONS,
+    SUBJECT_STUDENTS,
+    SUBJECT_SUBJECTS,
+    SUBJECT_LOGS,
+} from '@constants';
 
 const routes: Routes = [
     {
