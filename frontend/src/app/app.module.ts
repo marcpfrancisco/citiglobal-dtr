@@ -1,5 +1,5 @@
 import { HttpClientModule } from '@angular/common/http';
-import { isDevMode, NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { PureAbility } from '@casl/ability';
@@ -14,9 +14,6 @@ import { FuseSidebarModule } from '@fuse/components/sidebar/sidebar.module';
 import { FuseModule } from '@fuse/fuse.module';
 import { FuseSharedModule } from '@fuse/shared.module';
 import { SharedMaterialModule } from '@material/shared';
-import { EffectsModule } from '@ngrx/effects';
-import { StoreModule } from '@ngrx/store';
-import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { TranslateModule } from '@ngx-translate/core';
 import {
     ApiService,
@@ -55,16 +52,16 @@ import { PipesModule } from './shared/pipes/pipes.module';
         FuseSidebarModule,
         FuseThemeOptionsModule,
 
-        SharedMaterialModule,
-
-        AppRoutingModule,
-        PipesModule,
-
         // Layout module of your application
         LayoutModule,
 
         // Ngrx Store Modules
         StoresModule,
+
+        SharedMaterialModule,
+
+        AppRoutingModule,
+        PipesModule,
     ],
     providers: [
         { provide: AppAbility, useValue: new AppAbility() },

@@ -30,59 +30,50 @@ export class AuthGuard implements CanActivate {
         | Promise<boolean | UrlTree>
         | boolean
         | UrlTree {
-        const isLoginPage = state.url === '/auth/login';
-        const isPasswordResetPage = state.url === '/auth/new-password-required';
+        const isLoginPage = state.url === '/auth/time-log';
+        const isAdminLoginPage = state.url === '/auth/admin-login';
 
         return this.store.pipe(
             select(AuthenticationReducer.selectAuthenticationState),
-            map(
-                ({
-                    signInUserSession,
-                    currentUser,
-                    changePasswordRequired,
-                }) => {
-                    const authenticated = signInUserSession && currentUser;
-                    const requiresPasswordChange = changePasswordRequired;
+            map(({ signInUserSession, currentUser, isAdmin }) => {
+                const authenticated = signInUserSession && currentUser;
+                const isAdminLogin = isAdmin;
 
-                    // when inside login page
-                    if (isLoginPage) {
-                        // when authenticated, go to landing page by User role
-                        if (authenticated) {
-                            this.routerService.navigateToLandingPage(
-                                currentUser.role
-                            );
-                            return false;
-                        }
-                        // or, proceed if not yet logged in
-                        else {
-                            return true;
-                        }
-                    }
-
-                    // allow navigate if require password change
-                    if (requiresPasswordChange) {
-                        // force password change!
-                        if (!isPasswordResetPage) {
-                            this.router.navigate([
-                                'auth',
-                                'new-password-required',
-                            ]);
-                            return false;
-                        } else {
-                            return true;
-                        }
-                    }
-
-                    // For other pages, authenticate if not yet authenticated.
-                    if (!authenticated) {
-                        this.router.navigate(['auth', 'login']);
+                // when inside login page
+                if (isLoginPage) {
+                    // when authenticated, go to landing page by User role
+                    if (authenticated) {
+                        this.routerService.navigateToLandingPage(
+                            currentUser.role
+                        );
                         return false;
                     }
-
-                    // when authenticated, proceed!
-                    return true;
+                    // or, proceed if not yet logged in
+                    else {
+                        return true;
+                    }
                 }
-            ),
+
+                // allow navigate if require password change
+                if (isAdminLogin) {
+                    // force password change!
+                    if (!isAdminLoginPage) {
+                        this.router.navigate(['auth', 'admin-login']);
+                        return false;
+                    } else {
+                        return true;
+                    }
+                }
+
+                // For other pages, authenticate if not yet authenticated.
+                if (!authenticated) {
+                    this.router.navigate(['auth', 'time-log']);
+                    return false;
+                }
+
+                // when authenticated, proceed!
+                return true;
+            }),
             take(1)
         );
     }

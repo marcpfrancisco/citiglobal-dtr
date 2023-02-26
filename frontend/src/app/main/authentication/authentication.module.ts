@@ -2,10 +2,12 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FuseSharedModule } from '@fuse/shared.module';
 import { SharedMaterialModule } from '@material/shared';
+import { AdminLoginComponent } from './admin-login/admin-login.component';
 import { AuthenticationRoutingModule } from './authentication-routing.module';
+import { TimeLogComponent } from './time-log/time-log.component';
 
 @NgModule({
-    declarations: [],
+    declarations: [AdminLoginComponent, TimeLogComponent],
     imports: [
         CommonModule,
 
