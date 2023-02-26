@@ -18,9 +18,9 @@ import {
 
 import { navigation } from './../../../navigation/navigation';
 
-import { RootState } from '@stores';
 // import { AuthenticationActions } from '../../../stores/authentication';
 import { User } from '@models';
+import { RootState, AuthenticationReducer } from '@stores/index';
 
 @Component({
     selector: 'toolbar',
