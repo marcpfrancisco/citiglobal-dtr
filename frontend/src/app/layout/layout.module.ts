@@ -1,56 +1,22 @@
 import { NgModule } from '@angular/core';
-import { MatIconModule } from '@angular/material/icon';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { FuseDrawerModule } from '@fuse/components/drawer';
-import { LayoutComponent } from 'app/layout/layout.component';
-import { EmptyLayoutModule } from 'app/layout/layouts/empty/empty.module';
-import { CenteredLayoutModule } from 'app/layout/layouts/horizontal/centered/centered.module';
-import { EnterpriseLayoutModule } from 'app/layout/layouts/horizontal/enterprise/enterprise.module';
-import { MaterialLayoutModule } from 'app/layout/layouts/horizontal/material/material.module';
-import { ModernLayoutModule } from 'app/layout/layouts/horizontal/modern/modern.module';
-import { ClassicLayoutModule } from 'app/layout/layouts/vertical/classic/classic.module';
-import { ClassyLayoutModule } from 'app/layout/layouts/vertical/classy/classy.module';
-import { CompactLayoutModule } from 'app/layout/layouts/vertical/compact/compact.module';
-import { DenseLayoutModule } from 'app/layout/layouts/vertical/dense/dense.module';
-import { FuturisticLayoutModule } from 'app/layout/layouts/vertical/futuristic/futuristic.module';
-import { ThinLayoutModule } from 'app/layout/layouts/vertical/thin/thin.module';
-import { SharedModule } from 'app/shared/shared.module';
 
-const layoutModules = [
-    // Empty
-    EmptyLayoutModule,
-
-    // Horizontal navigation
-    CenteredLayoutModule,
-    EnterpriseLayoutModule,
-    MaterialLayoutModule,
-    ModernLayoutModule,
-
-    // Vertical navigation
-    ClassicLayoutModule,
-    ClassyLayoutModule,
-    CompactLayoutModule,
-    DenseLayoutModule,
-    FuturisticLayoutModule,
-    ThinLayoutModule
-];
+import { VerticalLayout1Module } from './vertical/layout-1/layout-1.module';
+import { VerticalLayout2Module } from './vertical/layout-2/layout-2.module';
+import { VerticalLayout3Module } from './vertical/layout-3/layout-3.module';
+import { HorizontalLayout1Module } from './horizontal/layout-1/layout-1.module';
 
 @NgModule({
-    declarations: [
-        LayoutComponent
-    ],
-    imports     : [
-        MatIconModule,
-        MatTooltipModule,
-        FuseDrawerModule,
-        SharedModule,
-        ...layoutModules
-    ],
-    exports     : [
-        LayoutComponent,
-        ...layoutModules
-    ]
+  imports: [
+    VerticalLayout1Module,
+    VerticalLayout2Module,
+    VerticalLayout3Module,
+    HorizontalLayout1Module,
+  ],
+  exports: [
+    VerticalLayout1Module,
+    VerticalLayout2Module,
+    VerticalLayout3Module,
+    HorizontalLayout1Module,
+  ],
 })
-export class LayoutModule
-{
-}
+export class LayoutModule {}
