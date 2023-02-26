@@ -1,41 +1,42 @@
-@import 'apps/fuse/src/@fuse/scss/fuse';
+@import "../../../../@fuse/scss/fuse.scss";
 
-.bloomlocal-filters-dialog {
-  @include media-breakpoint('xs') {
-    width: 100%;
-  }
-
-  @include media-breakpoint('gt-xs') {
-    width: 400px;
-  }
-
-  .mat-dialog-container {
-    padding: 0;
-
-    .mat-toolbar {
-      flex: 1 0 auto;
-      min-height: initial;
+.filters-dialog {
+    @include media-breakpoint("xs") {
+        width: 100%;
     }
 
-    .toolbar-bottom {
-      height: auto;
+    @include media-breakpoint("gt-xs") {
+        width: 400px;
     }
-  }
 
-  .dialog-content-wrapper {
-    max-height: 85vh;
-    display: flex;
-    flex-direction: column;
-  }
+    .mat-dialog-container {
+        padding: 0;
 
-  .multi-select-input {
-    .mat-form-field-flex, input {
-      cursor: pointer;
+        .mat-toolbar {
+            flex: 1 0 auto;
+            min-height: initial;
+        }
+
+        .toolbar-bottom {
+            height: auto;
+        }
     }
-  }
 
-  .checkbox {
-    margin-right: 15px;
-    margin-bottom: 4px;
-  }
+    .dialog-content-wrapper {
+        max-height: 85vh;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .multi-select-input {
+        .mat-form-field-flex,
+        input {
+            cursor: pointer;
+        }
+    }
+
+    .checkbox {
+        margin-right: 15px;
+        margin-bottom: 4px;
+    }
 }

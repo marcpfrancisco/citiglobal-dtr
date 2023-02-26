@@ -1,0 +1,130 @@
+
+<div
+  fxLayout="row"
+  fxLayoutAlign="start center" 
+  role="group"
+  [formGroup]="formGroup"
+  (mouseenter)="onMouseEnter($event)"
+  (mouseleave)="onMouseLeave($event)"
+>
+  <ng-container *ngIf="displayMode">
+    <ng-container
+      *ngIf="!empty && shouldLabelFloat"
+      [ngSwitch]="valueStatus"
+    >
+      <ng-container *ngSwitchCase="'min'">
+        <div>
+          <mat-icon>arrow_upward</mat-icon>
+        </div>
+        <div class="from">{{ formatDisplay(value?.from) }}</div>
+      </ng-container>
+      <ng-container *ngSwitchCase="'max'">
+        <div>
+          <mat-icon>arrow_downward</mat-icon>
+        </div>
+        <div class="to">{{  formatDisplay(value?.to) }}</div>
+      </ng-container>
+      <ng-container *ngSwitchCase="'range'">
+        <div class="from">{{ formatDisplay(value?.from) }}</div>
+        <div>
+          &nbsp;
+          <mat-icon>trending_flat</mat-icon>
+          &nbsp;
+        </div>
+        <div class="to">{{ formatDisplay(value?.to) }}</div>
+      </ng-container>
+      <ng-container *ngSwitchCase="'invalid'">
+        <div class="from">{{ formatDisplay(value?.from) }}</div>
+        <div>
+          &nbsp;
+          <mat-icon>trending_flat</mat-icon>
+          &nbsp;
+        </div>
+        <div class="to">{{ formatDisplay(value?.to) }}</div>
+      </ng-container>
+    </ng-container>
+    <ng-container *ngIf="empty">&nbsp;</ng-container>
+  </ng-container>
+  <ng-container *ngIf="!displayMode">
+    <div class="from">
+      <input
+        type="number"
+        matInput
+        formControlName="from"
+        autocomplete="off"
+        [placeholder]="formatPlaceholder('from')"
+        (focus)="onFocusIn($event)"
+        (blur)="onFocusOut($event); toggleActivateInput('from')"
+      />
+    </div>
+    <div [ngSwitch]="valueStatus">
+      <mat-icon *ngSwitchCase="'min'">first_page</mat-icon>
+      <mat-icon *ngSwitchCase="'max'">last_page</mat-icon>
+      <mat-icon *ngSwitchCase="'range'">arrow_forward</mat-icon>
+      <mat-icon *ngSwitchCase="'invalid'">close</mat-icon>
+      <mat-icon *ngSwitchDefault>more_horiz</mat-icon>
+    </div>
+    <div class="to">
+      <input
+        type="number"
+        matInput
+        formControlName="to"
+        autocomplete="off"
+        [placeholder]="formatPlaceholder('to')"
+        (focus)="onFocusIn($event)"
+        (blur)="onFocusOut($event); toggleActivateInput('to')"
+      />
+    </div>
+  </ng-container>
+</div>
+
+<!-- <ng-template
+  cdkConnectedOverlay
+  [cdkConnectedOverlayOrigin]="sliderTrigger"
+  [cdkConnectedOverlayOpen]="showSlider"
+>
+  <mat-slider></mat-slider>
+</ng-template> -->
+
+<!-- 
+<div
+  fxLayout="row"
+  fxLayoutAlign="space-between center" 
+  role="group"
+  [formGroup]="formGroup"
+>
+  <div>
+    <input
+      type="number"
+      #from
+      matInput
+      formControlName="from"
+      autocomplete="off"
+      [placeholder]="formatPlaceholder('from')"
+      (focus)="onFocusIn($event)"
+      (blur)="onFocusOut($event)"
+    />
+  </div>
+  <div
+    *ngIf="shouldLabelFloat"
+    [ngSwitch]="valueStatus"
+  >
+    <mat-icon *ngSwitchCase="'min'">first_page</mat-icon>
+    <mat-icon *ngSwitchCase="'max'">last_page</mat-icon>
+    <mat-icon *ngSwitchCase="'range'">arrow_forward</mat-icon>
+    <mat-icon *ngSwitchCase="'invalid'">close</mat-icon>
+    <mat-icon *ngSwitchDefault="'none'">more_horiz</mat-icon>
+  </div>
+  <div>
+    <input
+      type="number"
+      #to
+      matInput
+      formControlName="to"
+      autocomplete="off"
+      [placeholder]="formatPlaceholder('to')"
+      (focus)="onFocusIn($event)"
+      (blur)="onFocusOut($event)"
+    />
+  </div>
+</div> -->

@@ -1,4 +1,4 @@
-@import "apps/fuse/src/@fuse/scss/fuse";
+@import "../../../../@fuse/scss/fuse.scss";
 
 toolbar {
     position: relative;
@@ -33,7 +33,7 @@ toolbar {
         min-width: 64px;
         height: 64px;
 
-        @include media-breakpoint('xs') {
+        @include media-breakpoint("xs") {
             height: 56px;
         }
     }
@@ -47,7 +47,7 @@ toolbar {
         height: 64px;
         width: 1px;
 
-        @include media-breakpoint('xs') {
+        @include media-breakpoint("xs") {
             height: 56px;
         }
     }

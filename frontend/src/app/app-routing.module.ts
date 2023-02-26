@@ -19,6 +19,13 @@ const routes: Routes = [
         pathMatch: 'full',
     },
     {
+        path: 'auth',
+        loadChildren: () =>
+            import('./main/authentication/authentication.module').then(
+                (m) => m.AuthenticationModule
+            ),
+    },
+    {
         path: 'dashboard',
         loadChildren: () =>
             import('./main/dashboard/dashboard.module').then(

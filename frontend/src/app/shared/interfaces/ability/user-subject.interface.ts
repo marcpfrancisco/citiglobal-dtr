@@ -1,8 +1,7 @@
-import { User } from '../../models';
+import { User } from '@models';
 
 export interface UserSubject {
-  forUser: User;
-  userIds?: Array<string | number>;
-  floristIds?: Array<string | number>;
-  siteIds?: Array<string | number>;
+    forUser: User;
+    userIds?: Array<string | number>;
+    subjectIds?: Array<string | number>;
 }

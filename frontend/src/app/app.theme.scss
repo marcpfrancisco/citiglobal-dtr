@@ -68,11 +68,46 @@ $typography: mat-typography-config(
     $body-2: mat-typography-level(14px, 24px, 600),
     $button: mat-typography-level(14px, 14px, 600),
     $input: mat-typography-level(16px, 1.125, 400)
-        // line-height must be unitless !!!,
+        // line-height must be unitless !!!,,,,,,
 );
 
 // Setup the typography
 @include angular-material-typography($typography);
+
+// Import app and page component themes here to enable theming for them
+@import "./layout/components/toolbar/toolbar.theme";
+
+// Authentication
+@import "./main/authentication/admin-login/admin-login.theme";
+@import "./main/authentication/time-log/time-log.component.theme";
+
+// Dashboard
+@import "./main/dashboard/dashboard.theme";
+
+// Dialogs
+@import "./shared/dialogs/multi-select-filters-dialog/multi-select-filters-dialog.theme";
+
+// Error 404
+@import "./main/error-404/error-404.theme";
+
+// Define a mixin for easier access
+@mixin components-theme($theme) {
+    // Layout components
+    @include toolbar-theme($theme);
+
+    // Authentication
+    @include admin-login-theme($theme);
+    @include time-log-theme($theme);
+
+    // Dashboard
+    @include dashboard-theme($theme);
+
+    // Dialogs
+    @include multi-select-filters-dialog($theme);
+
+    // Error 404
+    @include error-404-theme($theme);
+}
 
 // Default Theme
 $default-primary-palette: mat-palette($fuse-navy);

@@ -179,7 +179,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
         const dialogConfig = new MatDialogConfig();
         dialogConfig.disableClose = true;
         dialogConfig.autoFocus = true;
-        dialogConfig.panelClass = 'bloomlocal-user-profile';
+        dialogConfig.panelClass = 'user-profile';
         dialogConfig.data = user;
 
         const dialogRef = this.dialog.open(UserProfileComponent, dialogConfig);

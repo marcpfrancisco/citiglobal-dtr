@@ -8,8 +8,6 @@ import {
     SUBJECT_USER,
 } from '@constants';
 
-// import { UsersListComponent } from './users-list/users-list.component';
-// import { UsersEditComponent } from './users-edit/users-edit.component';
 import { PermissionsGuard } from '../../guards';
 
 const routes: Routes = [
