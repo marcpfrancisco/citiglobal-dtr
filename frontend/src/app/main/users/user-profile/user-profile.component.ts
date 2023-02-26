@@ -1,10 +1,4 @@
-import {
-    Component,
-    OnInit,
-    ViewEncapsulation,
-    Inject,
-    OnDestroy,
-} from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, Inject } from '@angular/core';
 import { FormGroup, Validators, FormControl } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 

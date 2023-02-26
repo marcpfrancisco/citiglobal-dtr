@@ -2,7 +2,10 @@ import { HttpClientModule } from '@angular/common/http';
 import { isDevMode, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { PureAbility } from '@casl/ability';
 import { AbilityModule } from '@casl/angular';
+import { SnackbarMultilineService } from '@components';
+import { AppAbility } from '@constants';
 import {
     FuseProgressBarModule,
     FuseThemeOptionsModule,
@@ -10,17 +13,27 @@ import {
 import { FuseSidebarModule } from '@fuse/components/sidebar/sidebar.module';
 import { FuseModule } from '@fuse/fuse.module';
 import { FuseSharedModule } from '@fuse/shared.module';
+import { SharedMaterialModule } from '@material/shared';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { TranslateModule } from '@ngx-translate/core';
+import {
+    ApiService,
+    AuthService,
+    FiltersService,
+    PermissionsService,
+    RouterService,
+    SnackbarService,
+    UsersService,
+} from '@services';
+import { StoresModule } from '@stores/stores.module';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { fuseConfig } from './fuse-config';
 import { httpInterceptorProvider } from './interceptors/http-interceptors';
 import { LayoutModule } from './layout/layout.module';
-import { SharedMaterialModule } from '@material/shared';
 import { PipesModule } from './shared/pipes/pipes.module';
 
 @NgModule({
@@ -51,11 +64,21 @@ import { PipesModule } from './shared/pipes/pipes.module';
         LayoutModule,
 
         // Ngrx Store Modules
-        StoreModule.forRoot({}, {}),
-        EffectsModule.forRoot([]),
-        StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() }),
+        StoresModule,
     ],
-    providers: [httpInterceptorProvider],
+    providers: [
+        { provide: AppAbility, useValue: new AppAbility() },
+        { provide: PureAbility, useExisting: AppAbility },
+        httpInterceptorProvider,
+        ApiService,
+        AuthService,
+        FiltersService,
+        PermissionsService,
+        RouterService,
+        SnackbarMultilineService,
+        SnackbarService,
+        UsersService,
+    ],
     bootstrap: [AppComponent],
 })
 export class AppModule {}

@@ -9,7 +9,7 @@ import {
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
-// import { AuthenticationReducer } from '../stores';
+import { AuthenticationReducer } from '@stores/index';
 import { RouterService } from '@services';
 
 @Injectable({
