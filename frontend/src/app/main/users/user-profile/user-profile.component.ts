@@ -24,7 +24,7 @@ export interface UserProfileDialogResult {
 }
 
 @Component({
-    selector: 'bloomlocal-user-profile',
+    selector: 'user-profile',
     templateUrl: './user-profile.component.html',
     styleUrls: ['./user-profile.component.scss'],
     animations: fuseAnimations,

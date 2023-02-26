@@ -13,16 +13,13 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 import { FuseDirectivesModule } from '@fuse/directives/directives';
-import { FuseMaterialColorPickerModule } from '@fuse/components/material-color-picker/material-color-picker.module';
 import { FuseSidebarModule } from '@fuse/components/sidebar/sidebar.module';
 
 import { FuseThemeOptionsComponent } from '@fuse/components/theme-options/theme-options.component';
 
 @NgModule({
-    declarations: [
-        FuseThemeOptionsComponent
-    ],
-    imports     : [
+    declarations: [FuseThemeOptionsComponent],
+    imports: [
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
@@ -40,13 +37,8 @@ import { FuseThemeOptionsComponent } from '@fuse/components/theme-options/theme-
         MatSlideToggleModule,
 
         FuseDirectivesModule,
-        FuseMaterialColorPickerModule,
-        FuseSidebarModule
+        FuseSidebarModule,
     ],
-    exports     : [
-        FuseThemeOptionsComponent
-    ]
+    exports: [FuseThemeOptionsComponent],
 })
-export class FuseThemeOptionsModule
-{
-}
+export class FuseThemeOptionsModule {}

@@ -20,6 +20,7 @@ import { AppComponent } from './app.component';
 import { fuseConfig } from './fuse-config';
 import { httpInterceptorProvider } from './interceptors/http-interceptors';
 import { LayoutModule } from './layout/layout.module';
+import { SharedMaterialModule } from '@material/shared';
 import { PipesModule } from './shared/pipes/pipes.module';
 
 @NgModule({
@@ -40,6 +41,8 @@ import { PipesModule } from './shared/pipes/pipes.module';
         FuseSharedModule,
         FuseSidebarModule,
         FuseThemeOptionsModule,
+
+        SharedMaterialModule,
 
         AppRoutingModule,
         PipesModule,
