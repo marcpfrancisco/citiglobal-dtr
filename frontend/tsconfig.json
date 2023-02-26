@@ -1,49 +1,54 @@
 /* To learn more about this file see: https://angular.io/config/tsconfig. */
 {
-  "compileOnSave": false,
-  "compilerOptions": {
-    "baseUrl": ".",
-    "rootDir": ".",
-    "outDir": "./dist/out-tsc",
-    "forceConsistentCasingInFileNames": true,
-    "strict": true,
-    "noImplicitOverride": true,
-    "noPropertyAccessFromIndexSignature": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "sourceMap": true,
-    "declaration": false,
-    "downlevelIteration": true,
-    "experimentalDecorators": true,
-    "moduleResolution": "node",
-    "importHelpers": true,
-    "target": "es2020",
-    "module": "es2020",
-    "lib": ["es2020", "dom"],
-    "paths": {
-      // Shared Files
-      "@components": ["src/app/shared/components/index.ts"],
-      "@constants": ["src/app/shared/components/index.ts"],
-      "@directives": ["src/app/shared/components/index.ts"],
-      "@pipes": ["src/app/shared/components/index.ts"],
+    "compileOnSave": false,
+    "compilerOptions": {
+        "allowSyntheticDefaultImports": true,
+        "baseUrl": ".",
+        "rootDir": ".",
+        "sourceMap": true,
+        "declaration": false,
+        "downlevelIteration": true,
+        "experimentalDecorators": true,
+        "moduleResolution": "node",
+        "importHelpers": true,
+        "target": "es2017",
+        "module": "es2020",
+        "typeRoots": ["node_modules/@types"],
+        "lib": ["es2018", "dom"],
+        "paths": {
+            "@fuse/*": ["src/@fuse/*"],
 
-      // Main Modules
-      "@main": ["src/app/main/index.ts"],
+            // Shared Files
+            "@ability": ["src/app/shared/ability/index.ts"],
+            "@components": ["src/app/shared/components/index.ts"],
+            "@constants": ["src/app/shared/constants/index.ts"],
+            "@enums": ["src/app/shared/enums/index.ts"],
 
-      // Services
-      "@services": ["src/app/services/index.ts"],
+            "@directives": ["src/app/shared/directives/index.ts"],
+            "@interfaces": ["src/app/shared/interfaces/index.ts"],
+            "@models": ["src/app/shared/models/index.ts"],
+            "@pipes": ["src/app/shared/pipes/index.ts"],
 
-      // Layout
-      "@layout": ["src/app/layout/index.ts"],
+            "@material/shared": ["src/app/shared/material/index.ts"],
 
-      // NgRX Store
-      "@stores": ["src/app/stores/index.ts"]
+            // Main Modules
+            "@main": ["src/app/main/index.ts"],
+
+            // Services
+            "@services": ["src/app/services/index.ts"],
+
+            // Layout
+            "@layout": ["src/app/layout/index.ts"],
+
+            // NgRX Store
+            "@stores/*": ["src/app/stores/*"],
+
+            // Utils
+            "@utils": ["src/app/shared/utils/index.ts"]
+        }
+    },
+    "exclude": ["node_modules", "tmp"],
+    "angularCompilerOptions": {
+        "enableI18nLegacyMessageIdFormat": false
     }
-  },
-  "angularCompilerOptions": {
-    "enableI18nLegacyMessageIdFormat": false,
-    "strictInjectionParameters": true,
-    "strictInputAccessModifiers": true,
-    "strictTemplates": true
-  }
 }
