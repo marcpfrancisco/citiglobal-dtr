@@ -11,7 +11,10 @@ import { SharedDialogsModule } from 'src/app/shared/dialogs/shared-dialogs.modul
     declarations: [],
     imports: [
         CommonModule,
-        StoreModule.forFeature(null),
+        StoreModule.forFeature(
+            AuthenticationReducer.featureKey,
+            AuthenticationReducer.reducer
+        ),
         StoreModule.forFeature(
             AuthenticationReducer.featureKey,
             AuthenticationReducer.reducer
