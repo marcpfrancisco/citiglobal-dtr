@@ -17,11 +17,17 @@
         "lib": ["es2018", "dom"],
         "paths": {
             "@fuse/*": ["src/@fuse/*"],
+
             // Shared Files
+            "@ability": ["src/app/shared/ability/index.ts"],
             "@components": ["src/app/shared/components/index.ts"],
-            "@constants": ["src/app/shared/components/index.ts"],
-            "@directives": ["src/app/shared/components/index.ts"],
-            "@pipes": ["src/app/shared/components/index.ts"],
+            "@constants": ["src/app/shared/constants/index.ts"],
+            "@enums": ["src/app/shared/enums/index.ts"],
+
+            "@directives": ["src/app/shared/directives/index.ts"],
+            "@interfaces": ["src/app/shared/interfaces/index.ts"],
+            "@models": ["src/app/shared/models/index.ts"],
+            "@pipes": ["src/app/shared/pipes/index.ts"],
 
             // Main Modules
             "@main": ["src/app/main/index.ts"],
