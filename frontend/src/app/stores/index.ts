@@ -1,5 +1,10 @@
 import { InjectionToken } from '@angular/core';
-import { ActionReducerMap, Action } from '@ngrx/store';
+import {
+    ActionReducerMap,
+    Action,
+    ActionReducer,
+    MetaReducer,
+} from '@ngrx/store';
 
 export interface RootState {}
 

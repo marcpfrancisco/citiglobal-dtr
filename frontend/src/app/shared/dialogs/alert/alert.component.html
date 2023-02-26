@@ -1,0 +1,34 @@
+<h1 mat-dialog-title *ngIf="data.title">{{ data.title }}</h1>
+<mat-dialog-content *ngIf="data.message">{{ data.message }}</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <ng-container
+    *ngFor="let button of data.buttons; let i = index"
+    [ngSwitch]="button?.type"
+  >
+    <button
+      *ngSwitchCase="buttonTypes?.CANCEL"
+      mat-button
+      [mat-dialog-close]="buttonTypes?.CANCEL"
+    >
+      {{ button.title }}
+    </button>
+
+    <button
+      *ngSwitchCase="buttonTypes?.CONFIRM"
+      mat-raised-button
+      [mat-dialog-close]="buttonTypes?.CONFIRM"
+      color="accent"
+    >
+      {{ button.title }}
+    </button>
+
+    <button
+      *ngSwitchDefault
+      mat-raised-button
+      [mat-dialog-close]="i"
+      color="accent"
+    >
+      {{ button.title }}
+    </button>
+  </ng-container>
+</mat-dialog-actions>

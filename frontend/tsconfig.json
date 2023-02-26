@@ -41,7 +41,10 @@
             "@layout": ["src/app/layout/index.ts"],
 
             // NgRX Store
-            "@stores": ["src/app/stores/index.ts"]
+            "@stores/*": ["src/app/stores/*"],
+
+            // Utils
+            "@utils": ["src/app/shared/utils/index.ts"]
         }
     },
     "exclude": ["node_modules", "tmp"],
