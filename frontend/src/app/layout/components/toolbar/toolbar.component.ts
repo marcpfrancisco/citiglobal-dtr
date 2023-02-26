@@ -11,200 +11,200 @@ import { FuseSidebarService } from '@fuse/components/sidebar/sidebar.service';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 
 import {
-  UserProfileComponent,
-  UserProfileDialogResult,
-  UserProfileDialogResultType,
+    UserProfileComponent,
+    UserProfileDialogResult,
+    UserProfileDialogResultType,
 } from './../../../main/users/user-profile/user-profile.component';
 
 import { navigation } from './../../../navigation/navigation';
 
-import { RootState, AuthenticationReducer } from '../../../stores';
-import { AuthenticationActions } from '../../../stores/authentication';
-import { User } from '@bloomlocal/shared';
+import { RootState } from '@stores';
+// import { AuthenticationActions } from '../../../stores/authentication';
+import { User } from '@models';
 
 @Component({
-  selector: 'toolbar',
-  templateUrl: './toolbar.component.html',
-  styleUrls: ['./toolbar.component.scss'],
-  encapsulation: ViewEncapsulation.None,
+    selector: 'toolbar',
+    templateUrl: './toolbar.component.html',
+    styleUrls: ['./toolbar.component.scss'],
+    encapsulation: ViewEncapsulation.None,
 })
 export class ToolbarComponent implements OnInit, OnDestroy {
-  user$: Observable<User>;
+    user$: Observable<User>;
 
-  horizontalNavbar: boolean;
-  rightNavbar: boolean;
-  hiddenNavbar: boolean;
-  languages: any;
-  navigation: any;
-  selectedLanguage: any;
-  userStatusOptions: any[];
+    horizontalNavbar: boolean;
+    rightNavbar: boolean;
+    hiddenNavbar: boolean;
+    languages: any;
+    navigation: any;
+    selectedLanguage: any;
+    userStatusOptions: any[];
 
-  // Private
-  private _unsubscribeAll: Subject<any>;
+    // Private
+    private _unsubscribeAll: Subject<any>;
 
-  /**
-   * Constructor
-   *
-   * @param {FuseConfigService} _fuseConfigService
-   * @param {FuseSidebarService} _fuseSidebarService
-   * @param {TranslateService} _translateService
-   */
-  constructor(
-    private _fuseConfigService: FuseConfigService,
-    private _fuseSidebarService: FuseSidebarService,
-    private _translateService: TranslateService,
-    private dialog: MatDialog,
-    private store: Store<RootState>
-  ) {
-    // Set the defaults
-    this.userStatusOptions = [
-      {
-        title: 'Online',
-        icon: 'icon-checkbox-marked-circle',
-        color: '#4CAF50',
-      },
-      {
-        title: 'Away',
-        icon: 'icon-clock',
-        color: '#FFC107',
-      },
-      {
-        title: 'Do not Disturb',
-        icon: 'icon-minus-circle',
-        color: '#F44336',
-      },
-      {
-        title: 'Invisible',
-        icon: 'icon-checkbox-blank-circle-outline',
-        color: '#BDBDBD',
-      },
-      {
-        title: 'Offline',
-        icon: 'icon-checkbox-blank-circle-outline',
-        color: '#616161',
-      },
-    ];
+    /**
+     * Constructor
+     *
+     * @param {FuseConfigService} _fuseConfigService
+     * @param {FuseSidebarService} _fuseSidebarService
+     * @param {TranslateService} _translateService
+     */
+    constructor(
+        private _fuseConfigService: FuseConfigService,
+        private _fuseSidebarService: FuseSidebarService,
+        private _translateService: TranslateService,
+        private dialog: MatDialog,
+        private store: Store<RootState>
+    ) {
+        // Set the defaults
+        this.userStatusOptions = [
+            {
+                title: 'Online',
+                icon: 'icon-checkbox-marked-circle',
+                color: '#4CAF50',
+            },
+            {
+                title: 'Away',
+                icon: 'icon-clock',
+                color: '#FFC107',
+            },
+            {
+                title: 'Do not Disturb',
+                icon: 'icon-minus-circle',
+                color: '#F44336',
+            },
+            {
+                title: 'Invisible',
+                icon: 'icon-checkbox-blank-circle-outline',
+                color: '#BDBDBD',
+            },
+            {
+                title: 'Offline',
+                icon: 'icon-checkbox-blank-circle-outline',
+                color: '#616161',
+            },
+        ];
 
-    this.languages = [
-      {
-        id: 'en',
-        title: 'English',
-        flag: 'us',
-      },
-      {
-        id: 'tr',
-        title: 'Turkish',
-        flag: 'tr',
-      },
-    ];
+        this.languages = [
+            {
+                id: 'en',
+                title: 'English',
+                flag: 'us',
+            },
+            {
+                id: 'tr',
+                title: 'Turkish',
+                flag: 'tr',
+            },
+        ];
 
-    this.navigation = navigation;
+        this.navigation = navigation;
 
-    // Set the private defaults
-    this._unsubscribeAll = new Subject();
-  }
+        // Set the private defaults
+        this._unsubscribeAll = new Subject();
+    }
 
-  // -----------------------------------------------------------------------------------------------------
-  // @ Lifecycle hooks
-  // -----------------------------------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------
+    // @ Lifecycle hooks
+    // -----------------------------------------------------------------------------------------------------
 
-  /**
-   * On init
-   */
-  ngOnInit(): void {
-    // Subscribe to the config changes
-    this._fuseConfigService.config
-      .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe((settings) => {
-        this.horizontalNavbar = settings.layout.navbar.position === 'top';
-        this.rightNavbar = settings.layout.navbar.position === 'right';
-        this.hiddenNavbar = settings.layout.navbar.hidden === true;
-      });
+    /**
+     * On init
+     */
+    ngOnInit(): void {
+        // Subscribe to the config changes
+        this._fuseConfigService.config
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((settings) => {
+                this.horizontalNavbar =
+                    settings.layout.navbar.position === 'top';
+                this.rightNavbar = settings.layout.navbar.position === 'right';
+                this.hiddenNavbar = settings.layout.navbar.hidden === true;
+            });
 
-    // Set the selected language from default languages
-    this.selectedLanguage = _.find(this.languages, {
-      id: this._translateService.currentLang,
-    });
+        // Set the selected language from default languages
+        this.selectedLanguage = _.find(this.languages, {
+            id: this._translateService.currentLang,
+        });
 
-    // Set user
-    this.user$ = this.store.select(AuthenticationReducer.selectCurrentUser);
-  }
+        // Set user
+        // this.user$ = this.store.select(AuthenticationReducer.selectCurrentUser);
+    }
 
-  /**
-   * On destroy
-   */
-  ngOnDestroy(): void {
-    // Unsubscribe from all subscriptions
-    this._unsubscribeAll.next();
-    this._unsubscribeAll.complete();
-  }
+    /**
+     * On destroy
+     */
+    ngOnDestroy(): void {
+        // Unsubscribe from all subscriptions
+        this._unsubscribeAll.next();
+        this._unsubscribeAll.complete();
+    }
 
-  // -----------------------------------------------------------------------------------------------------
-  // @ Public methods
-  // -----------------------------------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------
+    // @ Public methods
+    // -----------------------------------------------------------------------------------------------------
 
-  /**
-   * Toggle sidebar open
-   *
-   * @param key
-   */
-  toggleSidebarOpen(key): void {
-    this._fuseSidebarService.getSidebar(key).toggleOpen();
-  }
+    /**
+     * Toggle sidebar open
+     *
+     * @param key
+     */
+    toggleSidebarOpen(key): void {
+        this._fuseSidebarService.getSidebar(key).toggleOpen();
+    }
 
-  /**
-   * Search
-   *
-   * @param value
-   */
-  search(value): void {
-    // Do your search here...
-  }
+    /**
+     * Search
+     *
+     * @param value
+     */
+    search(value): void {
+        // Do your search here...
+    }
 
-  /**
-   * Set the language
-   *
-   * @param lang
-   */
-  setLanguage(lang): void {
-    // Set the selected language for the toolbar
-    this.selectedLanguage = lang;
+    /**
+     * Set the language
+     *
+     * @param lang
+     */
+    setLanguage(lang): void {
+        // Set the selected language for the toolbar
+        this.selectedLanguage = lang;
 
-    // Use the selected language for translations
-    this._translateService.use(lang.id);
-  }
+        // Use the selected language for translations
+        this._translateService.use(lang.id);
+    }
 
-  handleProfile(user: User): void {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-    dialogConfig.panelClass = 'bloomlocal-user-profile';
-    dialogConfig.data = user;
+    handleProfile(user: User): void {
+        const dialogConfig = new MatDialogConfig();
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        dialogConfig.panelClass = 'bloomlocal-user-profile';
+        dialogConfig.data = user;
 
-    const dialogRef = this.dialog.open(UserProfileComponent, dialogConfig);
-    dialogRef
-      .afterClosed()
-      .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe((data: UserProfileDialogResult) => {
-        switch (data?.type) {
-          case UserProfileDialogResultType.SAVE:
-            this.store.dispatch(
-              AuthenticationActions.onUpdateCurrentUser({
-                partialUser: data?.value,
-              })
-            );
-            return;
+        const dialogRef = this.dialog.open(UserProfileComponent, dialogConfig);
+        dialogRef
+            .afterClosed()
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((data: UserProfileDialogResult) => {
+                // switch (data?.type) {
+                //     case UserProfileDialogResultType.SAVE:
+                //         this.store.dispatch(
+                //             AuthenticationActions.onUpdateCurrentUser({
+                //                 partialUser: data?.value,
+                //             })
+                //         );
+                //         return;
+                //     case UserProfileDialogResultType.RESET:
+                //         this.store.dispatch(
+                //             AuthenticationActions.onResetCurrentUserPassword()
+                //         );
+                //         return;
+                // }
+            });
+    }
 
-          case UserProfileDialogResultType.RESET:
-            this.store.dispatch(
-              AuthenticationActions.onResetCurrentUserPassword()
-            );
-            return;
-        }
-      });
-  }
-
-  onLogout(): void {
-    this.store.dispatch(AuthenticationActions.onLogout());
-  }
+    // onLogout(): void {
+    //     this.store.dispatch(AuthenticationActions.onLogout());
+    // }
 }

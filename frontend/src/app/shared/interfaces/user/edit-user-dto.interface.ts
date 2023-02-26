@@ -1,13 +1,13 @@
-import { UserRoles } from '../../enums/user/user.roles.enum';
+import { UserRoles } from '@enums';
 
 export interface EditUserDto {
-  name?: string;
+    name?: string;
 
-  role?: UserRoles;
+    role?: UserRoles;
 
-  email?: string;
+    email?: string;
 
-  active?: boolean;
+    active?: boolean;
 
-  deletedAt?: null;
+    deletedAt?: null;
 }

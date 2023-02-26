@@ -8,28 +8,22 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 
-import { FuseSearchBarModule, FuseShortcutsModule } from '@fuse/components';
 import { FuseSharedModule } from '@fuse/shared.module';
 
 import { ToolbarComponent } from './toolbar.component';
-import { UserProfileComponent } from './../../../main/users/user-profile/user-profile.component';
-
 @NgModule({
-  declarations: [ToolbarComponent, UserProfileComponent],
-  imports: [
-    RouterModule,
-    MatButtonModule,
-    MatIconModule,
-    MatMenuModule,
-    MatToolbarModule,
-    MatDialogModule,
-    MatFormFieldModule,
-    FuseSharedModule,
-    FuseSearchBarModule,
-    FuseShortcutsModule,
-    MatInputModule,
-  ],
-  exports: [ToolbarComponent],
-  entryComponents: [UserProfileComponent],
+    declarations: [ToolbarComponent],
+    imports: [
+        RouterModule,
+        MatButtonModule,
+        MatIconModule,
+        MatMenuModule,
+        MatToolbarModule,
+        MatDialogModule,
+        MatFormFieldModule,
+        FuseSharedModule,
+        MatInputModule,
+    ],
+    exports: [ToolbarComponent],
 })
 export class ToolbarModule {}

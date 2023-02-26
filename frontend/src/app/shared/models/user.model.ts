@@ -1,5 +1,6 @@
 import { UserRoles } from '@enums';
 import { Section } from './section.model';
+import { Subject } from './subject.model';
 
 export interface User {
     id: number;
@@ -9,6 +10,7 @@ export interface User {
     role: UserRoles;
     active: boolean;
     sections?: Section[];
+    subjects?: Subject[];
     createdAt: string | Date;
     updatedAt: string | Date;
 }

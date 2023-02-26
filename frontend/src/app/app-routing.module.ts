@@ -9,6 +9,7 @@ import {
     SUBJECT_STUDENTS,
     SUBJECT_SUBJECTS,
     SUBJECT_LOGS,
+    SUBJECT_USER,
 } from '@constants';
 
 const routes: Routes = [
@@ -71,6 +72,14 @@ const routes: Routes = [
         loadChildren: () =>
             import('./main/logs/logs.module').then((m) => m.LogsModule),
         data: { actions: [ACTION_LIST, ACTION_READ], subject: SUBJECT_LOGS },
+        canActivate: [AuthGuard, PermissionsGuard],
+    },
+
+    {
+        path: 'users',
+        loadChildren: () =>
+            import('./main/users/users.module').then((m) => m.UsersModule),
+        data: { actions: [ACTION_LIST, ACTION_READ], subject: SUBJECT_USER },
         canActivate: [AuthGuard, PermissionsGuard],
     },
 

@@ -1,11 +1,11 @@
-import { UserRoles } from '../../enums/user/user.roles.enum';
+import { UserRoles } from '@enums';
 
 export interface CreateUserDto {
-  name: string;
+    name: string;
 
-  username: string;
+    username: string;
 
-  role: UserRoles;
+    role: UserRoles;
 
-  email: string;
+    email: string;
 }

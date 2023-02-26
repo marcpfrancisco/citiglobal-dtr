@@ -29,6 +29,8 @@
             "@models": ["src/app/shared/models/index.ts"],
             "@pipes": ["src/app/shared/pipes/index.ts"],
 
+            "@material/shared": ["src/app/shared/material/index.ts"],
+
             // Main Modules
             "@main": ["src/app/main/index.ts"],
 
