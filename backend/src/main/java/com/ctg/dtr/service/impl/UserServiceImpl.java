@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserService {
 		user.setStudentId(userDto.getStudentId());
 		user.setSection(section.isPresent() ? section.get() : null);
 		user.setSubject(subject.isPresent() ? subject.get() : null);
-		user.setRole(role.isPresent()? role.get() : null);
+		user.setRole(role.isPresent() ? role.get() : null);
 
 		return userRepository.save(user);
 	}

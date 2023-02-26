@@ -12,6 +12,8 @@ import com.ctg.dtr.model.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificationExecutor<User> {
 
+    User findByStudentId(String studentId);
+
     @Query(value = "SELECT * FROM user WHERE id = ?1", nativeQuery = true) 
     List<User> findUserById(Long id);
 }
