@@ -1,0 +1,1 @@
+export const SERVICE_CONFIG = 'SERVICE_CONFIG';

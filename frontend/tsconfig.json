@@ -5,7 +5,6 @@
         "allowSyntheticDefaultImports": true,
         "baseUrl": ".",
         "rootDir": ".",
-        "outDir": "./dist/out-tsc",
         "sourceMap": true,
         "declaration": false,
         "downlevelIteration": true,
@@ -14,13 +13,23 @@
         "importHelpers": true,
         "target": "es2017",
         "module": "es2020",
+        "typeRoots": ["node_modules/@types"],
         "lib": ["es2018", "dom"],
         "paths": {
+            "@fuse/*": ["src/@fuse/*"],
+
             // Shared Files
+            "@ability": ["src/app/shared/ability/index.ts"],
             "@components": ["src/app/shared/components/index.ts"],
-            "@constants": ["src/app/shared/components/index.ts"],
-            "@directives": ["src/app/shared/components/index.ts"],
-            "@pipes": ["src/app/shared/components/index.ts"],
+            "@constants": ["src/app/shared/constants/index.ts"],
+            "@enums": ["src/app/shared/enums/index.ts"],
+
+            "@directives": ["src/app/shared/directives/index.ts"],
+            "@interfaces": ["src/app/shared/interfaces/index.ts"],
+            "@models": ["src/app/shared/models/index.ts"],
+            "@pipes": ["src/app/shared/pipes/index.ts"],
+
+            "@material/shared": ["src/app/shared/material/index.ts"],
 
             // Main Modules
             "@main": ["src/app/main/index.ts"],
@@ -32,9 +41,13 @@
             "@layout": ["src/app/layout/index.ts"],
 
             // NgRX Store
-            "@stores": ["src/app/stores/index.ts"]
+            "@stores/*": ["src/app/stores/*"],
+
+            // Utils
+            "@utils": ["src/app/shared/utils/index.ts"]
         }
     },
+    "exclude": ["node_modules", "tmp"],
     "angularCompilerOptions": {
         "enableI18nLegacyMessageIdFormat": false
     }

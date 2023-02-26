@@ -1,0 +1,88 @@
+<div class="dialog-content-wrapper contact-form-dialog">
+  <mat-toolbar matDialogTitle class="mat-accent m-0">
+    <mat-toolbar-row fxLayout="row" fxLayoutAlign="space-between center">
+      <span class="title dialog-title">Profile</span>
+      <button
+        mat-icon-button
+        (click)="matDialogRef.close()"
+        aria-label="Close dialog"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-toolbar-row>
+
+    <mat-toolbar-row
+      class="toolbar-bottom py-16"
+      fxLayout="column"
+      fxLayoutAlign="center center"
+    >
+      <!-- <img
+        src="assets/images/avatars/profile.jpg"
+        class="avatar contact-avatar huge m-0"
+        alt="Sample Alt"
+      /> -->
+      <div class="contact-name mt-8">
+        {{ name }}
+      </div>
+    </mat-toolbar-row>
+  </mat-toolbar>
+  <div mat-dialog-content class="p-24 pb-0 m-0">
+    <form [formGroup]="userForm">
+      <div fxLayout="row" fxLayoutAlign="start start">
+        <mat-form-field appearance="outline" fxFlex>
+          <mat-label>Name</mat-label>
+          <mat-icon matSuffix class="secondary-text">account_circle</mat-icon>
+          <input
+            formControlName="name"
+            matInput
+            required
+          />
+          <mat-error>Name is required!</mat-error>
+        </mat-form-field>
+      </div>
+
+      <div fxLayout="row" fxLayoutAlign="start start">
+        <mat-form-field appearance="outline" fxFlex>
+          <mat-label>Email</mat-label>
+          <mat-icon matSuffix class="secondary-text">email</mat-icon>
+          <input formControlName="email" matInput />
+
+          <mat-error *ngIf="hasError('email', 'required')"
+            >Email is required!</mat-error
+          >
+          <mat-error *ngIf="hasError('email', 'email')"
+            >This is not a valid email address!</mat-error
+          >
+        </mat-form-field>
+      </div>
+
+      <div fxLayout="row" fxLayoutAlign="center start">
+        <button
+          mat-raised-button
+          class="button"
+          color="accent"
+          aria-label="Change my password"
+          matTooltip="Change my password"
+          style="width: 100%"
+          (click)="resetPassword()"
+        >
+          CHANGE MY PASSWORD
+        </button>
+      </div>
+      <div fxLayout="row" fxLayoutAlign="center start">
+        <button
+          mat-raised-button
+          class="button save-button"
+          type="submit"
+          color="accent"
+          aria-label="Save"
+          matTooltip="Save"
+          (click)="handleSave()"
+          [disabled]="userForm.invalid || !hasChanges"
+        >
+          SAVE
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
