@@ -1,0 +1,71 @@
+<div class="template">
+  <div
+    class="header accent"
+    fxLayout="column"
+    fxLayoutAlign="center center"
+    fxLayout.gt-sm="row"
+    fxLayoutAlign.gt-sm="space-between center"
+  >
+    <div
+      *ngIf="isBack"
+      class="logo mb-24 mb-md-0"
+      fxLayout="row"
+      fxLayoutAlign="start center"
+    >
+      <button mat-icon-button class="mr-0 mr-sm-16" (click)="navTo()">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+
+      <div
+        *ngIf="hasImage && imageSrc != ''"
+        class="product-image mr-8 mr-sm-16"
+        [@animate]="{ value: '*', params: { delay: '50ms', scale: '0.2' } }"
+      >
+        <img [src]="imageSrc" />
+      </div>
+
+      <div fxLayout="column">
+        <span
+          class="logo-text h1"
+          [@animate]="{ value: '*', params: { delay: '100ms', x: '-25px' } }"
+        >
+          <ng-container *ngTemplateOutlet="titleTemplate"> </ng-container>
+        </span>
+
+        <span class="sub-title">
+          <ng-container *ngTemplateOutlet="subTitleTemplate"> </ng-container
+        ></span>
+      </div>
+    </div>
+    <div
+      *ngIf="!isBack"
+      class="logo mb-24 mb-md-0"
+      fxLayout="row"
+      fxLayoutAlign="start center"
+    >
+      <mat-icon
+        class="logo-icon s-32 mr-16"
+        [@animate]="{ value: '*', params: { delay: '50ms', scale: '0.2' } }"
+      >
+        {{ iconName }}
+      </mat-icon>
+      <div fxLayout="column">
+        <span
+          class="logo-text h1"
+          [@animate]="{ value: '*', params: { delay: '100ms', x: '-25px' } }"
+        >
+          <ng-container *ngTemplateOutlet="titleTemplate"> </ng-container>
+        </span>
+        <span class="sub-title">
+          <ng-container *ngTemplateOutlet="subTitleTemplate"> </ng-container
+        ></span>
+      </div>
+    </div>
+    <div class="search">
+      <ng-container *ngTemplateOutlet="searchTemplate"> </ng-container>
+    </div>
+    <div class="actions">
+      <ng-container *ngTemplateOutlet="actionsTemplate"> </ng-container>
+    </div>
+  </div>
+</div>

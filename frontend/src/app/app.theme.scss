@@ -68,36 +68,49 @@ $typography: mat-typography-config(
     $body-2: mat-typography-level(14px, 24px, 600),
     $button: mat-typography-level(14px, 14px, 600),
     $input: mat-typography-level(16px, 1.125, 400)
-        // line-height must be unitless !!!,,,,,,
+        // line-height must be unitless !!!,,,,
 );
 
 // Setup the typography
 @include angular-material-typography($typography);
 
+// -----------------------------------------------------------------------------------------------------
+// @ Component theming
+// -----------------------------------------------------------------------------------------------------
+
 // Import app and page component themes here to enable theming for them
-@import "./layout/components/toolbar/toolbar.theme";
+@import "frontend/src/app/layout/components/chat-panel/chat-panel.theme";
+@import "frontend/src/app/layout/components/build-version/build-version.theme";
+@import "frontend/src/app/layout/components/toolbar/toolbar.theme";
 
 // Authentication
-@import "./main/authentication/admin-login/admin-login.theme";
-@import "./main/authentication/time-log/time-log.component.theme";
+@import "frontend/src/app/main/authentication/login/login.theme";
+@import "frontend/src/app/main/authentication/forgot-password/forgot-password.theme";
+@import "frontend/src/app/main/authentication/reset-password/reset-password.theme";
 
 // Dashboard
-@import "./main/dashboard/dashboard.theme";
+@import "frontend/src/app/main/dashboard/dashboard.theme";
 
 // Dialogs
-@import "./shared/dialogs/multi-select-filters-dialog/multi-select-filters-dialog.theme";
+@import "frontend/src/app/shared/dialogs/multi-select-filters-dialog/multi-select-filters-dialog.theme";
 
 // Error 404
-@import "./main/error-404/error-404.theme";
+@import "frontend/src/app/main/error-404/error-404.theme";
+
+// Shared Components
+@import "frontend/src/app/shared/components/header/header.theme";
 
 // Define a mixin for easier access
 @mixin components-theme($theme) {
     // Layout components
+    @include chat-panel-theme($theme);
     @include toolbar-theme($theme);
+    @include build-version($theme);
 
     // Authentication
-    @include admin-login-theme($theme);
-    @include time-log-theme($theme);
+    @include login-theme($theme);
+    @include forgot-password-theme($theme);
+    @include reset-password-theme($theme);
 
     // Dashboard
     @include dashboard-theme($theme);
@@ -107,11 +120,18 @@ $typography: mat-typography-config(
 
     // Error 404
     @include error-404-theme($theme);
+
+    // Shared Components
+    @include header-theme($theme);
 }
 
-// Default Theme
+// -----------------------------------------------------------------------------------------------------
+// @ Define the default theme
+// -----------------------------------------------------------------------------------------------------
+
+// Define the primary, accent and warn palettes
 $default-primary-palette: mat-palette($fuse-navy);
-$default-accent-palette: mat-palette($mat-light-blue, 600, 400, 700);
+$default-accent-palette: mat-palette($mat-yellow, 600, 400, 700);
 $default-warn-palette: mat-palette($mat-red);
 
 // Create the Material theme object
@@ -138,6 +158,120 @@ body.theme-default {
         primary: $default-primary-palette,
         accent: $default-accent-palette,
         warn: $default-warn-palette,
+    );
+
+    @include fuse-color-classes($palettes);
+}
+
+// -----------------------------------------------------------------------------------------------------
+// @ Define a yellow light theme
+// -----------------------------------------------------------------------------------------------------
+
+// Define the primary, accent and warn palettes
+$yellow-light-theme-primary-palette: mat-palette($fuse-navy, 600, 400, 700);
+$yellow-light-theme-accent-palette: mat-palette($mat-yellow, 600, 400, 700);
+$yellow-light-theme-warn-palette: mat-palette($mat-red);
+
+// Create the Material theme object
+$yellow-light-theme: mat-light-theme(
+    $yellow-light-theme-primary-palette,
+    $yellow-light-theme-accent-palette,
+    $yellow-light-theme-warn-palette
+);
+
+// Add ".theme-yellow-light" class to the body to activate this theme.
+// Class name must start with "theme-" !!!
+body.theme-yellow-light {
+    // Generate the Angular Material theme
+    @include angular-material-theme($yellow-light-theme);
+
+    // Apply the theme to the Fuse Core
+    @include fuse-core-theme($yellow-light-theme);
+
+    // Apply the theme to the user components
+    @include components-theme($yellow-light-theme);
+
+    // Generate Fuse color classes for primary, accent and warn colors
+    $palettes: (
+        primary: $yellow-light-theme-primary-palette,
+        accent: $yellow-light-theme-accent-palette,
+        warn: $yellow-light-theme-warn-palette,
+    );
+
+    @include fuse-color-classes($palettes);
+}
+
+// -----------------------------------------------------------------------------------------------------
+// @ Define a blue-gray dark theme
+// -----------------------------------------------------------------------------------------------------
+
+// Define the primary, accent and warn palettes
+$blue-gray-dark-theme-primary-palette: mat-palette($mat-blue);
+$blue-gray-dark-theme-accent-palette: mat-palette($mat-blue-gray);
+$blue-gray-dark-theme-warn-palette: mat-palette($mat-red);
+
+// Create the Material theme object
+$blue-gray-dark-theme: mat-dark-theme(
+    $blue-gray-dark-theme-primary-palette,
+    $blue-gray-dark-theme-accent-palette,
+    $blue-gray-dark-theme-warn-palette
+);
+
+// Add ".theme-blue-gray-dark" class to the body to activate this theme.
+// Class name must start with "theme-" !!!
+body.theme-blue-gray-dark {
+    // Generate the Angular Material theme
+    @include angular-material-theme($blue-gray-dark-theme);
+
+    // Apply the theme to the Fuse Core
+    @include fuse-core-theme($blue-gray-dark-theme);
+
+    // Apply the theme to the user components
+    @include components-theme($blue-gray-dark-theme);
+
+    // Generate Fuse color classes for primary, accent and warn colors
+    $palettes: (
+        primary: $blue-gray-dark-theme-primary-palette,
+        accent: $blue-gray-dark-theme-accent-palette,
+        warn: $blue-gray-dark-theme-warn-palette,
+    );
+
+    @include fuse-color-classes($palettes);
+}
+
+// -----------------------------------------------------------------------------------------------------
+// @ Define a pink dark theme
+// -----------------------------------------------------------------------------------------------------
+
+// Define the primary, accent and warn palettes
+$pink-dark-theme-primary-palette: mat-palette($mat-pink);
+$pink-dark-theme-accent-palette: mat-palette($mat-pink);
+$pink-dark-theme-warn-palette: mat-palette($mat-red);
+
+// Create the Material theme object
+$pink-dark-theme: mat-dark-theme(
+    $pink-dark-theme-primary-palette,
+    $pink-dark-theme-accent-palette,
+    $pink-dark-theme-warn-palette
+);
+
+// Add ".theme-pink-dark" class to the body to activate this theme.
+// Class name must start with "theme-" !!!
+body.theme-pink-dark {
+    // Generate the Angular Material theme
+    @include angular-material-theme($pink-dark-theme);
+
+    // Apply the theme to the Fuse Core
+    @include fuse-core-theme($pink-dark-theme);
+
+    // Apply the theme to the user components
+    @include components-theme($pink-dark-theme);
+
+    // Generate Fuse color classes for primary, accent and warn colors
+    $palettes: (
+        primary: $pink-dark-theme-primary-palette,
+        accent: $pink-dark-theme-accent-palette,
+        warn: $pink-dark-theme-warn-palette,
     );
 
     @include fuse-color-classes($palettes);
