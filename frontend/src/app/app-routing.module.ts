@@ -19,6 +19,14 @@ const routes: Routes = [
         pathMatch: 'full',
     },
     {
+        path: 'auth',
+        loadChildren: () =>
+            import('./main/authentication/authentication.module').then(
+                (m) => m.AuthenticationModule
+            ),
+    },
+
+    {
         path: 'dashboard',
         loadChildren: () =>
             import('./main/dashboard/dashboard.module').then(
@@ -43,6 +51,7 @@ const routes: Routes = [
         },
         canActivate: [AuthGuard, PermissionsGuard],
     },
+
     {
         path: 'students',
         loadChildren: () =>
@@ -55,6 +64,7 @@ const routes: Routes = [
         },
         canActivate: [AuthGuard, PermissionsGuard],
     },
+
     {
         path: 'subjects',
         loadChildren: () =>
@@ -67,6 +77,7 @@ const routes: Routes = [
         },
         canActivate: [AuthGuard, PermissionsGuard],
     },
+
     {
         path: 'logs',
         loadChildren: () =>

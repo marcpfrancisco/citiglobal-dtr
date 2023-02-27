@@ -1,5 +1,5 @@
 import { AbilityRule, ACTION_MANAGE, SUBJECT_ALL } from '@constants';
-import { UserSubject } from '../interfaces';
+import { UserSubject } from '@interfaces';
 
 export function superAdminAbility(subject: UserSubject): AbilityRule[] {
     subject;

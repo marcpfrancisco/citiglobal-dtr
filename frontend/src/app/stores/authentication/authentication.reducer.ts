@@ -12,7 +12,7 @@ import { RootState } from '..';
 export const featureKey = 'authentication';
 
 export interface State {
-    changePasswordRequired: boolean;
+    isAdmin: boolean;
     signInUserSession: SignInUserSession | null;
     currentUser: User | null;
 }
@@ -20,7 +20,7 @@ export interface State {
 export const initialState: State = {
     signInUserSession: null,
     currentUser: null,
-    changePasswordRequired: false,
+    isAdmin: false,
 };
 
 export const reducer = createReducer(
@@ -31,8 +31,7 @@ export const reducer = createReducer(
         (state, { user }) => ({
             ...state,
             signInUserSession: user.signInUserSession,
-            changePasswordRequired:
-                user.challengeName === 'NEW_PASSWORD_REQUIRED',
+            isAdmin: user.isAdmin === true,
         })
     ),
     on(

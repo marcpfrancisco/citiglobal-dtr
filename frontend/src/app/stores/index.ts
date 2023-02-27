@@ -1,20 +1,24 @@
 import { InjectionToken } from '@angular/core';
 import {
-    ActionReducerMap,
     Action,
     ActionReducer,
+    ActionReducerMap,
     MetaReducer,
 } from '@ngrx/store';
+import { localStorageSync } from 'ngrx-store-localstorage';
+
+import { AuthenticationActions } from './authentication';
 
 // Import reducers here...
 import * as AuthenticationReducer from './authentication/authentication.reducer';
-
+import * as UsersListReducer from './users-list/users-list.reducer'
 // export reducers here
-export { AuthenticationReducer };
+export { AuthenticationReducer, UsersListReducer };
 
 export interface RootState {
     // Add reducer state here
     [AuthenticationReducer.featureKey]: AuthenticationReducer.State;
+    [UsersListReducer.featureKey]: UsersListReducer.State;
 }
 
 export const ROOT_REDUCERS = new InjectionToken<
@@ -23,5 +27,40 @@ export const ROOT_REDUCERS = new InjectionToken<
     factory: () => ({
         // Add reducer state here
         [AuthenticationReducer.featureKey]: AuthenticationReducer.reducer,
+        [UsersListReducer.featureKey]: UsersListReducer.reducer,
     }),
 });
+
+export function localStorageSyncReducer(
+    reducer: ActionReducer<any>
+): ActionReducer<any> {
+    return localStorageSync({
+        keys: [
+            // add the store keys for syncing to localStorage
+            AuthenticationReducer.featureKey,
+        ],
+        rehydrate: true, // Pull initial state from local storage on startup
+    })(reducer);
+}
+
+export function storageMetaReducer(
+    reducer: ActionReducer<any>
+): ActionReducer<any, any> {
+    return localStorageSyncReducer(reducer);
+}
+
+// Reset State on LogOutSuccess
+export function resetState(reducer: ActionReducer<any>): ActionReducer<any> {
+    return (state, action) =>
+        reducer(
+            action.type === AuthenticationActions.onLogOutSuccess.type
+                ? undefined
+                : state,
+            action
+        );
+}
+
+export const metaReducers: MetaReducer<RootState>[] = [
+    resetState,
+    storageMetaReducer,
+];

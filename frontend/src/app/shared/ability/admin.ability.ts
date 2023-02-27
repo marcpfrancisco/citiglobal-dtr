@@ -6,6 +6,10 @@ import {
     ACTION_READ,
     ACTION_UPDATE,
     SUBJECT_DASHBOARD,
+    SUBJECT_LOGS,
+    SUBJECT_SECTIONS,
+    SUBJECT_STUDENTS,
+    SUBJECT_SUBJECTS,
     SUBJECT_USER,
 } from '@constants';
 import { UserSubject } from '@interfaces';
@@ -36,6 +40,30 @@ export function adminAbility(subject: UserSubject): AbilityRule[] {
         {
             action: ACTION_MANAGE,
             subject: SUBJECT_DASHBOARD,
+        },
+
+        // manage sections
+        {
+            action: ACTION_MANAGE,
+            subject: SUBJECT_SECTIONS,
+        },
+
+        // manage students
+        {
+            action: ACTION_MANAGE,
+            subject: SUBJECT_STUDENTS,
+        },
+
+        // manage subjects
+        {
+            action: ACTION_MANAGE,
+            subject: SUBJECT_SUBJECTS,
+        },
+
+        // manage logs
+        {
+            action: ACTION_MANAGE,
+            subject: SUBJECT_LOGS,
         },
     ];
 }

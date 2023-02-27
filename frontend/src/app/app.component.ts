@@ -3,13 +3,13 @@ import { DOCUMENT } from '@angular/common';
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { RootState } from '@stores';
+import { RootState } from '@stores/index';
 import { Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { FuseNavigationService } from 'src/@fuse/components/navigation/navigation.service';
 import { FuseSidebarService } from 'src/@fuse/components/sidebar/sidebar.service';
-import { FuseConfigService } from 'src/@fuse/services/config/config.service';
-import { FuseSplashScreenService } from 'src/@fuse/services/splash-screen/splash-screen.service';
+import { FuseConfigService } from '@fuse/services/config.service';
+import { FuseSplashScreenService } from '@fuse/services/splash-screen.service';
 import { navigation } from './navigation/navigation';
 
 @Component({
