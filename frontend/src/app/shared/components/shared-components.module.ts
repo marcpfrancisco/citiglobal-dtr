@@ -6,7 +6,12 @@ import { RouterModule } from '@angular/router';
 import { SharedMaterialModule } from '@material/shared';
 import { TranslateModule } from '@ngx-translate/core';
 
-const COMPONENTS = [];
+import { HeaderComponent } from './header/header.component';
+import { NumberRangeFieldModule } from './number-range-field/number-range-field.module';
+import { SnackbarMultilineModule } from './snackbar-multiline';
+import { StudentCardComponent } from './student-card/student-card.component';
+
+const COMPONENTS = [HeaderComponent, StudentCardComponent];
 
 @NgModule({
     declarations: COMPONENTS,
@@ -20,6 +25,9 @@ const COMPONENTS = [];
         RouterModule,
         HttpClientModule,
         HttpClientJsonpModule,
+
+        NumberRangeFieldModule,
+        SnackbarMultilineModule,
     ],
 })
 export class SharedComponentsModule {}

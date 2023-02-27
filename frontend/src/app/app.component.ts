@@ -11,6 +11,10 @@ import { FuseSidebarService } from 'src/@fuse/components/sidebar/sidebar.service
 import { FuseConfigService } from '@fuse/services/config.service';
 import { FuseSplashScreenService } from '@fuse/services/splash-screen.service';
 import { navigation } from './navigation/navigation';
+import { locale as navigationEnglish } from './navigation/i18n/en';
+import { locale as navigationTurkish } from './navigation/i18n/tr';
+import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-root',
@@ -35,6 +39,8 @@ export class AppComponent implements OnInit, OnDestroy {
         private _fuseNavigationService: FuseNavigationService,
         private _fuseSidebarService: FuseSidebarService,
         private _fuseSplashScreenService: FuseSplashScreenService,
+        private _fuseTranslationLoaderService: FuseTranslationLoaderService,
+        private _translateService: TranslateService,
         private _platform: Platform,
         private store: Store<RootState>,
         // private routerService: RouterService,
@@ -48,6 +54,21 @@ export class AppComponent implements OnInit, OnDestroy {
 
         // Set the main navigation as our current navigation
         this._fuseNavigationService.setCurrentNavigation('main');
+
+        // Add languages
+        this._translateService.addLangs(['en', 'tr']);
+
+        // Set the default language
+        this._translateService.setDefaultLang('en');
+
+        // Set the navigation translations
+        this._fuseTranslationLoaderService.loadTranslations(
+            navigationEnglish,
+            navigationTurkish
+        );
+
+        // Use a language
+        this._translateService.use('en');
 
         // Add is-mobile class to the body if the platform is mobile
         if (this._platform.ANDROID || this._platform.IOS) {

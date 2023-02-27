@@ -156,14 +156,19 @@ $typography: mat-typography-config($font-family: "Muli, Helvetica Neue, Arial, s
 // -----------------------------------------------------------------------------------------------------
 
 // Define the primary, accent and warn palettes
-$default-primary-palette: mat-palette($fuse-navy);
-$default-accent-palette: mat-palette($mat-yellow, 600, 400, 700);
+// $default-primary-palette: mat-palette($fuse-navy, PRIMARY);
+// $default-accent-palette: mat-palette($fuse-navy, ACCENT2);
+// $default-warn-palette: mat-palette($mat-red);
+
+$default-primary-palette: mat-palette($fuse-navy, PRIMARY);
+$default-accent-palette: mat-palette($fuse-navy, ACCENT1);
+$default-accent-light-palette: mat-palette($fuse-navy, ACCENT2);
 $default-warn-palette: mat-palette($mat-red);
 
 // Create the Material theme object
 $theme: mat-light-theme($default-primary-palette,
         $default-accent-palette,
-        $default-warn-palette);
+        $default-accent-light-palette);
 
 // Add ".theme-default" class to the body to activate this theme.
 // Class name must start with "theme-" !!!
@@ -180,7 +185,7 @@ body.theme-default {
     // Generate Fuse color classes for primary, accent and warn colors
     $palettes: (primary: $default-primary-palette,
         accent: $default-accent-palette,
-        warn: $default-warn-palette,
+        warn: $default-accent-light-palette,
     );
 
     @include fuse-color-classes($palettes);
@@ -216,6 +221,7 @@ body.theme-yellow-light {
     $palettes: (primary: $yellow-light-theme-primary-palette,
         accent: $yellow-light-theme-accent-palette,
         warn: $yellow-light-theme-warn-palette,
+
     );
 
     @include fuse-color-classes($palettes);
