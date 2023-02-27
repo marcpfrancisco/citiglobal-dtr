@@ -3,6 +3,7 @@ import { fuseAnimations } from '@fuse/animations';
 import { FuseConfigService } from '@fuse/services/config.service';
 import { Store } from '@ngrx/store';
 import { RootState } from '@stores/index';
+import { getCurrentTimeStamp } from '@utils';
 import { interval, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -14,7 +15,7 @@ import { map } from 'rxjs/operators';
     animations: fuseAnimations,
 })
 export class TimeLogComponent implements OnInit {
-    currentDate: Date | null;
+    currentTime: number | null;
 
     unsubscribe$: Subject<any>;
     /**
@@ -50,6 +51,8 @@ export class TimeLogComponent implements OnInit {
     ngOnInit(): void {
         interval(1000)
             .pipe(map(() => new Date()))
-            .subscribe((date) => (this.currentDate = date));
+            .subscribe((date) => {
+                this.currentTime = getCurrentTimeStamp();
+            });
     }
 }

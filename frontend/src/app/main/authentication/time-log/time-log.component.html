@@ -15,9 +15,11 @@
             fxLayoutAlign="center center"
         >
             <h1 class="time-log-heading">
-                {{ currentDate | date : "mediumTime" }}
+                {{ currentTime | date : "mediumTime" }}
             </h1>
-            <h3 class="time-log-subheading">Monday, 29 Feb 2023</h3>
+            <h3 class="time-log-subheading">
+                {{ currentTime | date : "fullDate" }}
+            </h3>
         </div>
 
         <div class="time-log-footer">
