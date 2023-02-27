@@ -120,12 +120,12 @@ public class TimesheetServiceImpl implements TimesheetService {
         if (checkStudentId == null) {
             return null;
         }
-        
-        Subject nextSubject = subjectRepository.findBySectionId(checkStudentId.getSection().getId());
-        Optional<Timesheet> checkTimeLog = timesheetRepository.findTimesheetByUserId(checkStudentId.getId());
 
         SimpleDateFormat formatter = new SimpleDateFormat("EEEE");
         String checkDay = formatter.format(new Date());
+        
+        Subject nextSubject = subjectRepository.findByDayAndSectionId(checkDay.toUpperCase(), checkStudentId.getSection().getId());
+        Optional<Timesheet> checkTimeLog = timesheetRepository.findTimesheetByUserId(checkStudentId.getId());
 
         if (nextSubject.getDay().equals(checkDay.toUpperCase())) {
 
