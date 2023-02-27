@@ -49,7 +49,7 @@ const routes: Routes = [
             actions: [ACTION_LIST, ACTION_READ],
             subject: SUBJECT_SECTIONS,
         },
-        // canActivate: [AuthGuard, PermissionsGuard],
+        canActivate: [AuthGuard, PermissionsGuard],
     },
 
     {
@@ -111,4 +111,4 @@ const routes: Routes = [
     ],
     exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
