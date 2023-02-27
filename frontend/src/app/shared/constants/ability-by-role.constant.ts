@@ -1,7 +1,8 @@
+import { adminAbility, studentAbility, superAdminAbility } from '@ability';
+
 import { AbilityRule } from '@constants';
 import { UserRoles } from '@enums';
 import { UserSubject } from '@interfaces';
-import { superAdminAbility, adminAbility, studentAbility } from '@ability';
 
 export type AbilityByRole = {
     [key in UserRoles]: (subject: UserSubject) => AbilityRule[];

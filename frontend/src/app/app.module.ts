@@ -25,6 +25,7 @@ import {
     UsersService,
 } from '@services';
 import { StoresModule } from '@stores/stores.module';
+import { BuildVersion } from 'src/build-version';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -52,20 +53,19 @@ import { PipesModule } from './shared/pipes/pipes.module';
         FuseSidebarModule,
         FuseThemeOptionsModule,
 
-        // Layout module of your application
-        LayoutModule,
-
         // Ngrx Store Modules
         StoresModule,
 
+        // App modules
+        LayoutModule,
         SharedMaterialModule,
-
         AppRoutingModule,
         PipesModule,
     ],
     providers: [
         { provide: AppAbility, useValue: new AppAbility() },
         { provide: PureAbility, useExisting: AppAbility },
+        { provide: 'APP_BUILD_VERSION', useValue: BuildVersion.number },
         httpInterceptorProvider,
         ApiService,
         AuthService,

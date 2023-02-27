@@ -25,6 +25,7 @@ const routes: Routes = [
                 (m) => m.AuthenticationModule
             ),
     },
+
     {
         path: 'dashboard',
         loadChildren: () =>
@@ -50,6 +51,7 @@ const routes: Routes = [
         },
         canActivate: [AuthGuard, PermissionsGuard],
     },
+
     {
         path: 'students',
         loadChildren: () =>
@@ -62,6 +64,7 @@ const routes: Routes = [
         },
         canActivate: [AuthGuard, PermissionsGuard],
     },
+
     {
         path: 'subjects',
         loadChildren: () =>
@@ -74,6 +77,7 @@ const routes: Routes = [
         },
         canActivate: [AuthGuard, PermissionsGuard],
     },
+
     {
         path: 'logs',
         loadChildren: () =>

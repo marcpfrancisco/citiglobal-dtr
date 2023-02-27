@@ -54,17 +54,6 @@ export class AuthGuard implements CanActivate {
                     }
                 }
 
-                // allow navigate if require password change
-                if (isAdminLogin) {
-                    // force password change!
-                    if (!isAdminLoginPage) {
-                        this.router.navigate(['auth', 'admin-login']);
-                        return false;
-                    } else {
-                        return true;
-                    }
-                }
-
                 // For other pages, authenticate if not yet authenticated.
                 if (!authenticated) {
                     this.router.navigate(['auth', 'time-log']);

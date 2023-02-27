@@ -6,4 +6,8 @@ import { map, switchMap } from 'rxjs/operators';
 import { AuthUser, SignInUserSession } from '@models';
 
 @Injectable({ providedIn: 'root' })
-export class AuthService {}
+export class AuthService {
+    logOut(global = false): Observable<any> {
+        return of('Logout');
+    }
+}
