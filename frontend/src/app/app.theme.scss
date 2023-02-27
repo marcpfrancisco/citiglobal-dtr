@@ -3,17 +3,34 @@
 // -----------------------------------------------------------------------------------------------------
 $fuse-white: (
     500: white,
-    contrast: (
-        500: $dark-primary-text,
+    contrast: (500: $dark-primary-text,
     ),
 );
 
 $fuse-black: (
     500: black,
-    contrast: (
-        500: $light-primary-text,
+    contrast: (500: $light-primary-text,
     ),
 );
+
+$citiglobal-theme: (
+    PRIMARY: #550E10,
+    ACCENT1: #A81620,
+    ACCENT2: #FFB20F,
+    DISABLED: #707070,
+    ALTWHITE: #F9FAF5,
+    WHITE: #FFFFFF,
+    BLACK: #000000,
+    constrast: (PRIMARY: $dark-primary-text,
+        ACCENT1: $dark-primary-text,
+        ACCENT2: $dark-primary-text,
+        DISABLED: $dark-primary-text,
+        ALTWHITE: $dark-primary-text,
+        WHITE: $dark-primary-text,
+        BLACK: $dark-primary-text,
+    )
+);
+
 
 $fuse-navy: (
     50: #ececee,
@@ -30,8 +47,14 @@ $fuse-navy: (
     A200: #9ea1a9,
     A400: #5c616f,
     A700: #2d323e,
-    contrast: (
-        50: $dark-primary-text,
+    PRIMARY: #550E10,
+    ACCENT1: #A81620,
+    ACCENT2: #FFB20F,
+    DISABLED: #707070,
+    ALTWHITE: #F9FAF5,
+    WHITE: #FFFFFF,
+    BLACK: #000000,
+    contrast: (50: $dark-primary-text,
         100: $dark-primary-text,
         200: $dark-primary-text,
         300: $light-primary-text,
@@ -45,6 +68,13 @@ $fuse-navy: (
         A200: $light-primary-text,
         A400: $light-primary-text,
         A700: $light-primary-text,
+        PRIMARY: #550E10,
+        ACCENT1: $light-primary-text,
+        ACCENT2: $light-primary-text,
+        DISABLED: $light-primary-text,
+        ALTWHITE: $dark-primary-text,
+        WHITE: $dark-primary-text,
+        BLACK: $light-primary-text,
     ),
 );
 
@@ -62,13 +92,12 @@ $custom_palettes: (
 // -----------------------------------------------------------------------------------------------------
 
 // Angular Material typography
-$typography: mat-typography-config(
-    $font-family: "Muli, Helvetica Neue, Arial, sans-serif",
-    $title: mat-typography-level(20px, 32px, 600),
-    $body-2: mat-typography-level(14px, 24px, 600),
-    $button: mat-typography-level(14px, 14px, 600),
-    $input: mat-typography-level(16px, 1.125, 400),
-);
+$typography: mat-typography-config($font-family: "Muli, Helvetica Neue, Arial, sans-serif",
+        $title: mat-typography-level(20px, 32px, 600),
+        $body-2: mat-typography-level(14px, 24px, 600),
+        $button: mat-typography-level(14px, 14px, 600),
+        $input: mat-typography-level(16px, 1.125, 400),
+    );
 
 // Setup the typography
 @include angular-material-typography($typography);
@@ -132,11 +161,9 @@ $default-accent-palette: mat-palette($mat-yellow, 600, 400, 700);
 $default-warn-palette: mat-palette($mat-red);
 
 // Create the Material theme object
-$theme: mat-light-theme(
-    $default-primary-palette,
-    $default-accent-palette,
-    $default-warn-palette
-);
+$theme: mat-light-theme($default-primary-palette,
+        $default-accent-palette,
+        $default-warn-palette);
 
 // Add ".theme-default" class to the body to activate this theme.
 // Class name must start with "theme-" !!!
@@ -151,8 +178,7 @@ body.theme-default {
     @include components-theme($theme);
 
     // Generate Fuse color classes for primary, accent and warn colors
-    $palettes: (
-        primary: $default-primary-palette,
+    $palettes: (primary: $default-primary-palette,
         accent: $default-accent-palette,
         warn: $default-warn-palette,
     );
@@ -170,11 +196,9 @@ $yellow-light-theme-accent-palette: mat-palette($mat-yellow, 600, 400, 700);
 $yellow-light-theme-warn-palette: mat-palette($mat-red);
 
 // Create the Material theme object
-$yellow-light-theme: mat-light-theme(
-    $yellow-light-theme-primary-palette,
-    $yellow-light-theme-accent-palette,
-    $yellow-light-theme-warn-palette
-);
+$yellow-light-theme: mat-light-theme($yellow-light-theme-primary-palette,
+        $yellow-light-theme-accent-palette,
+        $yellow-light-theme-warn-palette);
 
 // Add ".theme-yellow-light" class to the body to activate this theme.
 // Class name must start with "theme-" !!!
@@ -189,8 +213,7 @@ body.theme-yellow-light {
     @include components-theme($yellow-light-theme);
 
     // Generate Fuse color classes for primary, accent and warn colors
-    $palettes: (
-        primary: $yellow-light-theme-primary-palette,
+    $palettes: (primary: $yellow-light-theme-primary-palette,
         accent: $yellow-light-theme-accent-palette,
         warn: $yellow-light-theme-warn-palette,
     );
@@ -208,11 +231,9 @@ $blue-gray-dark-theme-accent-palette: mat-palette($mat-blue-gray);
 $blue-gray-dark-theme-warn-palette: mat-palette($mat-red);
 
 // Create the Material theme object
-$blue-gray-dark-theme: mat-dark-theme(
-    $blue-gray-dark-theme-primary-palette,
-    $blue-gray-dark-theme-accent-palette,
-    $blue-gray-dark-theme-warn-palette
-);
+$blue-gray-dark-theme: mat-dark-theme($blue-gray-dark-theme-primary-palette,
+        $blue-gray-dark-theme-accent-palette,
+        $blue-gray-dark-theme-warn-palette);
 
 // Add ".theme-blue-gray-dark" class to the body to activate this theme.
 // Class name must start with "theme-" !!!
@@ -227,8 +248,7 @@ body.theme-blue-gray-dark {
     @include components-theme($blue-gray-dark-theme);
 
     // Generate Fuse color classes for primary, accent and warn colors
-    $palettes: (
-        primary: $blue-gray-dark-theme-primary-palette,
+    $palettes: (primary: $blue-gray-dark-theme-primary-palette,
         accent: $blue-gray-dark-theme-accent-palette,
         warn: $blue-gray-dark-theme-warn-palette,
     );
@@ -246,11 +266,9 @@ $pink-dark-theme-accent-palette: mat-palette($mat-pink);
 $pink-dark-theme-warn-palette: mat-palette($mat-red);
 
 // Create the Material theme object
-$pink-dark-theme: mat-dark-theme(
-    $pink-dark-theme-primary-palette,
-    $pink-dark-theme-accent-palette,
-    $pink-dark-theme-warn-palette
-);
+$pink-dark-theme: mat-dark-theme($pink-dark-theme-primary-palette,
+        $pink-dark-theme-accent-palette,
+        $pink-dark-theme-warn-palette);
 
 // Add ".theme-pink-dark" class to the body to activate this theme.
 // Class name must start with "theme-" !!!
@@ -265,8 +283,7 @@ body.theme-pink-dark {
     @include components-theme($pink-dark-theme);
 
     // Generate Fuse color classes for primary, accent and warn colors
-    $palettes: (
-        primary: $pink-dark-theme-primary-palette,
+    $palettes: (primary: $pink-dark-theme-primary-palette,
         accent: $pink-dark-theme-accent-palette,
         warn: $pink-dark-theme-warn-palette,
     );

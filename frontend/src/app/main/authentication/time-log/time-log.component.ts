@@ -3,6 +3,8 @@ import { fuseAnimations } from '@fuse/animations';
 import { FuseConfigService } from '@fuse/services/config.service';
 import { Store } from '@ngrx/store';
 import { RootState } from '@stores/index';
+import { interval, Subject } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
     selector: 'citiglobal-time-log',
@@ -12,6 +14,9 @@ import { RootState } from '@stores/index';
     animations: fuseAnimations,
 })
 export class TimeLogComponent implements OnInit {
+    currentDate: Date | null;
+
+    unsubscribe$: Subject<any>;
     /**
      * Constructor
      *
@@ -42,5 +47,9 @@ export class TimeLogComponent implements OnInit {
         };
     }
 
-    ngOnInit(): void { }
+    ngOnInit(): void {
+        interval(1000)
+            .pipe(map(() => new Date()))
+            .subscribe((date) => (this.currentDate = date));
+    }
 }
