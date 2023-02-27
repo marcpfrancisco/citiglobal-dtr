@@ -1,1 +1,29 @@
-<p>Admin Login Works!</p>
+<div id="admin-login" fxLayout="column">
+    <div class="logo">
+        <img src="assets/images/logo/citiglobal-logo.png" />
+    </div>
+
+    <div
+        class="admin-login-wrapper"
+        fxFlex
+        fxLayout="column"
+        fxLayoutAlign="space-between center"
+    >
+        <div
+            class="admin-login-header"
+            fxLayout="column"
+            fxLayoutAlign="center center"
+        >
+            <h1 class="admin-login-heading">Administrator Login</h1>
+            <mat-form-field appearance="fill">
+                <input class="input-upper" placeholder="ID Number" matInput />
+            </mat-form-field>
+        </div>
+
+        <div class="admin-login-footer">
+            <a class="footer-title" routerLink="/auth/time-log"
+                >Back to Landing Page</a
+            >
+        </div>
+    </div>
+</div>

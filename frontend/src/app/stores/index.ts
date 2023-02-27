@@ -11,12 +11,14 @@ import { AuthenticationActions } from './authentication';
 
 // Import reducers here...
 import * as AuthenticationReducer from './authentication/authentication.reducer';
+import * as UsersListReducer from './users-list/users-list.reducer'
 // export reducers here
-export { AuthenticationReducer };
+export { AuthenticationReducer, UsersListReducer };
 
 export interface RootState {
     // Add reducer state here
     [AuthenticationReducer.featureKey]: AuthenticationReducer.State;
+    [UsersListReducer.featureKey]: UsersListReducer.State;
 }
 
 export const ROOT_REDUCERS = new InjectionToken<
@@ -25,6 +27,7 @@ export const ROOT_REDUCERS = new InjectionToken<
     factory: () => ({
         // Add reducer state here
         [AuthenticationReducer.featureKey]: AuthenticationReducer.reducer,
+        [UsersListReducer.featureKey]: UsersListReducer.reducer,
     }),
 });
 

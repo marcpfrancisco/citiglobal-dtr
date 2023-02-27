@@ -1,0 +1,49 @@
+@import 'src/@fuse/scss/fuse';
+
+citiglobal-admin-login {
+  background: #550E10 !important;
+  color: #fff;
+
+  .mat-input-element::placeholder {
+    color: #ccc !important;
+  }
+
+  .mat-form-field-underline {
+    background-color: #fff !important;
+  }
+
+  .mat-form-field {
+    min-width: 350px;
+  }
+
+  #admin-login {
+    width: 100%;
+
+    .logo {
+      padding-top: 20px;
+      padding-left: 60px;
+    }
+
+    .admin-login-wrapper {
+      height: 100%;
+
+      .admin-login-header {
+        margin-top: 150px;
+
+        .admin-login-heading {
+          font-size: 4.209rem;
+          margin: 0;
+        }
+      }
+
+      .admin-login-footer {
+        margin-bottom: 60px;
+
+        .footer-title {
+          color: #F9FAF5;
+        }
+      }
+    }
+  }
+
+}

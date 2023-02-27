@@ -1,1 +1,31 @@
-<p>Time Log Works!</p>
+<div id="time-log" fxLayout="column">
+    <div class="logo">
+        <img src="assets/images/logo/citiglobal-logo.png" />
+    </div>
+
+    <div
+        class="time-log-wrapper"
+        fxFlex
+        fxLayout="column"
+        fxLayoutAlign="space-between center"
+    >
+        <div
+            class="time-log-header"
+            fxLayout="column"
+            fxLayoutAlign="center center"
+        >
+            <h1 class="time-log-heading">
+                {{ currentTime | date : "mediumTime" }}
+            </h1>
+            <h3 class="time-log-subheading">
+                {{ currentTime | date : "fullDate" }}
+            </h3>
+        </div>
+
+        <div class="time-log-footer">
+            <a class="footer-title" routerLink="/auth/admin-login"
+                >Administrator Login</a
+            >
+        </div>
+    </div>
+</div>

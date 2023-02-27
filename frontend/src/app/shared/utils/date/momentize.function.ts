@@ -1,6 +1,5 @@
 import { isNumber, isString } from 'lodash';
 import * as moment from 'moment';
-import 'moment-timezone';
 import { MOMENT_SQL_DATE_TIME_FORMAT } from '../../constants';
 
 export const SQL_DATE_TIME = 'YYYY-MM-DD HH:mm:ss';

@@ -1,0 +1,45 @@
+@import 'src/@fuse/scss/fuse';
+
+.template {
+  .header {
+    height: 136px;
+
+    .search {
+      width: 100%;
+      max-width: 480px;
+      display: flex;
+      align-items: center;
+    }
+
+    .product-image {
+      overflow: hidden;
+      width: 56px;
+      min-width: 56px;
+      max-width: 56px;
+      height: 56px;
+      min-height: 56px;
+      max-height: 56px;
+      border-radius: 4px;
+      align-items: center;
+      display: flex;
+      border: 1px solid #ccc;
+
+      img {
+        width: auto;
+      }
+    }
+
+    .sub-title {
+      font-size: 14px;
+      line-height: 24px;
+      color: #81d4fa;
+    }
+
+    @include media-breakpoint('lt-md') {
+      padding: 8px 0;
+      height: 192px !important;
+      min-height: 192px !important;
+      max-height: 192px !important;
+    }
+  }
+}
