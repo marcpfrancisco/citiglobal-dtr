@@ -37,8 +37,8 @@ public class TimesheetServiceImpl implements TimesheetService {
         Timesheet timesheet = new Timesheet();
 
         timesheet.setDate(timesheetDto.getDate());
-        timesheet.setTimeFrom(timesheetDto.getTimeFrom());
-        timesheet.setTimeTo(timesheetDto.getTimeTo());
+        timesheet.setTimeIn(timesheetDto.getTimeIn());
+        timesheet.setTimeOut(timesheetDto.getTimeOut());
         timesheet.setTimeRendered(timesheetDto.getTimeRendered());
 		timesheet.setUser(user.isPresent() ? user.get() : null);
 
@@ -51,8 +51,8 @@ public class TimesheetServiceImpl implements TimesheetService {
 		Optional<User> user = userRepository.findById(timesheetDto.getUserId());
 
         currentTimesheet.setDate(timesheetDto.getDate());
-        currentTimesheet.setTimeFrom(timesheetDto.getTimeFrom());
-        currentTimesheet.setTimeTo(timesheetDto.getTimeTo());
+        currentTimesheet.setTimeIn(timesheetDto.getTimeIn());
+        currentTimesheet.setTimeOut(timesheetDto.getTimeOut());
         currentTimesheet.setTimeRendered(timesheetDto.getTimeRendered());
 		currentTimesheet.setUser(user.isPresent() ? user.get() : null);
 
@@ -117,12 +117,12 @@ public class TimesheetServiceImpl implements TimesheetService {
 
             Timesheet currenTimesheet = timesheetRepository.findByUserId(checkTimeLog.get().getUser().getId());
 
-            long timeDifference = (new Date()).getTime() - currenTimesheet.getTimeFrom().getTime();
+            long timeDifference = (new Date()).getTime() - currenTimesheet.getTimeIn().getTime();
             long secondsDifference = timeDifference / 1000 % 60;  
             long minutesDifference = timeDifference / (60 * 1000) % 60; 
             long hoursDifference = timeDifference / (60 * 60 * 1000);
                 
-            currenTimesheet.setTimeTo(new Date());
+            currenTimesheet.setTimeOut(new Date());
             currenTimesheet.setTimeRendered(String.format("%02d", hoursDifference)
             + ":" + String.format("%02d", minutesDifference)
             + ":" + String.format("%02d", secondsDifference));
@@ -136,8 +136,8 @@ public class TimesheetServiceImpl implements TimesheetService {
             Timesheet timesheet = new Timesheet();
     
             timesheet.setDate(new Date());
-            timesheet.setTimeFrom(new Date());
-            timesheet.setTimeTo(null);
+            timesheet.setTimeIn(new Date());
+            timesheet.setTimeOut(null);
             timesheet.setTimeRendered("00:00:00");
             timesheet.setUser(user.isPresent() ? user.get() : null);
     
@@ -151,8 +151,8 @@ public class TimesheetServiceImpl implements TimesheetService {
 		timesheetDto.setCreatedAt(timesheet.getCreatedAt());
 		timesheetDto.setUpdatedAt(timesheet.getUpdatedAt());
         timesheetDto.setDate(timesheet.getDate());
-        timesheetDto.setTimeFrom(timesheet.getTimeFrom());
-        timesheetDto.setTimeTo(timesheet.getTimeTo());
+        timesheetDto.setTimeIn(timesheet.getTimeIn());
+        timesheetDto.setTimeOut(timesheet.getTimeOut());
         timesheetDto.setTimeRendered(timesheet.getTimeRendered());
         timesheetDto.setUserId(timesheet.getUser() != null ? timesheet.getUser().getId() : 0);
 		timesheetDto.setUser(timesheet.getUser());

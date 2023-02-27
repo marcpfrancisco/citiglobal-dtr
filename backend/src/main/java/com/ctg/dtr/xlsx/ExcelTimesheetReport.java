@@ -23,7 +23,7 @@ import java.util.List;
 @Component
 public class ExcelTimesheetReport {
 
-    static String[] columnHeader = {"Date", "Day", "Time From", "Time To", "Time Rendered"};
+    static String[] columnHeader = {"Date", "Day", "Time In", "Time Out", "Time Rendered"};
 
     @Autowired
     private UserRepository userRepository;
@@ -101,12 +101,12 @@ public class ExcelTimesheetReport {
                     row.createCell(1).setCellValue(String.valueOf(dayFormat.format(timesheet.getDate())));
                     row.getCell(1).setCellStyle(horizontalRowLeft);
                 }
-                if (timesheet.getTimeFrom() != null) {
-                    row.createCell(2).setCellValue(String.valueOf(timestampFormat.format(timesheet.getTimeFrom())));
+                if (timesheet.getTimeIn() != null) {
+                    row.createCell(2).setCellValue(String.valueOf(timestampFormat.format(timesheet.getTimeIn())));
                     row.getCell(2).setCellStyle(horizontalRowLeft);             
                 }
-                if (timesheet.getTimeTo() != null) {
-                    row.createCell(3).setCellValue(String.valueOf(timestampFormat.format(timesheet.getTimeTo())));
+                if (timesheet.getTimeOut() != null) {
+                    row.createCell(3).setCellValue(String.valueOf(timestampFormat.format(timesheet.getTimeOut())));
                     row.getCell(3).setCellStyle(horizontalRowLeft);             
                 }
                 if (timesheet.getTimeRendered() != null) {

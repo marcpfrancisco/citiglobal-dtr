@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ctg.dtr.service.ReportService;
@@ -25,8 +26,8 @@ public class ReportController {
     @Autowired
     private ReportService reportService;
 
-    @GetMapping("/generate/xlsx/timesheet/{studentId}/{startDate}/{endDate}")
-    public ResponseEntity<Resource> generateBarcodeTransactionsReport(@PathVariable String studentId, @PathVariable String startDate, @PathVariable String endDate) {
+    @GetMapping("/generate/xlsx/timesheet/{studentId}")
+    public ResponseEntity<Resource> generateBarcodeTransactionsReport(@PathVariable String studentId, @RequestParam String startDate, @RequestParam String endDate) {
 
         Date sd = new Date();
         Date ed = new Date();

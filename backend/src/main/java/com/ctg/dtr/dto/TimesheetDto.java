@@ -15,9 +15,9 @@ public class TimesheetDto {
 
     private Date date;
 
-    private Date timeFrom;
+    private Date timeIn;
 
-    private Date timeTo;
+    private Date timeOut;
 
     private String timeRendered;
 

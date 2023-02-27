@@ -40,11 +40,11 @@ public class Timesheet {
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = true)
-    private Date timeFrom;
+    private Date timeIn;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = true)
-    private Date timeTo;
+    private Date timeOut;
 
     private String timeRendered;
 
