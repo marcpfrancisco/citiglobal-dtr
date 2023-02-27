@@ -14,12 +14,10 @@ const routes: Routes = [
     {
         path: 'time-log',
         component: TimeLogComponent,
-        canActivate: [AuthGuard],
     },
     {
         path: 'admin-login',
         component: AdminLoginComponent,
-        canActivate: [AuthGuard],
     },
 ];
 
