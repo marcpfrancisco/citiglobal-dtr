@@ -97,6 +97,25 @@ public class UserServiceImpl implements UserService {
 		return lUserDto;
 	}
 
+	@Override
+	public List<UserDto> getUserByStudentId(String studentId) {
+
+		List<User> lUsers = userRepository.findUserByStudentId(studentId);
+
+		List<UserDto> lUserDto = new ArrayList<UserDto>();
+
+		for (User user : lUsers) {
+
+			UserDto tmpUser = new UserDto();
+
+			buildUserDto(user, tmpUser);
+
+			lUserDto.add(tmpUser);
+
+		}
+		return lUserDto;
+	}
+
     @Override
 	public List<UserDto> getAllUsers() {
 

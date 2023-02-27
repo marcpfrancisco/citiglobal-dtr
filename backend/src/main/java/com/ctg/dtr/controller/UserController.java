@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ctg.dtr.dto.UserDto;
@@ -100,6 +101,18 @@ public class UserController {
 
 		} else {
 			List<UserDto> userInfo = userService.getUserById(id);
+			return new ResponseEntity<List<UserDto>>(userInfo, HttpStatus.OK);
+		}
+	}
+
+	@GetMapping("/getUserByStudentId")
+	public ResponseEntity<?> getUserById(@RequestParam String studentId) {
+
+		List<UserDto> userInfo = userService.getUserByStudentId(studentId);
+
+		if (userInfo == null) {
+			return new ResponseEntity<List<UserDto>>(userInfo, HttpStatus.NO_CONTENT);
+		} else {
 			return new ResponseEntity<List<UserDto>>(userInfo, HttpStatus.OK);
 		}
 	}
