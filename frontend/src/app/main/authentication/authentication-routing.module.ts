@@ -14,12 +14,12 @@ const routes: Routes = [
     {
         path: 'time-log',
         component: TimeLogComponent,
-        canActivate: [AuthGuard],
+        // canActivate: [AuthGuard],
     },
     {
         path: 'admin-login',
         component: AdminLoginComponent,
-        canActivate: [AuthGuard],
+        // canActivate: [AuthGuard],
     },
 ];
 
@@ -28,4 +28,4 @@ const routes: Routes = [
     exports: [RouterModule],
     providers: [],
 })
-export class AuthenticationRoutingModule {}
+export class AuthenticationRoutingModule { }

@@ -1,7 +1,7 @@
-@import "../../@fuse/components/search-bar/search-bar.theme";
-@import "../../@fuse/components/shortcuts/shortcuts.theme";
-@import "../../@fuse/components/sidebar/sidebar.theme";
-@import "../../@fuse/components/theme-options/theme-options.theme";
+@import "src/@fuse/components/search-bar/search-bar.theme";
+@import "src/@fuse/components/shortcuts/shortcuts.theme";
+@import "src/@fuse/components/sidebar/sidebar.theme";
+@import "src/@fuse/components/theme-options/theme-options.theme";
 
 @mixin fuse-core-theme($theme) {
     // Theming for Fuse core styles

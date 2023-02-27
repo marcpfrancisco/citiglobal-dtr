@@ -41,14 +41,10 @@
                         "stylePreprocessorOptions": {
                             "includePaths": ["src/@fuse/styles"]
                         },
-                        "styles": [
-                            "src/@fuse/styles/themes.scss",
-                            "src/styles/vendors.scss",
-                            "src/@fuse/styles/main.scss",
-                            "src/styles/styles.scss"
-                        ],
+                        "styles": ["src/styles.scss"],
                         "scripts": []
                     },
+
                     "configurations": {
                         "production": {
                             "optimization": true,

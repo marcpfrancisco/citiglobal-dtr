@@ -63,12 +63,12 @@ $custom_palettes: (
 
 // Angular Material typography
 $typography: mat-typography-config(
-    $font-family: "Inter, Helvetica Neue, Arial, sans-serif",
+    $font-family: "Muli, Helvetica Neue, Arial, sans-serif",
     $title: mat-typography-level(20px, 32px, 600),
     $body-2: mat-typography-level(14px, 24px, 600),
     $button: mat-typography-level(14px, 14px, 600),
     $input: mat-typography-level(16px, 1.125, 400)
-        // line-height must be unitless !!!,,,,,
+        // line-height must be unitless !!!,,,,,,,
 );
 
 // Setup the typography
@@ -79,26 +79,26 @@ $typography: mat-typography-config(
 // -----------------------------------------------------------------------------------------------------
 
 // Import app and page component themes here to enable theming for them
-@import "frontend/src/app/layout/components/chat-panel/chat-panel.theme";
-@import "frontend/src/app/layout/components/build-version/build-version.theme";
-@import "frontend/src/app/layout/components/toolbar/toolbar.theme";
+@import "src/app/layout/components/chat-panel/chat-panel.theme";
+@import "src/app/layout/components/build-version/build-version.theme";
+@import "src/app/layout/components/toolbar/toolbar.theme";
 
 // Authentication
-@import "frontend/src/app/main/authentication/login/login.theme";
-@import "frontend/src/app/main/authentication/forgot-password/forgot-password.theme";
-@import "frontend/src/app/main/authentication/reset-password/reset-password.theme";
+@import "src/app/main/authentication/login/login.theme";
+@import "src/app/main/authentication/forgot-password/forgot-password.theme";
+@import "src/app/main/authentication/reset-password/reset-password.theme";
 
 // Dashboard
-@import "frontend/src/app/main/dashboard/dashboard.theme";
+@import "src/app/main/dashboard/dashboard.theme";
 
 // Dialogs
-@import "frontend/src/app/shared/dialogs/multi-select-filters-dialog/multi-select-filters-dialog.theme";
+@import "src/app/shared/dialogs/multi-select-filters-dialog/multi-select-filters-dialog.theme";
 
 // Error 404
-@import "frontend/src/app/main/error-404/error-404.theme";
+@import "src/app/main/error-404/error-404.theme";
 
 // Shared Components
-@import "frontend/src/app/shared/components/header/header.theme";
+@import "src/app/shared/components/header/header.theme";
 
 // Define a mixin for easier access
 @mixin components-theme($theme) {
