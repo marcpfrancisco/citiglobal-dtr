@@ -1,13 +1,9 @@
-@import "apps/fuse/src/@fuse/components/countdown/countdown.theme";
-@import "apps/fuse/src/@fuse/components/material-color-picker/material-color-picker.theme";
-@import "apps/fuse/src/@fuse/components/search-bar/search-bar.theme";
-@import "apps/fuse/src/@fuse/components/shortcuts/shortcuts.theme";
-@import "apps/fuse/src/@fuse/components/sidebar/sidebar.theme";
-@import "apps/fuse/src/@fuse/components/theme-options/theme-options.theme";
-@import "apps/fuse/src/@fuse/components/widget/widget.theme";
+@import "../../@fuse/components/search-bar/search-bar.theme";
+@import "../../@fuse/components/shortcuts/shortcuts.theme";
+@import "../../@fuse/components/sidebar/sidebar.theme";
+@import "../../@fuse/components/theme-options/theme-options.theme";
 
 @mixin fuse-core-theme($theme) {
-
     // Theming for Fuse core styles
     @include colors-theme($theme);
     @include cards-theme($theme);
@@ -27,4 +23,3 @@
     // Theming for 3rd party components
     @include ngx-datatable-theme($theme);
 }
-
