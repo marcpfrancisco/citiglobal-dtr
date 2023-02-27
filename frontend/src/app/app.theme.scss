@@ -67,8 +67,7 @@ $typography: mat-typography-config(
     $title: mat-typography-level(20px, 32px, 600),
     $body-2: mat-typography-level(14px, 24px, 600),
     $button: mat-typography-level(14px, 14px, 600),
-    $input: mat-typography-level(16px, 1.125, 400)
-        // line-height must be unitless !!!,,,,,,,
+    $input: mat-typography-level(16px, 1.125, 400),
 );
 
 // Setup the typography
@@ -84,9 +83,8 @@ $typography: mat-typography-config(
 @import "src/app/layout/components/toolbar/toolbar.theme";
 
 // Authentication
-@import "src/app/main/authentication/login/login.theme";
-@import "src/app/main/authentication/forgot-password/forgot-password.theme";
-@import "src/app/main/authentication/reset-password/reset-password.theme";
+@import "src/app/main/authentication/admin-login/admin-login.theme";
+@import "src/app/main/authentication/time-log/time-log.theme";
 
 // Dashboard
 @import "src/app/main/dashboard/dashboard.theme";
@@ -108,9 +106,8 @@ $typography: mat-typography-config(
     @include build-version($theme);
 
     // Authentication
-    @include login-theme($theme);
-    @include forgot-password-theme($theme);
-    @include reset-password-theme($theme);
+    @include admin-login($theme);
+    @include time-log($theme);
 
     // Dashboard
     @include dashboard-theme($theme);
