@@ -31,10 +31,6 @@ public class UserDto {
 
     private Object section;
 
-    private Long subjectId;
-
-    private Object subject;
-
     private Long roleId;
 
     private Object role;

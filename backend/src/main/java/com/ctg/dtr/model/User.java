@@ -51,15 +51,11 @@ public class User {
     private String studentId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "section_id", nullable = true)
+    @JoinColumn(name = "section_id", referencedColumnName = "id", nullable = true)
     private Section section;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "subject_id", nullable = true)
-    private Subject subject;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "role_id", nullable = true)
+    @JoinColumn(name = "role_id", referencedColumnName = "id", nullable = true)
     private Role role;
 
     @OneToMany(mappedBy = "user")

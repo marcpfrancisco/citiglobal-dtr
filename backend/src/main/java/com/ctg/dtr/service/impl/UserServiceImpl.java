@@ -10,11 +10,9 @@ import org.springframework.stereotype.Service;
 import com.ctg.dtr.dto.UserDto;
 import com.ctg.dtr.model.Role;
 import com.ctg.dtr.model.Section;
-import com.ctg.dtr.model.Subject;
 import com.ctg.dtr.model.User;
 import com.ctg.dtr.repository.RoleRepository;
 import com.ctg.dtr.repository.SectionRepository;
-import com.ctg.dtr.repository.SubjectRepository;
 import com.ctg.dtr.repository.UserRepository;
 import com.ctg.dtr.service.UserService;
 
@@ -28,9 +26,6 @@ public class UserServiceImpl implements UserService {
     private SectionRepository sectionRepository;
 
 	@Autowired
-    private SubjectRepository subjectRepository;
-
-	@Autowired
     private RoleRepository roleRepository;
 
     @Override
@@ -42,7 +37,6 @@ public class UserServiceImpl implements UserService {
 	public User createUser(UserDto userDto) {
 
 		Optional<Section> section = sectionRepository.findById(userDto.getSectionId());
-		Optional<Subject> subject = subjectRepository.findById(userDto.getSubjectId());
 		Optional<Role> role = roleRepository.findById(userDto.getRoleId());
 
         User user = new User();
@@ -55,7 +49,6 @@ public class UserServiceImpl implements UserService {
 		user.setMobileNumber(userDto.getMobileNumber());
 		user.setStudentId(userDto.getStudentId());
 		user.setSection(section.isPresent() ? section.get() : null);
-		user.setSubject(subject.isPresent() ? subject.get() : null);
 		user.setRole(role.isPresent() ? role.get() : null);
 
 		return userRepository.save(user);
@@ -65,7 +58,6 @@ public class UserServiceImpl implements UserService {
 	public User updateUser(User currentUser, UserDto userDto) {
 
 		Optional<Section> section = sectionRepository.findById(userDto.getSectionId());
-		Optional<Subject> subject = subjectRepository.findById(userDto.getSubjectId());
 		Optional<Role> role = roleRepository.findById(userDto.getRoleId());
 
         currentUser.setPublishedAt(userDto.getPublishedAt());
@@ -76,7 +68,6 @@ public class UserServiceImpl implements UserService {
 		currentUser.setMobileNumber(userDto.getMobileNumber());
 		currentUser.setStudentId(userDto.getStudentId());
 		currentUser.setSection(section.isPresent() ? section.get() : null);
-		currentUser.setSubject(subject.isPresent() ? subject.get() : null);
 		currentUser.setRole(role.isPresent() ? role.get() : null);
 
         return userRepository.save(currentUser);
@@ -139,8 +130,6 @@ public class UserServiceImpl implements UserService {
 		userDto.setStudentId(user.getStudentId());
 		userDto.setSectionId(user.getSection() != null ? user.getSection().getId() : 0);
 		userDto.setSection(user.getSection());
-		userDto.setSubjectId(user.getSubject() != null ? user.getSubject().getId() : 0);
-		userDto.setSubject(user.getSubject());
 		userDto.setRoleId(user.getRole() != null ? user.getRole().getId() : 0);
 		userDto.setRole(user.getRole());
 	}
