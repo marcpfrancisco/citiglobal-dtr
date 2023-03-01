@@ -111,6 +111,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
         this._fuseConfigService.config
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((settings) => {
+                console.log(settings, 'settings');
                 this.horizontalNavbar =
                     settings.layout.navbar.position === 'top';
                 this.rightNavbar = settings.layout.navbar.position === 'right';
@@ -124,6 +125,8 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 
         // Set user
         this.user$ = this.store.select(AuthenticationReducer.selectCurrentUser);
+
+        this.user$.subscribe((user) => console.log(user));
     }
 
     /**

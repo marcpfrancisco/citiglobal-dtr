@@ -25,15 +25,15 @@ export const initialState: State = {
 
 export const reducer = createReducer(
     initialState,
-    // on(
-    //     AuthenticationActions.onLogInSuccess,
-    //     AuthenticationActions.onCurrentSignInUserSessionSuccess,
-    //     (state, { user }) => ({
-    //         ...state,
-    //         signInUserSession: user.signInUserSession,
-    //         isAdmin: user.isAdmin === true,
-    //     })
-    // ),
+    on(
+        AuthenticationActions.onLogInSuccess,
+        AuthenticationActions.onCurrentSignInUserSessionSuccess,
+        (state, { user }) => ({
+            ...state,
+            signInUserSession: null,
+            isAdmin: true,
+        })
+    ),
     on(AuthenticationActions.onLogInSuccess, (state, { user }) => ({
         ...state,
 

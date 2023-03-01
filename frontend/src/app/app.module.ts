@@ -33,7 +33,8 @@ import { AppComponent } from './app.component';
 import { fuseConfig } from './fuse-config';
 import { httpInterceptorProvider } from './interceptors/http-interceptors';
 import { LayoutModule } from './layout/layout.module';
-import { PipesModule } from './shared/pipes/pipes.module';
+import { PipesModule } from '@pipes';
+import { FxLayoutOverridesModule } from './shared/modules';
 
 const { apiUrl } = environment;
 
@@ -61,6 +62,7 @@ const { apiUrl } = environment;
 
         // App modules
         LayoutModule,
+        FxLayoutOverridesModule,
         SharedMaterialModule,
         AppRoutingModule,
         PipesModule,
