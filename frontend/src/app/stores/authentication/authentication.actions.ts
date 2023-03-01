@@ -8,7 +8,7 @@ export const onLogout = createAction('[Toolbar Component] On Logout');
 // API Actions
 export const onLogInSuccess = createAction(
     '[Authentication API] On Log In Success',
-    props<{ user: AuthUser }>()
+    props<{ user: User }>()
 );
 export const onLogInFailure = createAction(
     '[Authentication API] On Log In Failure',
@@ -28,28 +28,6 @@ export const onCurrentSignInUserSessionSuccess = createAction(
 export const onCurrentSignInUserSessionFailure = createAction(
     '[Authentication API] On Current Sign In User Session Failure',
     props<{ error: any }>()
-);
-export const onForgotPasswordSuccess = createAction(
-    '[Authentication API] On Forgot Password Success',
-    props<{ result: any }>()
-);
-export const onForgotPasswordFailure = createAction(
-    '[Authentication API] On Forgot Password Failure',
-    props<{ error: any }>()
-);
-export const onForgotPasswordSubmitSuccess = createAction(
-    '[Authentication API] On Forgot Password Submit Success',
-    props<{ result: any }>()
-);
-export const onForgotPasswordSubmitFailure = createAction(
-    '[Authentication API] On Forgot Password Submit Failure',
-    props<{ error: any }>()
-);
-
-// Recover Password Actions
-export const onForgotPassword = createAction(
-    '[Forgot Password Component] On Forgot Password',
-    props<{ email: string }>()
 );
 
 // Load Current/Logged In User Profile

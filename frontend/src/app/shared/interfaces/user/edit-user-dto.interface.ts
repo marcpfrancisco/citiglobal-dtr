@@ -1,13 +1,12 @@
 import { UserRoles } from '@enums';
 
 export interface EditUserDto {
-    name?: string;
-
+    firstName?: string;
+    isActive?: boolean;
+    lastName?: string;
+    middleName?: string;
+    mobileNumber?: string;
     role?: UserRoles;
-
-    email?: string;
-
-    active?: boolean;
-
-    deletedAt?: null;
+    section?: any;
+    studentId?: string;
 }

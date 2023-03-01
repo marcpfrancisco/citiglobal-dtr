@@ -5,6 +5,7 @@ import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { ROOT_REDUCERS, metaReducers } from '@stores/index';
 import { AuthenticationModule } from './authentication/authentication.module';
+import { LoginModule } from './login/login.module';
 
 @NgModule({
     imports: [
@@ -14,6 +15,7 @@ import { AuthenticationModule } from './authentication/authentication.module';
         StoreDevtoolsModule.instrument(),
 
         AuthenticationModule,
+        LoginModule,
     ],
 })
 export class StoresModule {}

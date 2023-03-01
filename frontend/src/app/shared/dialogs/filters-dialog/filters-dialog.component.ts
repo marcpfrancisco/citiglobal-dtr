@@ -288,7 +288,7 @@ export class FiltersDialogComponent implements OnInit, OnDestroy {
     }
 
     usersNameDisplayFn(user: User): string {
-        return user && user.name ? user.name : null;
+        return user ? `${user?.firstName} ${user?.lastName}` : null;
     }
 
     applyAndClose(): void {

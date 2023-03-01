@@ -16,18 +16,18 @@ import { ApiService } from './api.service';
 
 @Injectable({ providedIn: 'root' })
 export class UsersService {
-    private readonly USERS_URL = 'users';
+    private readonly USERS_URL = 'user';
 
     constructor(private apiService: ApiService) {}
 
     getUsers(options: FindAllUsersDto): Observable<PaginationResult<User>> {
-        return this.apiService.get('users', {
+        return this.apiService.get('user', {
             params: this.createListOptions(options),
         });
     }
 
     createListOptions(options: FindAllUsersDto): HttpParams {
-        const { role, roles, active } = options;
+        const { role, roles, isActive } = options;
         let params = this.apiService.createListRecordParameters(options, {
             sortables: UserSortables,
         });
@@ -36,8 +36,8 @@ export class UsersService {
             params = params.append('role', role);
         }
 
-        if (isBoolean(active)) {
-            params = params.append('active', active ? 'true' : 'false');
+        if (isBoolean(isActive)) {
+            params = params.append('isActive', isActive ? 'true' : 'false');
         }
 
         // Filter by multiple user roles
@@ -50,21 +50,8 @@ export class UsersService {
         return params;
     }
 
-    getUserById(
-        userId: string | number,
-        findUser: FindUserDto = null
-    ): Observable<User> {
-        const join = findUser?.join;
-
-        let params = new HttpParams();
-
-        if (join?.length) {
-            join.forEach((relations) => {
-                params = params.append('join', relations);
-            });
-        }
-
-        return this.apiService.get(`${this.USERS_URL}/${userId}`, { params });
+    getUserById(userId: string | number): Observable<User> {
+        return this.apiService.get(`${this.USERS_URL}/${userId}`);
     }
 
     createUser(partialUser: CreateUserDto): Observable<User> {
@@ -85,15 +72,6 @@ export class UsersService {
         return this.apiService.delete(`${this.USERS_URL}/${userId}`);
     }
 
-    undeleteUser(userId: string | number): Observable<User> {
-        return this.editUser(
-            {
-                deletedAt: null,
-            },
-            userId as string
-        );
-    }
-
     changeUserPassword(userId: string): Observable<void> {
         return this.apiService.post(
             `${this.USERS_URL}/${userId}/reset-password`,
@@ -105,24 +83,6 @@ export class UsersService {
         return this.apiService.patch(
             `${this.USERS_URL}/${userId}/admin-reset-password`,
             {}
-        );
-    }
-
-    addFloristToUser(
-        userId: string | number,
-        floristId: string | number
-    ): Observable<User> {
-        return this.apiService.post(`${this.USERS_URL}/${userId}/florists`, {
-            id: floristId,
-        });
-    }
-
-    deleteFloristFromUser(
-        userId: string | number,
-        floristId: string | number
-    ): Observable<User> {
-        return this.apiService.delete(
-            `${this.USERS_URL}/${userId}/florists/${floristId}`
         );
     }
 }

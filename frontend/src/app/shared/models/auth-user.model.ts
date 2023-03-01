@@ -1,7 +1,7 @@
 import { SignInUserSession } from './signin-user.session.model';
 
 export interface AuthUser {
-    username: string;
+    studentId: string;
     signInUserSession: SignInUserSession;
     isAdmin: boolean | null;
 }

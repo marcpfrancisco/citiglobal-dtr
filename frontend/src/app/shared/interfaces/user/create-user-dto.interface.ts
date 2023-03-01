@@ -1,11 +1,12 @@
 import { UserRoles } from '@enums';
 
 export interface CreateUserDto {
-    name: string;
-
-    username: string;
-
+    firstName: string;
+    isActive: boolean;
+    lastName: string;
+    middleName: string;
+    mobileNumber: string;
     role: UserRoles;
-
-    email: string;
+    section: any;
+    studentId: string;
 }
