@@ -30,10 +30,15 @@ export const reducer = createReducer(
         AuthenticationActions.onCurrentSignInUserSessionSuccess,
         (state, { user }) => ({
             ...state,
-            signInUserSession: user.signInUserSession,
-            isAdmin: user.isAdmin === true,
+            signInUserSession: null,
+            isAdmin: true,
         })
     ),
+    on(AuthenticationActions.onLogInSuccess, (state, { user }) => ({
+        ...state,
+
+        isAdmin: user.role === 'superadmin' ? true : false,
+    })),
     on(
         AuthenticationActions.onLoadCurrentUserSuccess,
         AuthenticationActions.onUpdateCurrentUserSuccess,

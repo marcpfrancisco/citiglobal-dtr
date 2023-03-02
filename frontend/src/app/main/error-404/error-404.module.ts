@@ -7,23 +7,13 @@ import { Error404Component } from './error-404.component';
 
 const routes = [
     {
-        path     : '',
-        component: Error404Component
-    }
+        path: '',
+        component: Error404Component,
+    },
 ];
 
 @NgModule({
-    declarations: [
-        Error404Component
-    ],
-    imports     : [
-        RouterModule.forChild(routes),
-
-        MatIconModule,
-
-        FuseSharedModule
-    ]
+    declarations: [Error404Component],
+    imports: [RouterModule.forChild(routes), MatIconModule, FuseSharedModule],
 })
-export class Error404Module
-{
-}
+export class Error404Module {}

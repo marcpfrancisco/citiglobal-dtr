@@ -16,7 +16,14 @@
         >
             <h1 class="admin-login-heading">Administrator Login</h1>
             <mat-form-field appearance="fill">
-                <input class="input-upper" placeholder="ID Number" matInput />
+                <input
+                    class="input-upper"
+                    placeholder="ID Number"
+                    matInput
+                    [(ngModel)]="idNumber"
+                    (input)="onSubmit($event)"
+                    autofocus
+                />
             </mat-form-field>
         </div>
 

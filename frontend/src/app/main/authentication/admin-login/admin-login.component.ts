@@ -3,6 +3,7 @@ import { fuseAnimations } from '@fuse/animations';
 import { FuseConfigService } from '@fuse/services/config.service';
 import { Store } from '@ngrx/store';
 import { RootState } from '@stores/index';
+import { LoginActions } from '@stores/login';
 
 @Component({
     selector: 'citiglobal-admin-login',
@@ -12,6 +13,8 @@ import { RootState } from '@stores/index';
     animations: fuseAnimations,
 })
 export class AdminLoginComponent implements OnInit {
+    idNumber: string | number;
+
     /**
      * Constructor
      *
@@ -42,5 +45,16 @@ export class AdminLoginComponent implements OnInit {
         };
     }
 
-    ngOnInit(): void {}
+    ngOnInit(): void {
+        this.store.dispatch(LoginActions.onAdminLoginInit());
+    }
+
+    onSubmit(event: Event): void {
+        const target = event?.target as HTMLInputElement;
+        const value = target?.value;
+
+        this.store.dispatch(
+            LoginActions.onLoginByStudentId({ studentId: value })
+        );
+    }
 }

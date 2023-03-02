@@ -1,26 +1,21 @@
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
-import { Subject, Observable } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-import { TranslateService } from '@ngx-translate/core';
-
-import * as _ from 'lodash';
-
-import { Store } from '@ngrx/store';
-import { FuseConfigService } from '@fuse/services/config.service';
-import { FuseSidebarService } from '@fuse/components/sidebar/sidebar.service';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { FuseSidebarService } from '@fuse/components/sidebar/sidebar.service';
+import { FuseConfigService } from '@fuse/services/config.service';
+import { User } from '@models';
+import { Store } from '@ngrx/store';
+import { TranslateService } from '@ngx-translate/core';
+import { AuthenticationReducer, RootState } from '@stores/index';
+import { AuthenticationActions } from '@stores/authentication';
+import * as _ from 'lodash';
+import { Observable, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 import {
     UserProfileComponent,
     UserProfileDialogResult,
-    UserProfileDialogResultType,
 } from './../../../main/users/user-profile/user-profile.component';
-
 import { navigation } from './../../../navigation/navigation';
-
-// import { AuthenticationActions } from '../../../stores/authentication';
-import { User } from '@models';
-import { RootState, AuthenticationReducer } from '@stores/index';
 
 @Component({
     selector: 'toolbar',
@@ -128,7 +123,9 @@ export class ToolbarComponent implements OnInit, OnDestroy {
         });
 
         // Set user
-        // this.user$ = this.store.select(AuthenticationReducer.selectCurrentUser);
+        this.user$ = this.store.select(AuthenticationReducer.selectCurrentUser);
+
+        this.user$.subscribe((user) => console.log(user));
     }
 
     /**
@@ -204,7 +201,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
             });
     }
 
-    // onLogout(): void {
-    //     this.store.dispatch(AuthenticationActions.onLogout());
-    // }
+    onLogout(): void {
+        this.store.dispatch(AuthenticationActions.onLogout());
+    }
 }

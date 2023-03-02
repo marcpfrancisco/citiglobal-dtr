@@ -5,7 +5,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { PureAbility } from '@casl/ability';
 import { AbilityModule } from '@casl/angular';
 import { SnackbarMultilineService } from '@components';
-import { AppAbility } from '@constants';
+import { AppAbility, SERVICE_CONFIG } from '@constants';
 import {
     FuseProgressBarModule,
     FuseThemeOptionsModule,
@@ -26,13 +26,17 @@ import {
 } from '@services';
 import { StoresModule } from '@stores/stores.module';
 import { BuildVersion } from 'src/build-version';
+import { environment } from 'src/environments/environment';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { fuseConfig } from './fuse-config';
 import { httpInterceptorProvider } from './interceptors/http-interceptors';
 import { LayoutModule } from './layout/layout.module';
-import { PipesModule } from './shared/pipes/pipes.module';
+import { PipesModule } from '@pipes';
+import { FxLayoutOverridesModule } from './shared/modules';
+
+const { apiUrl } = environment;
 
 @NgModule({
     declarations: [AppComponent],
@@ -58,15 +62,17 @@ import { PipesModule } from './shared/pipes/pipes.module';
 
         // App modules
         LayoutModule,
+        FxLayoutOverridesModule,
         SharedMaterialModule,
         AppRoutingModule,
         PipesModule,
     ],
     providers: [
+        { provide: SERVICE_CONFIG, useValue: { apiUrl } },
         { provide: AppAbility, useValue: new AppAbility() },
         { provide: PureAbility, useExisting: AppAbility },
         { provide: 'APP_BUILD_VERSION', useValue: BuildVersion.number },
-        httpInterceptorProvider,
+        // httpInterceptorProvider,
         ApiService,
         AuthService,
         FiltersService,

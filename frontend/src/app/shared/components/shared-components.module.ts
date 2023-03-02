@@ -1,11 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { HttpClientJsonpModule, HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
 import { SharedMaterialModule } from '@material/shared';
-import { TranslateModule } from '@ngx-translate/core';
 
+import { PipesModule } from '../pipes/pipes.module';
 import { HeaderComponent } from './header/header.component';
 import { NumberRangeFieldModule } from './number-range-field/number-range-field.module';
 import { SnackbarMultilineModule } from './snackbar-multiline';
@@ -13,21 +10,16 @@ import { StudentCardComponent } from './student-card/student-card.component';
 
 const COMPONENTS = [HeaderComponent, StudentCardComponent];
 
+const MODULES = [
+    NumberRangeFieldModule,
+    SnackbarMultilineModule,
+    SharedMaterialModule,
+    PipesModule,
+];
+
 @NgModule({
     declarations: COMPONENTS,
-    exports: COMPONENTS,
-    imports: [
-        CommonModule,
-        TranslateModule,
-        SharedMaterialModule,
-        ReactiveFormsModule,
-        FormsModule,
-        RouterModule,
-        HttpClientModule,
-        HttpClientJsonpModule,
-
-        NumberRangeFieldModule,
-        SnackbarMultilineModule,
-    ],
+    exports: [...COMPONENTS, ...MODULES],
+    imports: [...MODULES, CommonModule],
 })
 export class SharedComponentsModule {}
