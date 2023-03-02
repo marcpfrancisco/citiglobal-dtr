@@ -9,14 +9,15 @@ import {
 } from '@constants';
 
 import { PermissionsGuard } from '../../guards';
+import { UsersListComponent } from './user-list/user-list.component';
 
 const routes: Routes = [
-    // {
-    //   path: '',
-    //   component: UsersListComponent,
-    //   data: { actions: [ACTION_LIST], subject: SUBJECT_USER },
-    //   canActivate: [PermissionsGuard],
-    // },
+    {
+        path: '',
+        component: UsersListComponent,
+        data: { actions: [ACTION_LIST], subject: SUBJECT_USER },
+        canActivate: [PermissionsGuard],
+    },
     // {
     //   path: 'create',
     //   component: UsersEditComponent,

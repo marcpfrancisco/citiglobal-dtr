@@ -6,10 +6,11 @@ import { FuseSharedModule } from '@fuse/shared.module';
 import { SharedMaterialModule } from '@material/shared';
 import { PipesModule } from '@pipes';
 
+import { UsersListComponent } from './user-list/user-list.component';
 import { UsersRoutingModule } from './users-routing.module';
 
 @NgModule({
-    declarations: [],
+    declarations: [UsersListComponent],
     imports: [
         CommonModule,
         UsersRoutingModule,
