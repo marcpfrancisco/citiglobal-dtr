@@ -93,9 +93,67 @@ public class SubjectServiceImpl implements SubjectService {
 	}
 
     @Override
+	public List<SubjectDto> getSubjectByStudent(Long userId) {
+
+		List<Subject> lSubjects = subjectRepository.findSubjectByStudent(userId);
+
+		List<SubjectDto> lSubjectDto = new ArrayList<SubjectDto>();
+
+		for (Subject subject : lSubjects) {
+
+			SubjectDto tmpSubject = new SubjectDto();
+
+			buildSubjectDto(subject, tmpSubject);
+
+			lSubjectDto.add(tmpSubject);
+
+		}
+		return lSubjectDto;
+	}
+
+    @Override
+	public List<SubjectDto> getSubjectByTeacher(Long userId) {
+
+		List<Subject> lSubjects = subjectRepository.findSubjectByTeacher(userId);
+
+		List<SubjectDto> lSubjectDto = new ArrayList<SubjectDto>();
+
+		for (Subject subject : lSubjects) {
+
+			SubjectDto tmpSubject = new SubjectDto();
+
+			buildSubjectDto(subject, tmpSubject);
+
+			lSubjectDto.add(tmpSubject);
+
+		}
+		return lSubjectDto;
+	}
+
+
+    @Override
 	public List<SubjectDto> getAllSubjects() {
 
 		List<Subject> lSubjects = subjectRepository.findAll();
+
+		List<SubjectDto> lSubjectDto = new ArrayList<SubjectDto>();
+
+		for (Subject subject : lSubjects) {
+
+			SubjectDto tmpSubject = new SubjectDto();
+
+			buildSubjectDto(subject, tmpSubject);
+
+			lSubjectDto.add(tmpSubject);
+
+		}
+		return lSubjectDto;
+	}
+
+    @Override
+	public List<SubjectDto> getSubjectBySectionId(Long sectionId) {
+
+		List<Subject> lSubjects = subjectRepository.findBySectionId(sectionId);
 
 		List<SubjectDto> lSubjectDto = new ArrayList<SubjectDto>();
 

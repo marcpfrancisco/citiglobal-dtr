@@ -19,4 +19,11 @@ public interface SubjectService {
 	List<SubjectDto> getSubjectById(Long id);
 
 	List<SubjectDto> getAllSubjects();
+
+	List<SubjectDto> getSubjectByStudent(Long userId);
+
+	List<SubjectDto> getSubjectByTeacher(Long userId);
+
+	List<SubjectDto> getSubjectBySectionId(Long sectionId);
+
 }

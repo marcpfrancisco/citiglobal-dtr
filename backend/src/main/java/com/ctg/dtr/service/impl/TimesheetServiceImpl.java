@@ -113,9 +113,9 @@ public class TimesheetServiceImpl implements TimesheetService {
 	}
 
     @Override
-	public Timesheet dailyTimeRecord(String studentId) {
+	public Timesheet dailyTimeRecord(String rfidNo) {
 
-        User checkStudentId = userRepository.findByStudentId(studentId);
+        User checkStudentId = userRepository.findByRfidNo(rfidNo);
 
         if (checkStudentId == null) {
             return null;
@@ -260,7 +260,7 @@ public class TimesheetServiceImpl implements TimesheetService {
                 timesheet.setTimeIn(new Date());
                 timesheet.setTimeOut(null);
                 timesheet.setTimeRendered("00:00:00");
-                timesheet.setStatus("--");
+                timesheet.setStatus("LABORATORY");
                 timesheet.setUser(checkStudentId != null ? checkStudentId : null);
         
                 return timesheetRepository.save(timesheet);

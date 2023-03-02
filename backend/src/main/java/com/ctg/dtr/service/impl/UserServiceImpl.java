@@ -48,6 +48,7 @@ public class UserServiceImpl implements UserService {
         user.setLastName(userDto.getLastName());
 		user.setMobileNumber(userDto.getMobileNumber());
 		user.setStudentId(userDto.getStudentId());
+		user.setRfidNo(userDto.getRfidNo());
 		user.setSection(section.isPresent() ? section.get() : null);
 		user.setRole(role.isPresent() ? role.get() : null);
 
@@ -67,6 +68,7 @@ public class UserServiceImpl implements UserService {
         currentUser.setLastName(userDto.getLastName());
 		currentUser.setMobileNumber(userDto.getMobileNumber());
 		currentUser.setStudentId(userDto.getStudentId());
+		currentUser.setRfidNo(userDto.getRfidNo());
 		currentUser.setSection(section.isPresent() ? section.get() : null);
 		currentUser.setRole(role.isPresent() ? role.get() : null);
 
@@ -147,6 +149,7 @@ public class UserServiceImpl implements UserService {
         userDto.setLastName(user.getLastName());
 		userDto.setMobileNumber(user.getMobileNumber());
 		userDto.setStudentId(user.getStudentId());
+		userDto.setRfidNo(user.getRfidNo());
 		userDto.setSectionId(user.getSection() != null ? user.getSection().getId() : 0);
 		userDto.setSection(user.getSection());
 		userDto.setRoleId(user.getRole() != null ? user.getRole().getId() : 0);

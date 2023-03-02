@@ -50,6 +50,8 @@ public class User {
 
     private String studentId;
 
+    private String rfidNo;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "section_id", referencedColumnName = "id", nullable = true)
     private Section section;

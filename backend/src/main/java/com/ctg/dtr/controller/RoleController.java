@@ -9,6 +9,7 @@ import java.util.TreeMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,6 +24,7 @@ import com.ctg.dtr.model.Role;
 import com.ctg.dtr.service.RoleService;
 
 @RestController
+@CrossOrigin
 @RequestMapping(value = "/api/role")
 public class RoleController {
 

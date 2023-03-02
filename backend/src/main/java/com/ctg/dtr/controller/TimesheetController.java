@@ -9,6 +9,7 @@ import java.util.TreeMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ctg.dtr.dto.TimesheetDto;
@@ -24,6 +24,7 @@ import com.ctg.dtr.model.Timesheet;
 import com.ctg.dtr.service.TimesheetService;
 
 @RestController
+@CrossOrigin
 @RequestMapping(value = "/api/timesheet")
 public class TimesheetController {
 
@@ -38,17 +39,17 @@ public class TimesheetController {
 		return new ResponseEntity<Timesheet>(timesheet, HttpStatus.CREATED);
 	}
 
-	@PostMapping("/dailyTimeRecord")
-	public ResponseEntity<?> dailyTimeRecord(@RequestParam String studentId) {
+	@PostMapping("/dailyTimeRecord/{rfidNo}")
+	public ResponseEntity<?> dailyTimeRecord(@PathVariable String rfidNo) {
 
-        Timesheet timesheet = timesheetService.dailyTimeRecord(studentId);
+        Timesheet timesheet = timesheetService.dailyTimeRecord(rfidNo);
 
 		if (timesheet == null) {
 
 			Map<String, Object> tempMap = new HashMap<String, Object>();
 
 			tempMap.put("error", HttpStatus.NOT_FOUND);
-			tempMap.put("message", "Missing Student ID: " + studentId);
+			tempMap.put("message", "No Student found.");
 
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(tempMap);
 

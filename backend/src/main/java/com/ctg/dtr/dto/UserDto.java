@@ -27,6 +27,8 @@ public class UserDto {
 
     private String studentId;
 
+    private String rfidNo;
+
     private Long sectionId;
 
     private Object section;
@@ -34,4 +36,5 @@ public class UserDto {
     private Long roleId;
 
     private Object role;
+
 }

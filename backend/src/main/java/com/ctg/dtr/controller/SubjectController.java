@@ -9,6 +9,7 @@ import java.util.TreeMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,6 +24,7 @@ import com.ctg.dtr.model.Subject;
 import com.ctg.dtr.service.SubjectService;
 
 @RestController
+@CrossOrigin
 @RequestMapping(value = "/api/subject")
 public class SubjectController {
 
@@ -100,6 +102,42 @@ public class SubjectController {
 
 		} else {
 			List<SubjectDto> subjectInfo = subjectService.getSubjectById(id);
+			return new ResponseEntity<List<SubjectDto>>(subjectInfo, HttpStatus.OK);
+		}
+	}
+
+	@GetMapping("/getSubjectByStudent/{userId}")
+	public ResponseEntity<?> getSubjectByStudentId(@PathVariable Long userId) {
+
+		List<SubjectDto> subjectInfo = subjectService.getSubjectByStudent(userId);
+
+		if (subjectInfo == null) {
+			return new ResponseEntity<List<SubjectDto>>(subjectInfo, HttpStatus.NO_CONTENT);
+		} else {
+			return new ResponseEntity<List<SubjectDto>>(subjectInfo, HttpStatus.OK);
+		}
+	}
+
+	@GetMapping("/getSubjectByTeacher/{userId}")
+	public ResponseEntity<?> getSubjectByTeacher(@PathVariable Long userId) {
+
+		List<SubjectDto> subjectInfo = subjectService.getSubjectByTeacher(userId);
+
+		if (subjectInfo == null) {
+			return new ResponseEntity<List<SubjectDto>>(subjectInfo, HttpStatus.NO_CONTENT);
+		} else {
+			return new ResponseEntity<List<SubjectDto>>(subjectInfo, HttpStatus.OK);
+		}
+	}
+
+	@GetMapping("/getSubjectBySectionId/{sectionId}")
+	public ResponseEntity<?> getSubjectBySectionId(@PathVariable Long sectionId) {
+
+		List<SubjectDto> subjectInfo = subjectService.getSubjectBySectionId(sectionId);
+
+		if (subjectInfo == null) {
+			return new ResponseEntity<List<SubjectDto>>(subjectInfo, HttpStatus.NO_CONTENT);
+		} else {
 			return new ResponseEntity<List<SubjectDto>>(subjectInfo, HttpStatus.OK);
 		}
 	}
