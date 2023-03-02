@@ -7,11 +7,13 @@ import { SharedMaterialModule } from '@material/shared';
 import { PipesModule } from '@pipes';
 
 import { SubjectListComponent } from './subject-list/subject-list.component';
+import { SubjectsRoutingModule } from './subjects-routing.module';
 
 @NgModule({
     declarations: [SubjectListComponent],
     imports: [
         CommonModule,
+        SubjectsRoutingModule,
         ReactiveFormsModule,
         SharedMaterialModule,
         SharedComponentsModule,

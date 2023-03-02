@@ -12,6 +12,7 @@ import { UsersRoutingModule } from './users-routing.module';
     declarations: [],
     imports: [
         CommonModule,
+        UsersRoutingModule,
         SharedMaterialModule,
         SharedComponentsModule,
         FuseSharedModule,

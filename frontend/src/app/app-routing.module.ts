@@ -49,7 +49,7 @@ const routes: Routes = [
             actions: [ACTION_LIST, ACTION_READ],
             subject: SUBJECT_SECTIONS,
         },
-        canActivate: [AuthGuard, PermissionsGuard],
+        // canActivate: [AuthGuard, PermissionsGuard],
     },
 
     {
@@ -62,7 +62,7 @@ const routes: Routes = [
             actions: [ACTION_LIST, ACTION_READ],
             subject: SUBJECT_STUDENTS,
         },
-        canActivate: [AuthGuard, PermissionsGuard],
+        // canActivate: [AuthGuard, PermissionsGuard],
     },
 
     {
@@ -75,7 +75,7 @@ const routes: Routes = [
             actions: [ACTION_LIST, ACTION_READ],
             subject: SUBJECT_SUBJECTS,
         },
-        canActivate: [AuthGuard, PermissionsGuard],
+        // canActivate: [AuthGuard, PermissionsGuard],
     },
 
     {
@@ -83,7 +83,7 @@ const routes: Routes = [
         loadChildren: () =>
             import('./main/logs/logs.module').then((m) => m.LogsModule),
         data: { actions: [ACTION_LIST, ACTION_READ], subject: SUBJECT_LOGS },
-        canActivate: [AuthGuard, PermissionsGuard],
+        // canActivate: [AuthGuard, PermissionsGuard],
     },
 
     {

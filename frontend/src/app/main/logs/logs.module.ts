@@ -7,11 +7,13 @@ import { SharedMaterialModule } from '@material/shared';
 import { PipesModule } from '@pipes';
 
 import { LogListComponent } from './log-list/log-list.component';
+import { LogsRoutingModule } from './logs-routing.module';
 
 @NgModule({
     declarations: [LogListComponent],
     imports: [
         CommonModule,
+        LogsRoutingModule,
         ReactiveFormsModule,
         SharedMaterialModule,
         SharedComponentsModule,
