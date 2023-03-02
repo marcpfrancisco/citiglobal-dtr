@@ -14,7 +14,6 @@ import { DashboardComponent } from './dashboard.component';
         CommonModule,
         DashboardRoutingModule,
         ReactiveFormsModule,
-        FuseSharedModule,
         SharedMaterialModule,
         SharedComponentsModule,
         FuseSharedModule,

@@ -25,7 +25,7 @@ import {
     PermissionsService,
 } from '@services';
 import { LoginActions } from '@stores/login';
-import { UsersListActions } from '@stores/users-list';
+import { UsersListActions } from '@stores/users';
 import { isArray, isFunction } from 'lodash';
 import { of } from 'rxjs';
 import {
@@ -90,13 +90,11 @@ export class AuthenticationEffects {
 
     // Admin Login
     onLoginByStudentId$ = createEffect(() => {
-        console.log('pumasok dito');
         return this.actions$.pipe(
             ofType(LoginActions.onLoginByStudentId),
             switchMap((action) =>
                 this.authService.loginByStudentId(action.studentId).pipe(
                     map((user) => {
-                        console.log(user, 'user');
                         return AuthenticationActions.onLogInSuccess({ user });
                     }),
                     catchError((error) =>

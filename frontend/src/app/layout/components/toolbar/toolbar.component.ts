@@ -111,7 +111,6 @@ export class ToolbarComponent implements OnInit, OnDestroy {
         this._fuseConfigService.config
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((settings) => {
-                console.log(settings, 'settings');
                 this.horizontalNavbar =
                     settings.layout.navbar.position === 'top';
                 this.rightNavbar = settings.layout.navbar.position === 'right';

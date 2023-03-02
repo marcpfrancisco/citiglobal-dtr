@@ -11,7 +11,7 @@ import { AuthenticationActions } from './authentication';
 
 // Import reducers here...
 import * as AuthenticationReducer from './authentication/authentication.reducer';
-import * as UsersListReducer from './users-list/users-list.reducer';
+import * as UsersListReducer from './users/users-list.reducer';
 import * as LoginReducer from './login/login.reducer';
 // export reducers here
 export { AuthenticationReducer, UsersListReducer, LoginReducer };
