@@ -1,8 +1,8 @@
 export interface Logs {
     id: number;
     name: string;
-
-    time_in: Date;
-    time_out: Date;
-    time_rederred: Date;
+    createdAt: string | Date;
+    time_in: string | Date;
+    time_out: string | Date;
+    time_rederred: string | Date;
 }
