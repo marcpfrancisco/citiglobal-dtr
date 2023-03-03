@@ -7,14 +7,23 @@ spring:
     username: root
     password:
     driver-class-name: com.mysql.cj.jdbc.Driver
+  sql:
+    init:
+      mode: always
   jackson:
     serialization:
       fail-on-empty-beans: false
 
   jpa:
+    generate-ddl: true
+    properties:
+      hibernate:
+        format:
+          sql: true
     hibernate:
-      # ddl-auto: create
-      ddl-auto: update
+      ddl-auto: create
+      # ddl-auto: update
     database-platform: org.hibernate.dialect.MySQL8Dialect
     show-sql: true
+
 # http://localhost:5000/swagger-ui/index.html#/

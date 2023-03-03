@@ -27,6 +27,7 @@ public interface SubjectRepository extends JpaRepository<Subject, Long>, JpaSpec
     + "subject.section_id "
     + "FROM subject "
     + "INNER JOIN user ON user.section_id = subject.section_id "
+    + "INNER JOIN role ON user.role_id = role.id "
     + "WHERE user.id = ?1 AND role.name = 'STUDENT'", nativeQuery = true) 
     List<Subject> findSubjectByStudent(Long userId);
 
