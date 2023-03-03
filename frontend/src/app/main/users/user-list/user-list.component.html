@@ -5,13 +5,120 @@
         <!-- HEADER -->
         <citiglobal-header iconName="people">
             <ng-template #title> All Users </ng-template>
+            <!-- <ng-template #search>
+                <bloomlocal-search
+                    [searchValue]="search$ | async"
+                    (search)="handleSearch($event)"
+                ></bloomlocal-search>
+                <bloomlocal-filter-list
+                    [hasFilters]="hasFilters$ | async"
+                    (buttonClick)="onShowFilters()"
+                ></bloomlocal-filter-list>
+            </ng-template> -->
+
+            <ng-template #actions>
+                <!-- <button
+                  mat-raised-button
+                  class="buttons accent mt-24 mt-md-0"
+                  *ngIf="'exportList' | able: 'Users'"
+                  (click)="exportUsers()"
+                >
+                  <span>EXPORT</span>
+                </button> -->
+                <button
+                    mat-raised-button
+                    class="buttons warn mt-24 mt-md-0"
+                    (click)="onCreate()"
+                >
+                    <span>CREATE USER</span>
+                </button>
+            </ng-template>
         </citiglobal-header>
         <!-- / HEADER -->
 
         <!-- Content Card  -->
         <div class="content-card">
-            <!-- Content  -->
-            <div class="card"></div>
+            <!-- [dataSource]="dataSource$" -->
+            <!-- [matSortActive]="(listState$ | listStateMatSort | async).active"
+            [matSortDirection]="
+                (listState$ | listStateMatSort | async).direction
+            " -->
+            <mat-table
+                #table
+                matSort
+                class="items-table"
+                [@animateStagger]="{ value: '50' }"
+                fusePerfectScrollbar
+                [fusePerfectScrollbarOptions]="{ suppressScrollX: true }"
+                (matSortChange)="onToggleSort($event)"
+            >
+                <!-- Subject Code Column -->
+                <ng-container [matColumnDef]="USER_SORTABLES.NAME">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header
+                        >Name</mat-header-cell
+                    >
+                    <mat-cell *matCellDef="let item">
+                        <p class="text-truncate">{{ item.name }}</p>
+                    </mat-cell>
+                </ng-container>
+
+                <!-- Role Column -->
+                <ng-container [matColumnDef]="USER_SORTABLES.ROLE">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header
+                        >Role</mat-header-cell
+                    >
+                    <mat-cell *matCellDef="let item">
+                        <p class="text-truncate">
+                            {{ item.role | userRoles | titlecase }}
+                        </p>
+                    </mat-cell>
+                </ng-container>
+
+                <!-- Active Column -->
+                <ng-container [matColumnDef]="USER_SORTABLES.ACTIVE">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header
+                        >Active</mat-header-cell
+                    >
+                    <mat-cell *matCellDef="let item">
+                        <span *ngIf="isDeleted(item)">&nbsp;</span>
+                        <span *ngIf="!isDeleted(item)">
+                            <mat-icon
+                                *ngIf="item.active"
+                                class="active-icon green-600 s-16"
+                                >check</mat-icon
+                            >
+                            <mat-icon
+                                *ngIf="!item.active"
+                                class="active-icon red-500 s-16"
+                                >close</mat-icon
+                            >
+                        </span>
+                    </mat-cell>
+                </ng-container>
+
+                <!-- Created At Column -->
+                <ng-container [matColumnDef]="USER_SORTABLES.CREATED_AT">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header
+                        >Created At</mat-header-cell
+                    >
+                    <mat-cell *matCellDef="let item">
+                        <p class="text-truncate">
+                            {{ item.createdAt | dateFormat }}
+                        </p>
+                    </mat-cell>
+                </ng-container>
+
+                <mat-header-row
+                    *matHeaderRowDef="displayedColumns; sticky: true"
+                ></mat-header-row>
+                <!-- [class]="{ deleted: item.deletedAt }" -->
+                <mat-row
+                    *matRowDef="let item; columns: displayedColumns"
+                    class="item"
+                    matRipple
+                    (click)="onSelectRow(item)"
+                ></mat-row>
+            </mat-table>
         </div>
     </div>
 </div>

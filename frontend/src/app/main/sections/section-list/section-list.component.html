@@ -68,7 +68,9 @@
                         >Published At</mat-header-cell
                     >
                     <mat-cell *matCellDef="let item">
-                        <p class="text-truncate">{{ item.publishedAt }}</p>
+                        <p class="text-truncate">
+                            {{ item.publishedAt | dateFormat }}
+                        </p>
                     </mat-cell>
                 </ng-container>
 

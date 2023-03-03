@@ -51,7 +51,7 @@
                     >
                     <mat-cell *matCellDef="let item">
                         <p class="text-truncate">
-                            {{ item.createdAt | date : "shortDate" }}
+                            {{ item.createdAt | dateFormat }}
                         </p>
                     </mat-cell>
                 </ng-container>
@@ -62,7 +62,9 @@
                         >Time In</mat-header-cell
                     >
                     <mat-cell *matCellDef="let item">
-                        <p class="text-truncate">{{ item.time_in }}</p>
+                        <p class="text-truncate">
+                            {{ item.time_in | dateFormat }}
+                        </p>
                     </mat-cell>
                 </ng-container>
 
@@ -72,7 +74,9 @@
                         >Time Out</mat-header-cell
                     >
                     <mat-cell *matCellDef="let item">
-                        <p class="text-truncate">{{ item.time_out }}</p>
+                        <p class="text-truncate">
+                            {{ item.time_out | dateFormat }}
+                        </p>
                     </mat-cell>
                 </ng-container>
 

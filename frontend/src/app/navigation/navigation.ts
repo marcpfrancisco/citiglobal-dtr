@@ -47,6 +47,14 @@ export const navigation: FuseNavigation[] = [
                 icon: 'library_books',
                 url: '/subjects',
             },
+            {
+                id: 'users',
+                title: 'Users',
+                translate: 'NAV.USERS.TITLE',
+                type: 'item',
+                icon: 'people',
+                url: '/users',
+            },
         ],
     },
     {

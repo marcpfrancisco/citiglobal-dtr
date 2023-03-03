@@ -1,8 +1,18 @@
+export const DEFAULT_CURRENCY = 'PH';
+// export const DEFAULT_DATE_FORMAT = 'dd/MM/yyyy'; // 'mediumDate';
+export const DEFAULT_DATE_FORMAT = 'dd/MM/yyyy';
+
 export const MOMENT_SQL_TIME_FORMAT = 'HH:mm:ss';
 
 export const MOMENT_SQL_DATE_FORMAT = 'YYYY-MM-DD';
 
 export const MOMENT_SQL_DATE_TIME_FORMAT = 'YYYY-MM-DD HH:mm:ss';
+
+// Must use International Date format for MS Excel
+// https://stackoverflow.com/questions/54131599/what-date-format-can-you-use-in-csv-that-excel-will-recognize-unambiguously
+export const CSV_MOMENT_DATE_FORMAT = 'YYYY-MM-DD';
+
+export const DEFAULT_LANGUAGE_LOCALE = 'en-us';
 
 // Moment date format
 // parse formats https://momentjs.com/docs/#/parsing/string-format/

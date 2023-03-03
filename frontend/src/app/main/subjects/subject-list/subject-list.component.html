@@ -79,7 +79,7 @@
                     >
                     <mat-cell *matCellDef="let item">
                         <p class="text-truncate">
-                            {{ item.publishedAt | date : "shortDate" }}
+                            {{ item.publishedAt | dateFormat }}
                         </p>
                     </mat-cell>
                 </ng-container>

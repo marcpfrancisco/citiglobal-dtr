@@ -17,12 +17,8 @@ import { UsersRoutingModule } from './users-routing.module';
         SharedMaterialModule,
         SharedComponentsModule,
         FuseSharedModule,
-        UsersRoutingModule,
         MatMenuModule,
         PipesModule,
     ],
-    providers: [],
-    entryComponents: [],
-    exports: [],
 })
 export class UsersModule {}
