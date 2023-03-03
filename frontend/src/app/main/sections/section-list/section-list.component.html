@@ -3,15 +3,134 @@
 
     <div class="center">
         <!-- HEADER -->
-        <citiglobal-header iconName="people">
+        <citiglobal-header iconName="info">
             <ng-template #title> All Sections </ng-template>
+            <!-- <ng-template #search>
+                <bloomlocal-search
+                    [searchValue]="search$ | async"
+                    (search)="handleSearch($event)"
+                ></bloomlocal-search>
+                <bloomlocal-filter-list
+                    [hasFilters]="hasFilters$ | async"
+                    (buttonClick)="onShowFilters()"
+                ></bloomlocal-filter-list>
+            </ng-template> -->
+
+            <ng-template #actions>
+                <!-- <button
+                  mat-raised-button
+                  class="buttons accent mt-24 mt-md-0"
+                  *ngIf="'exportList' | able: 'Florist'"
+                  (click)="exportFlorists()"
+                >
+                  <span>EXPORT</span>
+                </button> -->
+                <button
+                    mat-raised-button
+                    class="buttons warn mt-24 mt-md-0"
+                    (click)="onCreate()"
+                >
+                    <span>CREATE SECTION</span>
+                </button>
+            </ng-template>
         </citiglobal-header>
         <!-- / HEADER -->
 
         <!-- Content Card  -->
         <div class="content-card">
-            <!-- Content  -->
-            <div class="card"></div>
+            <!-- [dataSource]="dataSource$" -->
+            <!-- [matSortActive]="(listState$ | listStateMatSort | async).active"
+            [matSortDirection]="
+                (listState$ | listStateMatSort | async).direction
+            " -->
+            <mat-table
+                #table
+                matSort
+                class="items-table"
+                [@animateStagger]="{ value: '50' }"
+                fusePerfectScrollbar
+                [fusePerfectScrollbarOptions]="{ suppressScrollX: true }"
+                (matSortChange)="onToggleSort($event)"
+            >
+                <!-- Name Column -->
+                <ng-container [matColumnDef]="SECTION_SORTABLES.NAME">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header
+                        >Section</mat-header-cell
+                    >
+                    <mat-cell *matCellDef="let item">
+                        <p class="text-truncate">{{ item.name }}</p>
+                    </mat-cell>
+                </ng-container>
+
+                <!-- Name Column -->
+                <ng-container [matColumnDef]="SECTION_SORTABLES.PUBLISHED_AT">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header
+                        >Published At</mat-header-cell
+                    >
+                    <mat-cell *matCellDef="let item">
+                        <p class="text-truncate">{{ item.publishedAt }}</p>
+                    </mat-cell>
+                </ng-container>
+
+                <!-- Name Column -->
+                <ng-container [matColumnDef]="SECTION_SORTABLES.ACTIVE">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header
+                        >Active</mat-header-cell
+                    >
+                    <mat-cell *matCellDef="let item">
+                        <p class="text-truncate">{{ item.active }}</p>
+                    </mat-cell>
+                </ng-container>
+
+                <!-- Options Column -->
+                <ng-container matColumnDef="options">
+                    <mat-header-cell *matHeaderCellDef>Options</mat-header-cell>
+                    <mat-cell *matCellDef="let item">
+                        <button
+                            mat-button
+                            [matMenuTriggerFor]="menu"
+                            (click)="$event.stopPropagation()"
+                            *ngIf="'update' | able : 'Sections' : item"
+                        >
+                            <mat-icon
+                                class="logo-icon s-32"
+                                [@animate]="{
+                                    value: '*',
+                                    params: { delay: '50ms', scale: '0.2' }
+                                }"
+                                >more_vert
+                            </mat-icon>
+                        </button>
+                        <!-- <mat-menu #menu="matMenu">
+                <button
+                  mat-menu-item
+                  *ngIf="!isDeleted(item) && ('delete' | able : 'Sections': item)"
+                  (click)="deleteFlorist(item)"
+                >
+                  Archive
+                </button>
+                <button
+                  mat-menu-item
+                  *ngIf="isDeleted(item) && ('delete' | able : 'Sections': item)"
+                  (click)="undeleteFlorist(item)"
+                >
+                  Unarchive
+                </button>
+              </mat-menu> -->
+                    </mat-cell>
+                </ng-container>
+
+                <mat-header-row
+                    *matHeaderRowDef="displayedColumns; sticky: true"
+                ></mat-header-row>
+                <!-- [class]="{ deleted: item.deletedAt }" -->
+                <mat-row
+                    *matRowDef="let item; columns: displayedColumns"
+                    class="item"
+                    matRipple
+                    (click)="onSelectRow(item)"
+                ></mat-row>
+            </mat-table>
         </div>
     </div>
 </div>

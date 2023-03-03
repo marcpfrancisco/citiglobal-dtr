@@ -1,13 +1,34 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { AblePipe } from './able.pipe';
+import { PhoneNumberFormat } from 'google-libphonenumber';
 
-const PIPES = [AblePipe];
+import { AblePipe } from './able.pipe';
+import { ListStateMatSortPipe } from './list-state-mat-sort.pipe';
+import { MomentizePipe } from './momentize.pipe';
+import { PhoneNumberFormatPipe } from './phone-number-format.pipe';
+import { PhoneNumberUriPipe } from './phone-number-uri.pipe';
+import { UserRolesPipe } from './user-roles.pipe';
+
+const ALL_PIPES = [
+    AblePipe,
+    ListStateMatSortPipe,
+    MomentizePipe,
+    PhoneNumberFormatPipe,
+    PhoneNumberUriPipe,
+    UserRolesPipe,
+];
 
 @NgModule({
-    declarations: PIPES,
-    exports: PIPES,
+    declarations: ALL_PIPES,
+    exports: ALL_PIPES,
     imports: [CommonModule],
-    providers: [AblePipe],
+    providers: [
+        AblePipe,
+        ListStateMatSortPipe,
+        MomentizePipe,
+        PhoneNumberFormatPipe,
+        PhoneNumberUriPipe,
+        UserRolesPipe,
+    ],
 })
 export class PipesModule {}
