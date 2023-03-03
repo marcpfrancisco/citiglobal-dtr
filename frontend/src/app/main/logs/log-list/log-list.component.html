@@ -5,13 +5,98 @@
         <!-- HEADER -->
         <citiglobal-header iconName="date_range">
             <ng-template #title> Time Logs </ng-template>
+            <!-- <ng-template #search>
+                <bloomlocal-search
+                    [searchValue]="search$ | async"
+                    (search)="handleSearch($event)"
+                ></bloomlocal-search>
+                <bloomlocal-filter-list
+                    [hasFilters]="hasFilters$ | async"
+                    (buttonClick)="onShowFilters()"
+                ></bloomlocal-filter-list>
+            </ng-template> -->
         </citiglobal-header>
         <!-- / HEADER -->
 
         <!-- Content Card  -->
         <div class="content-card">
-            <!-- Content  -->
-            <div class="card"></div>
+            <!-- [dataSource]="dataSource$" -->
+            <!-- [matSortActive]="(listState$ | listStateMatSort | async).active"
+            [matSortDirection]="
+                (listState$ | listStateMatSort | async).direction
+            " -->
+            <mat-table
+                #table
+                matSort
+                class="items-table"
+                [@animateStagger]="{ value: '50' }"
+                fusePerfectScrollbar
+                [fusePerfectScrollbarOptions]="{ suppressScrollX: true }"
+                (matSortChange)="onToggleSort($event)"
+            >
+                <!-- Name Column -->
+                <ng-container [matColumnDef]="TIMELOG_SORTABLES.NAME">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header
+                        >Name</mat-header-cell
+                    >
+                    <mat-cell *matCellDef="let item">
+                        <p class="text-truncate">{{ item.name }}</p>
+                    </mat-cell>
+                </ng-container>
+
+                <!-- Date Column -->
+                <ng-container [matColumnDef]="TIMELOG_SORTABLES.DATE">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header
+                        >Date</mat-header-cell
+                    >
+                    <mat-cell *matCellDef="let item">
+                        <p class="text-truncate">
+                            {{ item.createdAt | date : "shortDate" }}
+                        </p>
+                    </mat-cell>
+                </ng-container>
+
+                <!-- Time In Column -->
+                <ng-container [matColumnDef]="TIMELOG_SORTABLES.TIME_IN">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header
+                        >Time In</mat-header-cell
+                    >
+                    <mat-cell *matCellDef="let item">
+                        <p class="text-truncate">{{ item.time_in }}</p>
+                    </mat-cell>
+                </ng-container>
+
+                <!-- Time Out Column -->
+                <ng-container [matColumnDef]="TIMELOG_SORTABLES.TIME_OUT">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header
+                        >Time Out</mat-header-cell
+                    >
+                    <mat-cell *matCellDef="let item">
+                        <p class="text-truncate">{{ item.time_out }}</p>
+                    </mat-cell>
+                </ng-container>
+
+                <!-- Time Rendered Column -->
+                <ng-container [matColumnDef]="TIMELOG_SORTABLES.TIME_RENDERED">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header
+                        >Time Rendered</mat-header-cell
+                    >
+                    <mat-cell *matCellDef="let item">
+                        <p class="text-truncate">{{ item.time_rendered }}</p>
+                    </mat-cell>
+                </ng-container>
+
+                <mat-header-row
+                    *matHeaderRowDef="displayedColumns; sticky: true"
+                ></mat-header-row>
+                <!-- [class]="{ deleted: item.deletedAt }" -->
+                <mat-row
+                    *matRowDef="let item; columns: displayedColumns"
+                    class="item"
+                    matRipple
+                    (click)="onSelectRow(item)"
+                ></mat-row>
+            </mat-table>
         </div>
     </div>
 </div>
