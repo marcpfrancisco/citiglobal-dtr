@@ -1,0 +1,12 @@
+@import 'src/@fuse/scss/fuse';
+
+citiglobal-section-list {
+  #sections {
+    .top-bg {
+
+      @include media-breakpoint('lt-md') {
+        height: 256px;
+      }
+    }
+  }
+}

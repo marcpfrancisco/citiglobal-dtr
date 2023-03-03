@@ -5,13 +5,38 @@
         <!-- HEADER -->
         <citiglobal-header iconName="library_books">
             <ng-template #title> All Subjects </ng-template>
+            <!-- <ng-template #search>
+                <bloomlocal-search
+                    [searchValue]="search$ | async"
+                    (search)="handleSearch($event)"
+                ></bloomlocal-search>
+                <bloomlocal-filter-list
+                    [hasFilters]="hasFilters$ | async"
+                    (buttonClick)="onShowFilters()"
+                ></bloomlocal-filter-list>
+            </ng-template> -->
+
+            <ng-template #actions>
+                <!-- <button
+                  mat-raised-button
+                  class="buttons accent mt-24 mt-md-0"
+                  *ngIf="'exportList' | able: 'Subjects'"
+                  (click)="exportSubject()"
+                >
+                  <span>EXPORT</span>
+                </button> -->
+                <button
+                    mat-raised-button
+                    class="buttons warn mt-24 mt-md-0"
+                    (click)="onCreate()"
+                >
+                    <span>CREATE SUBJECT</span>
+                </button>
+            </ng-template>
         </citiglobal-header>
         <!-- / HEADER -->
 
         <!-- Content Card  -->
-        <div class="content-card">
-            <!-- Content  -->
-            <div class="card"></div>
-        </div>
+        <div class="content-card"></div>
     </div>
 </div>

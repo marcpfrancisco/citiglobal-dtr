@@ -1,0 +1,12 @@
+@import 'src/@fuse/scss/fuse';
+
+citiglobal-subject-list {
+  #subjects {
+    .top-bg {
+
+      @include media-breakpoint('lt-md') {
+        height: 256px;
+      }
+    }
+  }
+}

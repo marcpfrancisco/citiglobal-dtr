@@ -20,8 +20,8 @@
                 <!-- <button
                   mat-raised-button
                   class="buttons accent mt-24 mt-md-0"
-                  *ngIf="'exportList' | able: 'Florist'"
-                  (click)="exportFlorists()"
+                  *ngIf="'exportList' | able: 'Sections'"
+                  (click)="exportSections()"
                 >
                   <span>EXPORT</span>
                 </button> -->
@@ -62,7 +62,7 @@
                     </mat-cell>
                 </ng-container>
 
-                <!-- Name Column -->
+                <!-- Published At Column -->
                 <ng-container [matColumnDef]="SECTION_SORTABLES.PUBLISHED_AT">
                     <mat-header-cell *matHeaderCellDef mat-sort-header
                         >Published At</mat-header-cell
@@ -72,7 +72,7 @@
                     </mat-cell>
                 </ng-container>
 
-                <!-- Name Column -->
+                <!-- Status Column -->
                 <ng-container [matColumnDef]="SECTION_SORTABLES.ACTIVE">
                     <mat-header-cell *matHeaderCellDef mat-sort-header
                         >Active</mat-header-cell

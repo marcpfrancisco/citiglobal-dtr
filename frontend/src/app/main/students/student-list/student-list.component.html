@@ -5,13 +5,138 @@
         <!-- HEADER -->
         <citiglobal-header iconName="groups">
             <ng-template #title> All Students </ng-template>
+            <!-- <ng-template #search>
+                <bloomlocal-search
+                    [searchValue]="search$ | async"
+                    (search)="handleSearch($event)"
+                ></bloomlocal-search>
+                <bloomlocal-filter-list
+                    [hasFilters]="hasFilters$ | async"
+                    (buttonClick)="onShowFilters()"
+                ></bloomlocal-filter-list>
+            </ng-template> -->
+
+            <ng-template #actions>
+                <!-- <button
+                  mat-raised-button
+                  class="buttons accent mt-24 mt-md-0"
+                  *ngIf="'exportList' | able: 'Students'"
+                  (click)="exportStudents()"
+                >
+                  <span>EXPORT</span>
+                </button> -->
+                <button
+                    mat-raised-button
+                    class="buttons warn mt-24 mt-md-0"
+                    (click)="onCreate()"
+                >
+                    <span>CREATE STUDENT</span>
+                </button>
+            </ng-template>
         </citiglobal-header>
         <!-- / HEADER -->
 
         <!-- Content Card  -->
         <div class="content-card">
-            <!-- Content  -->
-            <div class="card"></div>
+            <!-- [dataSource]="dataSource$" -->
+            <!-- [matSortActive]="(listState$ | listStateMatSort | async).active"
+            [matSortDirection]="
+                (listState$ | listStateMatSort | async).direction
+            " -->
+            <mat-table
+                #table
+                matSort
+                class="items-table"
+                [@animateStagger]="{ value: '50' }"
+                fusePerfectScrollbar
+                [fusePerfectScrollbarOptions]="{ suppressScrollX: true }"
+                (matSortChange)="onToggleSort($event)"
+            >
+                <!-- First Name Column -->
+                <ng-container [matColumnDef]="STUDENT_SORTABLES.FIRSTNAME">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header
+                        >First Name</mat-header-cell
+                    >
+                    <mat-cell *matCellDef="let item">
+                        <p class="text-truncate">{{ item.firstName }}</p>
+                    </mat-cell>
+                </ng-container>
+
+                <!-- Last Name Column -->
+                <ng-container [matColumnDef]="STUDENT_SORTABLES.LASTNAME">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header
+                        >Last Name</mat-header-cell
+                    >
+                    <mat-cell *matCellDef="let item">
+                        <p class="text-truncate">{{ item.lastName }}</p>
+                    </mat-cell>
+                </ng-container>
+
+                <!-- Section Column -->
+                <ng-container [matColumnDef]="STUDENT_SORTABLES.SECTION">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header
+                        >Section</mat-header-cell
+                    >
+                    <mat-cell *matCellDef="let item">
+                        <p class="text-truncate">{{ item.section }}</p>
+                    </mat-cell>
+                </ng-container>
+
+                <!-- Student Id Column -->
+                <ng-container [matColumnDef]="STUDENT_SORTABLES.STUDENT_ID">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header
+                        >ID No.</mat-header-cell
+                    >
+                    <mat-cell *matCellDef="let item">
+                        <p class="text-truncate">{{ item.idNo }}</p>
+                    </mat-cell>
+                </ng-container>
+
+                <!-- Mobile Number Column -->
+                <ng-container [matColumnDef]="STUDENT_SORTABLES.MOBILE_NUMBER">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header
+                        >Mobile Number</mat-header-cell
+                    >
+                    <mat-cell *matCellDef="let item">
+                        <p class="text-truncate">{{ item.mobileNumber }}</p>
+                    </mat-cell>
+                </ng-container>
+
+                <!-- Created At Column -->
+                <ng-container [matColumnDef]="STUDENT_SORTABLES.CREATED_AT">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header
+                        >Created At</mat-header-cell
+                    >
+                    <mat-cell *matCellDef="let item">
+                        <p class="text-truncate">
+                            {{ item.createdAt | date : "shortDate" }}
+                        </p>
+                    </mat-cell>
+                </ng-container>
+
+                <!-- Status Column -->
+                <ng-container [matColumnDef]="STUDENT_SORTABLES.ACTIVE">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header
+                        >Active</mat-header-cell
+                    >
+                    <mat-cell *matCellDef="let item">
+                        <p class="text-truncate">
+                            {{ item.active }}
+                        </p>
+                    </mat-cell>
+                </ng-container>
+
+                <mat-header-row
+                    *matHeaderRowDef="displayedColumns; sticky: true"
+                ></mat-header-row>
+                <!-- [class]="{ deleted: item.deletedAt }" -->
+                <mat-row
+                    *matRowDef="let item; columns: displayedColumns"
+                    class="item"
+                    matRipple
+                    (click)="onSelectRow(item)"
+                ></mat-row>
+            </mat-table>
         </div>
     </div>
 </div>
