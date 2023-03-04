@@ -31,11 +31,16 @@ export class HttpRequestInterceptor implements HttpInterceptor {
         request: HttpRequest<T>,
         next: HttpHandler
     ): Observable<HttpEvent<T>> {
-        return this.authService.getUserAccessToken().pipe(
+        return this.authService.getCurrentAuthenticatedUser().pipe(
             catchError(() => of(null)),
             // Update the store
-            tap((user) => {
-                if (user) {
+            tap((value) => {
+                if (value) {
+                    const user: AuthUser = {
+                        username: value.username,
+                        signInUserSession: value.signInUserSession,
+                    };
+
                     this.store.dispatch(
                         AuthenticationActions.onCurrentSignInUserSessionSuccess(
                             { user }

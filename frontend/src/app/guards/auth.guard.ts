@@ -38,7 +38,6 @@ export class AuthGuard implements CanActivate {
             map(({ signInUserSession, currentUser }) => {
                 const authenticated = signInUserSession && currentUser;
 
-                console.log(authenticated, 'authenticated');
                 // when inside login page
                 if (isAdminLoginPage) {
                     console.log(isAdminLoginPage, 'isAdminLoginPage');

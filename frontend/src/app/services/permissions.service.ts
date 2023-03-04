@@ -29,13 +29,11 @@ export class PermissionsService {
     constructor(private ability: AppAbility) {}
 
     updateAbilityFor(user: User): void {
-        console.log(user, 'user');
         const subject: UserSubject = {
             forUser: user,
             userIds: [user?.id],
         };
 
-        console.log(subject, 'subject');
         let rules = [];
 
         switch (user?.role) {

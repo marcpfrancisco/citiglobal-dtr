@@ -89,11 +89,11 @@ export class AuthenticationEffects {
     });
 
     // Admin Login
-    onLoginByStudentId$ = createEffect(() => {
+    onAdminLogin$ = createEffect(() => {
         return this.actions$.pipe(
-            ofType(LoginActions.onLoginByStudentId),
+            ofType(LoginActions.onLogin),
             switchMap((action) =>
-                this.authService.loginByStudentId(action.studentId).pipe(
+                this.authService.login(action.email, action.password).pipe(
                     map((user) =>
                         AuthenticationActions.onAdminLogInSuccess({
                             user,
@@ -200,8 +200,8 @@ export class AuthenticationEffects {
     showSplashscreen$ = createEffect(
         () => {
             return this.actions$.pipe(
-                ofType(LoginActions.onLoginByStudentIdSuccess),
-                tap((action) => this.splashscreenService.show())
+                ofType(LoginActions.onLogInSuccess)
+                // tap((action) => this.splashscreenService.show())
             );
         },
         { dispatch: false }
@@ -212,7 +212,7 @@ export class AuthenticationEffects {
         () => {
             return this.actions$.pipe(
                 ofType(
-                    LoginActions.onLoginByStudentIdFailure,
+                    LoginActions.onLogInFailure,
                     AuthenticationActions.onLoadCurrentUserSuccess,
                     AuthenticationActions.onLoadCurrentUserFailure
                 ),
@@ -286,7 +286,7 @@ export class AuthenticationEffects {
             return this.actions$.pipe(
                 ofType(AuthenticationActions.onLoadCurrentUserSuccess),
                 tap((action) => {
-                    if (action.user) {
+                    if (action.isLogin) {
                         this.routerService.navigateToLandingPage(
                             action.user.role
                         );

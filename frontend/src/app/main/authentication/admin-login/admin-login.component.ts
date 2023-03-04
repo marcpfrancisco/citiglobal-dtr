@@ -1,9 +1,12 @@
 import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseConfigService } from '@fuse/services/config.service';
 import { Store } from '@ngrx/store';
-import { RootState } from '@stores/index';
+import { LoginReducer, RootState } from '@stores/index';
 import { LoginActions } from '@stores/login';
+import { combineLatest, Observable } from 'rxjs';
+import { startWith, map } from 'rxjs/operators';
 
 @Component({
     selector: 'citiglobal-admin-login',
@@ -13,7 +16,8 @@ import { LoginActions } from '@stores/login';
     animations: fuseAnimations,
 })
 export class AdminLoginComponent implements OnInit {
-    idNumber: string | number;
+    loginForm: FormGroup;
+    loginButtonDisabled$: Observable<boolean>;
 
     /**
      * Constructor
@@ -23,6 +27,7 @@ export class AdminLoginComponent implements OnInit {
      */
     constructor(
         private fuseConfigService: FuseConfigService,
+        private formBuilder: FormBuilder,
         private store: Store<RootState>,
         @Inject('APP_BUILD_VERSION') public buildVersion: string
     ) {
@@ -46,15 +51,29 @@ export class AdminLoginComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.loginForm = this.formBuilder.group({
+            email: ['', [Validators.required]],
+            password: ['', Validators.required],
+        });
+
         this.store.dispatch(LoginActions.onAdminLoginInit());
+        this.setupObservables();
     }
 
-    onSubmit(event: Event): void {
-        const target = event?.target as HTMLInputElement;
-        const value = target?.value;
+    onSubmit(): void {
+        const { email, password } = this.loginForm.value;
+        this.store.dispatch(LoginActions.onLogin({ email, password }));
+    }
 
-        this.store.dispatch(
-            LoginActions.onLoginByStudentId({ studentId: value })
+    private setupObservables(): void {
+        this.loginButtonDisabled$ = combineLatest([
+            this.loginForm.statusChanges,
+            this.store.select(LoginReducer.selectLoginButtonDisabled),
+        ]).pipe(
+            map(([status, loginButtonDisabled]) => {
+                return this.loginForm.invalid;
+            }),
+            startWith(true)
         );
     }
 }

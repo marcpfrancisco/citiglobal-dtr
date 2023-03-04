@@ -68,11 +68,12 @@ const { apiUrl } = environment;
         PipesModule,
     ],
     providers: [
+        httpInterceptorProvider,
+        { provide: 'APP_BUILD_VERSION', useValue: BuildVersion.number },
         { provide: SERVICE_CONFIG, useValue: { apiUrl } },
         { provide: AppAbility, useValue: new AppAbility() },
         { provide: PureAbility, useExisting: AppAbility },
-        { provide: 'APP_BUILD_VERSION', useValue: BuildVersion.number },
-        // httpInterceptorProvider,
+
         ApiService,
         AuthService,
         FiltersService,

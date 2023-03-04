@@ -21,18 +21,13 @@ export const initialState: State = {
 export const reducer = createReducer(
     initialState,
     // Add `on()` call events here...
-    on(
-        LoginActions.onLoginByStudentId,
-        LoginActions.onTimeLogLogin,
-        (state) => {
-            return { ...state, loginButtonDisabled: true };
-        }
-    ),
+    on(LoginActions.onLogin, (state) => {
+        return { ...state, loginButtonDisabled: true };
+    }),
     on(
         LoginActions.onAdminLoginInit,
-        LoginActions.onTimeLogLoginInit,
         AuthenticationActions.onAdminLogInSuccess,
-        AuthenticationActions.onAdminLogInSuccess,
+        AuthenticationActions.onAdminLoginFailure,
         (state) => {
             return { ...state, loginButtonDisabled: false };
         }
