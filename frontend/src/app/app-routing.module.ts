@@ -91,7 +91,7 @@ const routes: Routes = [
         loadChildren: () =>
             import('./main/users/users.module').then((m) => m.UsersModule),
         data: { actions: [ACTION_LIST, ACTION_READ], subject: SUBJECT_USER },
-        // canActivate: [AuthGuard, PermissionsGuard],
+        canActivate: [AuthGuard, PermissionsGuard],
     },
 
     // redirect to this component for invalid routes

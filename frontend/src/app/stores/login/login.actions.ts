@@ -1,16 +1,17 @@
+import { AuthUser } from '@models';
 import { createAction, props } from '@ngrx/store';
 
 // User Actions
+export const onLogin = createAction(
+    '[Admin Login Component] On Login',
+    props<{ email: string; password: string }>()
+);
+
 export const onAdminLoginInit = createAction(
     '[Admin Login Component] Admin Login On Init'
 );
 export const onTimeLogLoginInit = createAction(
     '[Time Log Login Component] Time Log On Init'
-);
-
-export const onLoginByStudentId = createAction(
-    '[Admin Login Component] Login by Student Id',
-    props<{ studentId: string | number }>()
 );
 
 export const onTimeLogLogin = createAction(
@@ -19,13 +20,13 @@ export const onTimeLogLogin = createAction(
 );
 
 // API Actions
-export const onLoginByStudentIdSuccess = createAction(
-    '[Admin Login Component] Login by Student Id Success',
-    props<{ result: any }>()
+export const onLogInSuccess = createAction(
+    '[Authentication API] On Log In Success',
+    props<{ user: AuthUser }>()
 );
-export const onLoginByStudentIdFailure = createAction(
-    '[Admin Login Component] Login by Student Id Failure',
-    props<{ error: Error }>()
+export const onLogInFailure = createAction(
+    '[Authentication API] On Log In Failure',
+    props<{ error: any }>()
 );
 
 export const onTimeLogLoginSuccess = createAction(

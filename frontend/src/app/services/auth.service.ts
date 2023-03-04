@@ -1,50 +1,42 @@
 import { HttpParams, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { AuthUser } from '@models';
+import { AuthUser, SignInUserSession } from '@models';
 import { isString } from 'lodash';
 import { from, Observable, of } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { map, switchMap, tap } from 'rxjs/operators';
 
 import { ApiService } from './api.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
     private readonly USERS_URL = 'user';
+    private readonly AUTH_URL = 'authentication';
 
     constructor(private apiService: ApiService) {}
 
-    loginByStudentId(studentId: string | number): Observable<AuthUser> {
-        let params: HttpParams = new HttpParams();
-
-        if (isString(studentId)) {
-            params = params.append('studentId', studentId);
-        }
-
-        return this.apiService.get(`${this.USERS_URL}/getUserByStudentId`, {
-            params,
-        });
+    login(username: string, password: string): Observable<any> {
+        return this.apiService
+            .post(`${this.AUTH_URL}/authenticate`, { username, password })
+            .pipe(tap((response) => this.setSignInUserSession(response)));
     }
 
-    loginByUserId(userId: string | number): Observable<AuthUser> {
+    loginByUserId(userId: string | number): Observable<any> {
         return this.apiService.get(`${this.USERS_URL}/getUserById/${userId}`);
     }
 
-    getUserAccessToken(): Observable<AuthUser> {
-        const authentication = JSON.parse(
-            localStorage.getItem('authentication')
-        );
+    setSignInUserSession(response: any) {
+        if (!response) return;
 
-        if (!authentication) {
-            return;
-        }
+        const { username, token, id: userId, roles = [] } = response;
+        const signInUserSession = { username, token, userId, roles };
+        const payload = JSON.stringify(signInUserSession);
 
-        const user: AuthUser = {
-            studentId: authentication?.studentId,
-            signInUserSession: authentication?.signInUserSession,
-            role: authentication?.role,
-        };
+        localStorage.setItem('authenticate', payload);
+    }
 
-        return of(user);
+    getCurrentAuthenticatedUser() {
+        const storage = JSON.parse(localStorage.getItem('authenticate'));
+        return of(storage);
     }
 
     logOut(global = false): Observable<any> {

@@ -2,41 +2,97 @@
 
 citiglobal-admin-login {
   background: #550E10 !important;
-  color: #fff;
-
-  .mat-input-element::placeholder {
-    color: #ccc !important;
-  }
-
-  .mat-form-field-underline {
-    background-color: #fff !important;
-  }
-
-  .mat-form-field {
-    min-width: 350px;
-  }
 
   #admin-login {
     width: 100%;
+    position: relative;
 
-    .logo {
+    .logo-top {
+      position: absolute;
+      top: 0;
+      left: 0;
+
       padding-top: 20px;
       padding-left: 60px;
     }
 
     .admin-login-wrapper {
       height: 100%;
+      flex: 1 0 auto;
+      padding: 32px;
+      position: relative;
 
-      .admin-login-header {
-        margin-top: 150px;
+      @include media-breakpoint('xs') {
+        padding: 16px;
+      }
 
-        .admin-login-heading {
-          font-size: 4.209rem;
-          margin: 0;
+      #login-form {
+        width: 384px;
+        max-width: 384px;
+        padding: 32px;
+        text-align: center;
+        border-radius: 8px;
+
+        @include mat-elevation(16);
+
+        @include media-breakpoint('xs') {
+          padding: 24px;
+          width: 100%;
+        }
+
+        .logo-form {
+          width: 128px;
+          margin: 32px auto;
+        }
+
+        .title {
+          font-size: 20px;
+          margin: 16px 0 32px 0;
+        }
+
+        form {
+          width: 100%;
+          text-align: left;
+
+          mat-form-field {
+            width: 100%;
+          }
+
+          mat-checkbox {
+            margin: 0;
+          }
+
+          .remember-forgot-password {
+            font-size: 13px;
+            margin-top: 8px;
+
+            .remember-me {
+              margin-bottom: 16px;
+            }
+
+            .forgot-password {
+              font-size: 13px;
+              font-weight: 600;
+              margin-bottom: 16px;
+            }
+          }
+
+          .submit-button {
+            width: 220px;
+            margin: 16px auto;
+            display: block;
+
+            @include media-breakpoint('xs') {
+              width: 90%;
+            }
+          }
         }
       }
 
       .admin-login-footer {
+        position: absolute;
+        bottom: 0;
+
         margin-bottom: 60px;
 
         .footer-title {
