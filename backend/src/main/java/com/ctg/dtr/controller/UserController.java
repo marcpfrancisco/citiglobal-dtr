@@ -8,6 +8,7 @@ import java.util.TreeMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,6 +25,10 @@ import com.ctg.dtr.dto.UserDto;
 import com.ctg.dtr.model.User;
 import com.ctg.dtr.service.UserService;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
+
 @RestController
 @CrossOrigin
 @RequestMapping(value = "/api/user")
@@ -33,24 +38,43 @@ public class UserController {
     private UserService userService;
 
 	@PostMapping("/createUser")
-	public ResponseEntity<User> createUser(@RequestBody UserDto userDto) {
+	public ResponseEntity<?> createUser(@Valid @RequestBody UserDto userDto, HttpServletRequest request, HttpServletResponse response) {
+
+		Boolean checkUsername = userService.checkUsernameExists(userDto.getUsername());
+		Map<String, Object> tempMap = new HashMap<String, Object>();
+
+		if (checkUsername) {
+
+			response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+			response.setStatus(HttpServletResponse.SC_CONFLICT);
+		
+			tempMap.put("status", HttpServletResponse.SC_CONFLICT);
+			tempMap.put("error",  HttpStatus.CONFLICT);
+			tempMap.put("message", "Username already exists.");
+			tempMap.put("path", request.getServletPath());
+
+			return ResponseEntity.status(HttpStatus.CONFLICT).body(tempMap);
+		}
 
         User user = userService.createUser(userDto);
-
 		return new ResponseEntity<User>(user, HttpStatus.CREATED);
 	}
 
 	@PutMapping("/updateUser/{id}")
-	public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody UserDto userDto) {
+	public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody UserDto userDto, HttpServletRequest request, HttpServletResponse response) {
 
 		Optional<User> user = userService.getById(id);
+		Map<String, Object> tempMap = new HashMap<String, Object>();
 
 		if (!user.isPresent()) {
 
-			Map<String, Object> tempMap = new HashMap<String, Object>();
+			response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 
-			tempMap.put("error", HttpStatus.NOT_FOUND);
+			tempMap.put("status", HttpServletResponse.SC_NOT_FOUND);
+			tempMap.put("error",  HttpStatus.NOT_FOUND);
 			tempMap.put("message", "Missing User ID: " + id);
+			tempMap.put("path", request.getServletPath());
 
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(tempMap);
 
@@ -61,43 +85,49 @@ public class UserController {
 	}
 
 	@DeleteMapping("/deleteUser/{id}")
-	public ResponseEntity<?> deleteUser(@PathVariable Long id) {
+	public ResponseEntity<?> deleteUser(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
 
 		Optional<User> user = userService.getById(id);
+		Map<String, Object> tempMap = new HashMap<String, Object>();
 
 		if (!user.isPresent()) {
 
-			Map<String, Object> tempMap = new HashMap<String, Object>();
+			response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 
-			tempMap.put("error", HttpStatus.NOT_FOUND);
+			tempMap.put("status", HttpServletResponse.SC_NOT_FOUND);
+			tempMap.put("error",  HttpStatus.NOT_FOUND);
 			tempMap.put("message", "Missing User ID: " + id);
+			tempMap.put("path", request.getServletPath());
 
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(tempMap);
 
 		} else {
 
 			userService.deleteUser(id);
-
-			Map<String, Object> tempMap = new HashMap<String, Object>();
-
 			tempMap.put("message", "Successfully deleted User ID: " + id);
 
-			return ResponseEntity.status(HttpStatus.GONE).body(tempMap);
+			return ResponseEntity.status(HttpStatus.NO_CONTENT).body(tempMap);
 
 		}
 	}
 
 	@GetMapping("/getUserById/{id}")
-	public ResponseEntity<?> getUserById(@PathVariable Long id) {
+	public ResponseEntity<?> getUserById(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
 
 		Optional<User> user = userService.getById(id);
 
 		if (!user.isPresent()) {
 
+			response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+
 			Map<String, Object> tempMap = new HashMap<String, Object>();
 
-			tempMap.put("error", HttpStatus.NOT_FOUND);
+			tempMap.put("status", HttpServletResponse.SC_NOT_FOUND);
+			tempMap.put("error",  HttpStatus.NOT_FOUND);
 			tempMap.put("message", "Missing User ID: " + id);
+			tempMap.put("path", request.getServletPath());
 
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(tempMap);
 

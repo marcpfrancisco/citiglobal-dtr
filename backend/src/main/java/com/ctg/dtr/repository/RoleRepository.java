@@ -12,6 +12,8 @@ import com.ctg.dtr.model.Role;
 @Repository
 public interface RoleRepository extends JpaRepository<Role, Long>, JpaSpecificationExecutor<Role> {
 
+    Role findByName(String name);
+
     @Query(value = "SELECT * FROM role WHERE id = ?1", nativeQuery = true) 
     List<Role> findRoleById(Long id);
 }

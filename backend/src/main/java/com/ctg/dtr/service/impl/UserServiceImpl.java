@@ -1,10 +1,13 @@
 package com.ctg.dtr.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.ctg.dtr.dto.UserDto;
@@ -28,6 +31,9 @@ public class UserServiceImpl implements UserService {
 	@Autowired
     private RoleRepository roleRepository;
 
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+
     @Override
     public Optional<User> getById(Long id) {
         return userRepository.findById(id);
@@ -39,6 +45,7 @@ public class UserServiceImpl implements UserService {
 		Optional<Section> section = sectionRepository.findById(userDto.getSectionId());
 		Optional<Role> role = roleRepository.findById(userDto.getRoleId());
 
+
         User user = new User();
 
         user.setPublishedAt(userDto.getPublishedAt());
@@ -49,8 +56,25 @@ public class UserServiceImpl implements UserService {
 		user.setMobileNumber(userDto.getMobileNumber());
 		user.setStudentId(userDto.getStudentId());
 		user.setRfidNo(userDto.getRfidNo());
+		user.setUsername(userDto.getUsername());
+		user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+
 		user.setSection(section.isPresent() ? section.get() : null);
 		user.setRole(role.isPresent() ? role.get() : null);
+
+
+		// if (null == user.getRoles()) {
+        //     user.setRoles(new HashSet<>());
+        // }
+        // userDto.getRoles().stream().forEach(roleName -> {
+        //     Role role = roleRepository.findByName(roleName);
+        //     if (null == role) {
+        //         role = new Role();
+        //         role.setUsers(new HashSet<>());
+        //     }
+        //     role.setName(roleName);
+        //     user.addRole(role);
+        // });
 
 		return userRepository.save(user);
 	}
@@ -61,6 +85,7 @@ public class UserServiceImpl implements UserService {
 		Optional<Section> section = sectionRepository.findById(userDto.getSectionId());
 		Optional<Role> role = roleRepository.findById(userDto.getRoleId());
 
+
         currentUser.setPublishedAt(userDto.getPublishedAt());
         currentUser.setIsActive(userDto.getIsActive());
         currentUser.setFirstName(userDto.getFirstName());
@@ -69,8 +94,24 @@ public class UserServiceImpl implements UserService {
 		currentUser.setMobileNumber(userDto.getMobileNumber());
 		currentUser.setStudentId(userDto.getStudentId());
 		currentUser.setRfidNo(userDto.getRfidNo());
+		currentUser.setUsername(userDto.getUsername());
+		currentUser.setPassword(passwordEncoder.encode(userDto.getPassword()));
 		currentUser.setSection(section.isPresent() ? section.get() : null);
 		currentUser.setRole(role.isPresent() ? role.get() : null);
+
+
+		// if (null == currentUser.getRoles()) {
+        //     currentUser.setRoles(new HashSet<>());
+        // }
+        // userDto.getRoles().stream().forEach(roleName -> {
+        //     Role role = roleRepository.findByName(roleName);
+        //     if (null == role) {
+        //         role = new Role();
+        //         role.setUsers(new HashSet<>());
+        //     }
+        //     role.setName(roleName);
+        //     currentUser.addRole(role);
+        // });
 
         return userRepository.save(currentUser);
     }
@@ -137,6 +178,11 @@ public class UserServiceImpl implements UserService {
 		return lUserDto;
 	}
 
+	@Override
+	public Boolean checkUsernameExists(String username) {
+		return userRepository.existsByUsername(username);
+	}
+
     private void buildUserDto(User user, UserDto userDto) {
 
         userDto.setId(user.getId());
@@ -150,8 +196,11 @@ public class UserServiceImpl implements UserService {
 		userDto.setMobileNumber(user.getMobileNumber());
 		userDto.setStudentId(user.getStudentId());
 		userDto.setRfidNo(user.getRfidNo());
+		userDto.setUsername(user.getUsername());
+		userDto.setPassword(user.getPassword());
 		userDto.setSectionId(user.getSection() != null ? user.getSection().getId() : 0);
 		userDto.setSection(user.getSection());
+		// userDto.setRoles(user.getRoles().stream().map(Role::getName).collect(Collectors.toSet()));
 		userDto.setRoleId(user.getRole() != null ? user.getRole().getId() : 0);
 		userDto.setRole(user.getRole());
 	}

@@ -24,10 +24,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+// @EqualsAndHashCode(exclude="roles")
 public class User {
 
     @Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
     @CreationTimestamp
@@ -52,9 +53,18 @@ public class User {
 
     private String rfidNo;
 
+    private String username;
+
+    private String password;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "section_id", referencedColumnName = "id", nullable = true)
     private Section section;
+
+    // @ManyToMany(cascade = { CascadeType.MERGE, CascadeType.PERSIST })
+    // @JoinTable(name = "users_roles", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = {
+    //         @JoinColumn(name = "role_id") })
+    // private Set<Role> roles;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id", referencedColumnName = "id", nullable = true)
@@ -63,4 +73,9 @@ public class User {
     @OneToMany(mappedBy = "user")
 	@JsonIgnore
     private List<Timesheet> timesheets;
+
+    // public void addRole(Role role) {
+    //     this.roles.add(role);
+    //     role.getUsers().add(this);
+    // }
 }

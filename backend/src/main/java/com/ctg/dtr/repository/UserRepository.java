@@ -12,6 +12,10 @@ import com.ctg.dtr.model.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificationExecutor<User> {
 
+    User findByUsername(String username);
+
+    Boolean existsByUsername(String username);
+
     User findByStudentId(String studentId);
 
     User findByRfidNo(String rfidNo);

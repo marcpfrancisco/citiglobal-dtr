@@ -21,4 +21,6 @@ public interface UserService {
     List<UserDto> getUserByStudentId(String studentId);
 
 	List<UserDto> getAllUsers();
+
+    Boolean checkUsernameExists(String username);
 }

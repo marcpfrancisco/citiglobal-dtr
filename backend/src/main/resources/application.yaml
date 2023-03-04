@@ -2,6 +2,8 @@ server:
   port: 5000
 
 spring:
+  main:
+    allow-circular-references: true
   datasource:
     url: jdbc:mysql://localhost:3306/citiglobal
     username: root
@@ -25,5 +27,9 @@ spring:
       # ddl-auto: update
     database-platform: org.hibernate.dialect.MySQL8Dialect
     show-sql: true
+
+jwt:
+  secret: ctglobalSecretKey
+  expirationMs: 86400000
 
 # http://localhost:5000/swagger-ui/index.html#/

@@ -8,6 +8,7 @@ import java.util.TreeMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,6 +23,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ctg.dtr.dto.SubjectDto;
 import com.ctg.dtr.model.Subject;
 import com.ctg.dtr.service.SubjectService;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
 @CrossOrigin
@@ -40,16 +44,20 @@ public class SubjectController {
 	}
 
 	@PutMapping("/updateSubject/{id}")
-	public ResponseEntity<?> updateSubject(@PathVariable Long id, @RequestBody SubjectDto subjectDto) {
+	public ResponseEntity<?> updateSubject(@PathVariable Long id, @RequestBody SubjectDto subjectDto, HttpServletRequest request, HttpServletResponse response) {
 
 		Optional<Subject> subject = subjectService.getById(id);
+		Map<String, Object> tempMap = new HashMap<String, Object>();
 
 		if (!subject.isPresent()) {
 
-			Map<String, Object> tempMap = new HashMap<String, Object>();
+			response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 
+			tempMap.put("status", HttpServletResponse.SC_NOT_FOUND);
 			tempMap.put("error", HttpStatus.NOT_FOUND);
 			tempMap.put("message", "Missing Subject ID: " + id);
+			tempMap.put("path", request.getServletPath());
 
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(tempMap);
 
@@ -60,43 +68,48 @@ public class SubjectController {
 	}
 
 	@DeleteMapping("/deleteSubject/{id}")
-	public ResponseEntity<?> deleteSubject(@PathVariable Long id) {
+	public ResponseEntity<?> deleteSubject(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
 
 		Optional<Subject> subject = subjectService.getById(id);
+		Map<String, Object> tempMap = new HashMap<String, Object>();
 
 		if (!subject.isPresent()) {
 
-			Map<String, Object> tempMap = new HashMap<String, Object>();
+			response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 
+			tempMap.put("status", HttpServletResponse.SC_NOT_FOUND);
 			tempMap.put("error", HttpStatus.NOT_FOUND);
 			tempMap.put("message", "Missing Subject ID: " + id);
+			tempMap.put("path", request.getServletPath());
 
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(tempMap);
 
 		} else {
 
 			subjectService.deleteSubject(id);
-
-			Map<String, Object> tempMap = new HashMap<String, Object>();
-
 			tempMap.put("message", "Successfully deleted Subject ID: " + id);
 
-			return ResponseEntity.status(HttpStatus.GONE).body(tempMap);
+			return ResponseEntity.status(HttpStatus.NO_CONTENT).body(tempMap);
 
 		}
 	}
 
 	@GetMapping("/getSubjectById/{id}")
-	public ResponseEntity<?> getSubjectById(@PathVariable Long id) {
+	public ResponseEntity<?> getSubjectById(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
 
 		Optional<Subject> subject = subjectService.getById(id);
+		Map<String, Object> tempMap = new HashMap<String, Object>();
 
 		if (!subject.isPresent()) {
 
-			Map<String, Object> tempMap = new HashMap<String, Object>();
+			response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 
+			tempMap.put("status", HttpServletResponse.SC_NOT_FOUND);
 			tempMap.put("error", HttpStatus.NOT_FOUND);
 			tempMap.put("message", "Missing Subject ID: " + id);
+			tempMap.put("path", request.getServletPath());
 
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(tempMap);
 

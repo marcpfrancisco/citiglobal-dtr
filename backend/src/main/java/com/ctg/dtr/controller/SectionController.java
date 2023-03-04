@@ -8,6 +8,7 @@ import java.util.TreeMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,6 +23,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ctg.dtr.dto.SectionDto;
 import com.ctg.dtr.model.Section;
 import com.ctg.dtr.service.SectionService;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
 @CrossOrigin
@@ -40,16 +44,20 @@ public class SectionController {
 	}
 
 	@PutMapping("/updateSection/{id}")
-	public ResponseEntity<?> updateSection(@PathVariable Long id, @RequestBody SectionDto sectionDto) {
+	public ResponseEntity<?> updateSection(@PathVariable Long id, @RequestBody SectionDto sectionDto, HttpServletRequest request, HttpServletResponse response) {
 
 		Optional<Section> section = sectionService.getById(id);
+		Map<String, Object> tempMap = new HashMap<String, Object>();
 
 		if (!section.isPresent()) {
 
-			Map<String, Object> tempMap = new HashMap<String, Object>();
+			response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 
+			tempMap.put("status", HttpServletResponse.SC_NOT_FOUND);
 			tempMap.put("error", HttpStatus.NOT_FOUND);
 			tempMap.put("message", "Missing Section ID: " + id);
+			tempMap.put("path", request.getServletPath());
 
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(tempMap);
 
@@ -60,43 +68,47 @@ public class SectionController {
 	}
 
 	@DeleteMapping("/deleteSection/{id}")
-	public ResponseEntity<?> deleteSection(@PathVariable Long id) {
+	public ResponseEntity<?> deleteSection(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
 
 		Optional<Section> section = sectionService.getById(id);
+		Map<String, Object> tempMap = new HashMap<String, Object>();
 
 		if (!section.isPresent()) {
 
-			Map<String, Object> tempMap = new HashMap<String, Object>();
+			response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 
+			tempMap.put("status", HttpServletResponse.SC_NOT_FOUND);
 			tempMap.put("error", HttpStatus.NOT_FOUND);
 			tempMap.put("message", "Missing Section ID: " + id);
+			tempMap.put("path", request.getServletPath());
 
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(tempMap);
 
 		} else {
 
 			sectionService.deleteSection(id);
-
-			Map<String, Object> tempMap = new HashMap<String, Object>();
-
 			tempMap.put("message", "Successfully deleted Section ID: " + id);
 
-			return ResponseEntity.status(HttpStatus.GONE).body(tempMap);
-
+			return ResponseEntity.status(HttpStatus.NO_CONTENT).body(tempMap);
 		}
 	}
 
 	@GetMapping("/getSectionById/{id}")
-	public ResponseEntity<?> getSectionById(@PathVariable Long id) {
+	public ResponseEntity<?> getSectionById(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
 
 		Optional<Section> section = sectionService.getById(id);
+		Map<String, Object> tempMap = new HashMap<String, Object>();
 
 		if (!section.isPresent()) {
 
-			Map<String, Object> tempMap = new HashMap<String, Object>();
+			response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 
+			tempMap.put("status", HttpServletResponse.SC_NOT_FOUND);
 			tempMap.put("error", HttpStatus.NOT_FOUND);
 			tempMap.put("message", "Missing Section ID: " + id);
+			tempMap.put("path", request.getServletPath());
 
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(tempMap);
 

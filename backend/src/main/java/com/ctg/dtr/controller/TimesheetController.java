@@ -8,6 +8,7 @@ import java.util.TreeMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,6 +23,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ctg.dtr.dto.TimesheetDto;
 import com.ctg.dtr.model.Timesheet;
 import com.ctg.dtr.service.TimesheetService;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
 @CrossOrigin
@@ -40,17 +44,21 @@ public class TimesheetController {
 	}
 
 	@PostMapping("/dailyTimeRecord/{rfidNo}")
-	public ResponseEntity<?> dailyTimeRecord(@PathVariable String rfidNo) {
+	public ResponseEntity<?> dailyTimeRecord(@PathVariable String rfidNo, HttpServletRequest request, HttpServletResponse response) {
 
         Timesheet timesheet = timesheetService.dailyTimeRecord(rfidNo);
+		Map<String, Object> tempMap = new HashMap<String, Object>();
 
 		if (timesheet == null) {
 
-			Map<String, Object> tempMap = new HashMap<String, Object>();
+			response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 
-			tempMap.put("error", HttpStatus.NOT_FOUND);
+			tempMap.put("status", HttpServletResponse.SC_NOT_FOUND);
+			tempMap.put("error",  HttpStatus.NOT_FOUND);
 			tempMap.put("message", "No Student found.");
-
+			tempMap.put("path", request.getServletPath());
+			
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(tempMap);
 
 		} else {
@@ -59,16 +67,20 @@ public class TimesheetController {
 	}
 
 	@PutMapping("/updateTimesheet/{id}")
-	public ResponseEntity<?> updateTimesheet(@PathVariable Long id, @RequestBody TimesheetDto timesheetDto) {
+	public ResponseEntity<?> updateTimesheet(@PathVariable Long id, @RequestBody TimesheetDto timesheetDto,  HttpServletRequest request, HttpServletResponse response) {
 
 		Optional<Timesheet> timesheet = timesheetService.getById(id);
+		Map<String, Object> tempMap = new HashMap<String, Object>();
 
 		if (!timesheet.isPresent()) {
 
-			Map<String, Object> tempMap = new HashMap<String, Object>();
+			response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 
+			tempMap.put("status", HttpServletResponse.SC_NOT_FOUND);
 			tempMap.put("error", HttpStatus.NOT_FOUND);
 			tempMap.put("message", "Missing Timesheet ID: " + id);
+			tempMap.put("path", request.getServletPath());
 
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(tempMap);
 
@@ -79,43 +91,48 @@ public class TimesheetController {
 	}
 
 	@DeleteMapping("/deleteTimesheet/{id}")
-	public ResponseEntity<?> deleteTimesheet(@PathVariable Long id) {
+	public ResponseEntity<?> deleteTimesheet(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
 
 		Optional<Timesheet> timesheet = timesheetService.getById(id);
+		Map<String, Object> tempMap = new HashMap<String, Object>();
 
 		if (!timesheet.isPresent()) {
 
-			Map<String, Object> tempMap = new HashMap<String, Object>();
+			response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 
+			tempMap.put("status", HttpServletResponse.SC_NOT_FOUND);
 			tempMap.put("error", HttpStatus.NOT_FOUND);
 			tempMap.put("message", "Missing Timesheet ID: " + id);
+			tempMap.put("path", request.getServletPath());
 
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(tempMap);
 
 		} else {
 
 			timesheetService.deleteTimesheet(id);
-
-			Map<String, Object> tempMap = new HashMap<String, Object>();
-
 			tempMap.put("message", "Successfully deleted Timesheet ID: " + id);
 
-			return ResponseEntity.status(HttpStatus.GONE).body(tempMap);
+			return ResponseEntity.status(HttpStatus.NO_CONTENT).body(tempMap);
 
 		}
 	}
 
 	@GetMapping("/getTimesheetById/{id}")
-	public ResponseEntity<?> getTimesheetById(@PathVariable Long id) {
+	public ResponseEntity<?> getTimesheetById(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
 
 		Optional<Timesheet> timesheet = timesheetService.getById(id);
+		Map<String, Object> tempMap = new HashMap<String, Object>();
 
 		if (!timesheet.isPresent()) {
 
-			Map<String, Object> tempMap = new HashMap<String, Object>();
+			response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 
+			tempMap.put("status", HttpServletResponse.SC_NOT_FOUND);
 			tempMap.put("error", HttpStatus.NOT_FOUND);
 			tempMap.put("message", "Missing Timesheet ID: " + id);
+			tempMap.put("path", request.getServletPath());
 
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(tempMap);
 

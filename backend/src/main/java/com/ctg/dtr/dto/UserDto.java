@@ -29,6 +29,10 @@ public class UserDto {
 
     private String rfidNo;
 
+    private String username;
+
+    private String password;
+
     private Long sectionId;
 
     private Object section;
@@ -37,4 +41,5 @@ public class UserDto {
 
     private Object role;
 
+    // private Set<String> roles = new HashSet<>();
 }
