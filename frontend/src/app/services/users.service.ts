@@ -1,6 +1,6 @@
 import { HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { UserSortables } from '@enums';
+import { UserRoles, UserSortables } from '@enums';
 import {
     CreateUserDto,
     EditUserDto,
@@ -10,7 +10,7 @@ import {
 } from '@interfaces';
 import { User } from '@models';
 import { isBoolean } from 'lodash';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
 import { ApiService } from './api.service';
 
@@ -51,7 +51,7 @@ export class UsersService {
     }
 
     getUserById(userId: string | number): Observable<User> {
-        return this.apiService.get(`${this.USERS_URL}/${userId}`);
+        return this.apiService.get(`${this.USERS_URL}/getByUserId/${userId}`);
     }
 
     createUser(partialUser: CreateUserDto): Observable<User> {

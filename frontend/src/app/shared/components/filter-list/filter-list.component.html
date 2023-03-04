@@ -1,0 +1,15 @@
+<div class="ml-12" fxLayoutAlign="start center">
+    <button
+        mat-fab
+        class="fuse-white hide-text"
+        type="button"
+        color="warn"
+        matBadge="o"
+        matBadgeColor="warn"
+        [matBadgeHidden]="!hasFilters"
+        matBadgeSize="small"
+        (click)="onClick()"
+    >
+        <mat-icon>filter_list</mat-icon>
+    </button>
+</div>

@@ -78,10 +78,10 @@ export class AuthenticationEffects {
             switchMap((action) =>
                 this.authService.loginByUserId(action.id).pipe(
                     map((user) =>
-                        AuthenticationActions.onLogInSuccess({ user })
+                        AuthenticationActions.onAdminLogInSuccess({ user })
                     ),
                     catchError((error) =>
-                        of(AuthenticationActions.onLogInFailure({ error }))
+                        of(AuthenticationActions.onAdminLoginFailure({ error }))
                     )
                 )
             )
@@ -94,11 +94,13 @@ export class AuthenticationEffects {
             ofType(LoginActions.onLoginByStudentId),
             switchMap((action) =>
                 this.authService.loginByStudentId(action.studentId).pipe(
-                    map((user) => {
-                        return AuthenticationActions.onLogInSuccess({ user });
-                    }),
+                    map((user) =>
+                        AuthenticationActions.onAdminLogInSuccess({
+                            user,
+                        })
+                    ),
                     catchError((error) =>
-                        of(AuthenticationActions.onLogInFailure({ error }))
+                        of(AuthenticationActions.onAdminLoginFailure({ error }))
                     )
                 )
             )
@@ -109,8 +111,8 @@ export class AuthenticationEffects {
     loadCurrentUserProfile$ = createEffect(() => {
         return this.actions$.pipe(
             ofType(
+                AuthenticationActions.onAdminLogInSuccess,
                 AuthenticationActions.onLoadCurrentUser,
-                AuthenticationActions.onLogInSuccess,
                 UsersListActions.onUpdateUserSuccess
             ),
             withLatestFrom(
@@ -119,7 +121,9 @@ export class AuthenticationEffects {
             filter(([action, session]) => !!session),
             switchMap(([action, session]) => {
                 const isLogin =
-                    action.type === AuthenticationActions.onLogInSuccess.type;
+                    action.type ===
+                    AuthenticationActions.onAdminLogInSuccess.type;
+
                 return this.usersService.getUserById(session?.userId).pipe(
                     map((user) =>
                         AuthenticationActions.onLoadCurrentUserSuccess({
@@ -145,7 +149,6 @@ export class AuthenticationEffects {
         return this.actions$.pipe(
             ofType(
                 AuthenticationActions.onLogout,
-                AuthenticationActions.onConfirmChangePasswordSuccessAlert,
                 AuthenticationActions.onForceLogout
             ),
             switchMap((action) =>
@@ -164,7 +167,7 @@ export class AuthenticationEffects {
             return this.actions$.pipe(
                 ofType(AuthenticationActions.onLogOutSuccess),
                 tap((result) => {
-                    this.router.navigate(['auth']);
+                    this.router.navigate(['auth/admin-login']);
                     this.permissionsService.removeAllAbilities();
                 })
             );
@@ -177,7 +180,7 @@ export class AuthenticationEffects {
         () => {
             return this.actions$.pipe(
                 ofType(
-                    AuthenticationActions.onLogInFailure,
+                    AuthenticationActions.onAdminLoginFailure,
                     AuthenticationActions.onLogOutFailure,
                     AuthenticationActions.onCurrentSignInUserSessionFailure
                 ),
@@ -219,6 +222,37 @@ export class AuthenticationEffects {
         { dispatch: false }
     );
 
+    // Update Current User Profile
+    updateCurrentUserProfile$ = createEffect(() => {
+        return this.actions$.pipe(
+            ofType(AuthenticationActions.onUpdateCurrentUser),
+            withLatestFrom(
+                this.store.select(AuthenticationReducer.selectSignInUserSession)
+            ),
+            switchMap(([action, session]) =>
+                this.usersService
+                    .editUser(action.partialUser, session?.userId)
+                    .pipe(
+                        switchMap(() =>
+                            this.usersService.getUserById(session.userId)
+                        ),
+                        map((user) =>
+                            AuthenticationActions.onUpdateCurrentUserSuccess({
+                                user,
+                            })
+                        ),
+                        catchError((error) =>
+                            of(
+                                AuthenticationActions.onUpdateCurrentUserFailure(
+                                    { error }
+                                )
+                            )
+                        )
+                    )
+            )
+        );
+    });
+
     // Update Permission Ability
     updateAbility$ = createEffect(
         () => {
@@ -250,7 +284,7 @@ export class AuthenticationEffects {
     navigateToLandingPageAfterLogInAndLoadCurrentUser$ = createEffect(
         () => {
             return this.actions$.pipe(
-                ofType(AuthenticationActions.onLogInSuccess),
+                ofType(AuthenticationActions.onLoadCurrentUserSuccess),
                 tap((action) => {
                     if (action.user) {
                         this.routerService.navigateToLandingPage(
@@ -277,7 +311,7 @@ export class AuthenticationEffects {
                                 subject: SUBJECT_DASHBOARD,
                             },
                         ],
-                        condition: (user) => user.role === UserRoles.STUDENT,
+                        condition: (user) => user.role !== UserRoles.STUDENT,
                     },
                 ],
             },
@@ -293,7 +327,7 @@ export class AuthenticationEffects {
                                 subject: SUBJECT_SECTIONS,
                             },
                         ],
-                        condition: (user) => user.role === UserRoles.STUDENT,
+                        condition: (user) => user.role !== UserRoles.STUDENT,
                     },
                     {
                         name: 'students',
@@ -303,7 +337,7 @@ export class AuthenticationEffects {
                                 subject: SUBJECT_STUDENTS,
                             },
                         ],
-                        condition: (user) => user.role === UserRoles.STUDENT,
+                        condition: (user) => user.role !== UserRoles.STUDENT,
                     },
                     {
                         name: 'subjects',
@@ -313,7 +347,7 @@ export class AuthenticationEffects {
                                 subject: SUBJECT_SUBJECTS,
                             },
                         ],
-                        condition: (user) => user.role === UserRoles.STUDENT,
+                        condition: (user) => user.role !== UserRoles.STUDENT,
                     },
                 ],
             },
@@ -355,6 +389,7 @@ export class AuthenticationEffects {
                               //    2. ability.can(?) CASL
                               //    3. (optional) truthy result of condition
                               const isAccessible =
+                                  // rule count check
                                   !!rules.length &&
                                   // ability rule check
                                   rules.every(({ actions, subject }) =>
@@ -370,7 +405,9 @@ export class AuthenticationEffects {
 
                               this.fuseNavigationService.updateNavigationItem(
                                   itemName,
-                                  { hidden: !isAccessible }
+                                  {
+                                      hidden: !isAccessible,
+                                  }
                               );
 
                               return isAccessible;

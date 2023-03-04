@@ -16,7 +16,7 @@ const routes: Routes = [
         path: '',
         component: UsersListComponent,
         data: { actions: [ACTION_LIST], subject: SUBJECT_USER },
-        canActivate: [PermissionsGuard],
+        // canActivate: [PermissionsGuard],
     },
     // {
     //   path: 'create',

@@ -1,6 +1,4 @@
 export interface SignInUserSession {
-  accessToken: string;
-  idToken: string;
-  refreshToken: string;
+  token: string;  
   userId: string;
 }

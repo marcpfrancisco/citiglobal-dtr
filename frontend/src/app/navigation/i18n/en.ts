@@ -17,6 +17,9 @@ export const locale = {
             SUBJECTS: {
                 TITLE: 'Subjects',
             },
+            USERS: {
+                TITLE: 'Users',
+            },
 
             PROFILE: 'Profile',
             TIMELOG: {

@@ -15,6 +15,7 @@ import { locale as navigationEnglish } from './navigation/i18n/en';
 import { locale as navigationTurkish } from './navigation/i18n/tr';
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 import { TranslateService } from '@ngx-translate/core';
+import { AuthenticationActions } from '@stores/authentication';
 
 @Component({
     selector: 'app-root',
@@ -110,10 +111,10 @@ export class AppComponent implements OnInit, OnDestroy {
             });
 
         // Load Current User
-        // this.store.dispatch(AuthenticationActions.onLoadCurrentUser());
+        this.store.dispatch(AuthenticationActions.onLoadCurrentUser());
 
         // Update Ability
-        // this.store.dispatch(AuthenticationActions.onRefreshAbility());
+        this.store.dispatch(AuthenticationActions.onRefreshAbility());
     }
 
     /**

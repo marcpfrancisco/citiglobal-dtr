@@ -1,8 +1,9 @@
-import { HttpParams } from '@angular/common/http';
+import { HttpParams, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { isString, pick } from 'lodash';
-import { Observable, of } from 'rxjs';
-import { AuthUser, User } from '@models';
+import { AuthUser } from '@models';
+import { isString } from 'lodash';
+import { from, Observable, of } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 
 import { ApiService } from './api.service';
 
@@ -12,44 +13,38 @@ export class AuthService {
 
     constructor(private apiService: ApiService) {}
 
-    loginByStudentId(studentId: string | number): Observable<User> {
+    loginByStudentId(studentId: string | number): Observable<AuthUser> {
         let params: HttpParams = new HttpParams();
 
         if (isString(studentId)) {
             params = params.append('studentId', studentId);
         }
 
-        const authUser: any = {
-            studentId: '8700',
-            isAdmin: true,
-            role: 'superadmin',
-        };
-
-        return of(authUser);
-
-        // return this.apiService.get(`${this.USERS_URL}/getUserByStudentId`, {
-        //     params,
-        // });
+        return this.apiService.get(`${this.USERS_URL}/getUserByStudentId`, {
+            params,
+        });
     }
 
-    loginByUserId(id: string | number): Observable<any> {
-        let params: HttpParams = new HttpParams();
+    loginByUserId(userId: string | number): Observable<AuthUser> {
+        return this.apiService.get(`${this.USERS_URL}/getUserById/${userId}`);
+    }
 
-        if (isString(id)) {
-            params = params.append('id', id);
+    getUserAccessToken(): Observable<AuthUser> {
+        const authentication = JSON.parse(
+            localStorage.getItem('authentication')
+        );
+
+        if (!authentication) {
+            return;
         }
 
-        const authUser: any = {
-            studentId: '8700',
-            isAdmin: true,
-            role: 'superadmin',
+        const user: AuthUser = {
+            studentId: authentication?.studentId,
+            signInUserSession: authentication?.signInUserSession,
+            role: authentication?.role,
         };
 
-        return of(authUser);
-
-        // return this.apiService.get(`${this.USERS_URL}/getUserById`, {
-        //     params,
-        // });
+        return of(user);
     }
 
     logOut(global = false): Observable<any> {

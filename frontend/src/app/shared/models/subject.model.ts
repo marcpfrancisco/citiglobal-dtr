@@ -1,1 +1,11 @@
-export interface Subject {}
+export interface Subject {
+    id: number;
+
+    name: string;
+    subjectCode: string;
+
+    createdAt: string | Date;
+    updatedAt: string | Date;
+
+    active: boolean;
+}
