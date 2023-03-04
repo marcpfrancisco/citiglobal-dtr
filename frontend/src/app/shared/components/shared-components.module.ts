@@ -3,12 +3,19 @@ import { NgModule } from '@angular/core';
 import { SharedMaterialModule } from '@material/shared';
 
 import { PipesModule } from '../pipes/pipes.module';
+import { FilterListComponent } from './filter-list/filter-list.component';
 import { HeaderComponent } from './header/header.component';
 import { NumberRangeFieldModule } from './number-range-field/number-range-field.module';
+import { SearchComponent } from './search/search.component';
 import { SnackbarMultilineModule } from './snackbar-multiline';
 import { StudentCardComponent } from './student-card/student-card.component';
 
-const COMPONENTS = [HeaderComponent, StudentCardComponent];
+const COMPONENTS = [
+    HeaderComponent,
+    StudentCardComponent,
+    SearchComponent,
+    FilterListComponent,
+];
 
 const MODULES = [
     NumberRangeFieldModule,

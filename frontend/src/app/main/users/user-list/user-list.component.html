@@ -5,16 +5,16 @@
         <!-- HEADER -->
         <citiglobal-header iconName="people">
             <ng-template #title> All Users </ng-template>
-            <!-- <ng-template #search>
-                <bloomlocal-search
+            <ng-template #search>
+                <citiglobal-search
                     [searchValue]="search$ | async"
                     (search)="handleSearch($event)"
-                ></bloomlocal-search>
-                <bloomlocal-filter-list
+                ></citiglobal-search>
+                <citiglobal-filter-list
                     [hasFilters]="hasFilters$ | async"
                     (buttonClick)="onShowFilters()"
-                ></bloomlocal-filter-list>
-            </ng-template> -->
+                ></citiglobal-filter-list>
+            </ng-template>
 
             <ng-template #actions>
                 <!-- <button
@@ -38,11 +38,6 @@
 
         <!-- Content Card  -->
         <div class="content-card">
-            <!-- [dataSource]="dataSource$" -->
-            <!-- [matSortActive]="(listState$ | listStateMatSort | async).active"
-            [matSortDirection]="
-                (listState$ | listStateMatSort | async).direction
-            " -->
             <mat-table
                 #table
                 matSort
@@ -51,6 +46,11 @@
                 fusePerfectScrollbar
                 [fusePerfectScrollbarOptions]="{ suppressScrollX: true }"
                 (matSortChange)="onToggleSort($event)"
+                [dataSource]="dataSource$"
+                [matSortActive]="(listState$ | listStateMatSort | async).active"
+                [matSortDirection]="
+                    (listState$ | listStateMatSort | async).direction
+                "
             >
                 <!-- Subject Code Column -->
                 <ng-container [matColumnDef]="USER_SORTABLES.NAME">
@@ -119,6 +119,16 @@
                     (click)="onSelectRow(item)"
                 ></mat-row>
             </mat-table>
+
+            <mat-paginator
+                #paginator
+                [length]="total$ | async"
+                [pageIndex]="pageIndex$ | async"
+                [pageSize]="pageSize$ | async"
+                [pageSizeOptions]="pageSizeOptions$ | async"
+                (page)="onChangePage($event)"
+            >
+            </mat-paginator>
         </div>
     </div>
 </div>
