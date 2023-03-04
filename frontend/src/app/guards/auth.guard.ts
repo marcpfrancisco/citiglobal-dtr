@@ -35,12 +35,13 @@ export class AuthGuard implements CanActivate {
 
         return this.store.pipe(
             select(AuthenticationReducer.selectAuthenticationState),
-            map(({ signInUserSession, currentUser, isAdmin }) => {
+            map(({ signInUserSession, currentUser }) => {
                 const authenticated = signInUserSession && currentUser;
-                const isAdminLogin = isAdmin;
 
+                console.log(authenticated, 'authenticated');
                 // when inside login page
-                if (isLoginPage) {
+                if (isAdminLoginPage) {
+                    console.log(isAdminLoginPage, 'isAdminLoginPage');
                     // when authenticated, go to landing page by User role
                     if (authenticated) {
                         this.routerService.navigateToLandingPage(

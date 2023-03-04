@@ -31,8 +31,8 @@ export const reducer = createReducer(
     on(
         LoginActions.onAdminLoginInit,
         LoginActions.onTimeLogLoginInit,
-        AuthenticationActions.onLogInSuccess,
-        AuthenticationActions.onLogInFailure,
+        AuthenticationActions.onAdminLogInSuccess,
+        AuthenticationActions.onAdminLogInSuccess,
         (state) => {
             return { ...state, loginButtonDisabled: false };
         }

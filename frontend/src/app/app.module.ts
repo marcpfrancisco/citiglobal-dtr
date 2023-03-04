@@ -72,7 +72,7 @@ const { apiUrl } = environment;
         { provide: AppAbility, useValue: new AppAbility() },
         { provide: PureAbility, useExisting: AppAbility },
         { provide: 'APP_BUILD_VERSION', useValue: BuildVersion.number },
-        // httpInterceptorProvider,
+        httpInterceptorProvider,
         ApiService,
         AuthService,
         FiltersService,

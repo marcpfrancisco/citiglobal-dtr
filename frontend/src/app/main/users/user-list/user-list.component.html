@@ -74,6 +74,18 @@
                     </mat-cell>
                 </ng-container>
 
+                <!-- Created At Column -->
+                <ng-container [matColumnDef]="USER_SORTABLES.CREATED_AT">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header
+                        >Created At</mat-header-cell
+                    >
+                    <mat-cell *matCellDef="let item">
+                        <p class="text-truncate">
+                            {{ item.createdAt | dateFormat }}
+                        </p>
+                    </mat-cell>
+                </ng-container>
+
                 <!-- Active Column -->
                 <ng-container [matColumnDef]="USER_SORTABLES.ACTIVE">
                     <mat-header-cell *matHeaderCellDef mat-sort-header
@@ -93,18 +105,6 @@
                                 >close</mat-icon
                             >
                         </span>
-                    </mat-cell>
-                </ng-container>
-
-                <!-- Created At Column -->
-                <ng-container [matColumnDef]="USER_SORTABLES.CREATED_AT">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header
-                        >Created At</mat-header-cell
-                    >
-                    <mat-cell *matCellDef="let item">
-                        <p class="text-truncate">
-                            {{ item.createdAt | dateFormat }}
-                        </p>
                     </mat-cell>
                 </ng-container>
 

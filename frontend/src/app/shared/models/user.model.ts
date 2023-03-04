@@ -4,6 +4,7 @@ export interface User {
     id: number;
     createdAt: string | Date;
     updatedAt: string | Date;
+    publishedAt: string | Date;
     deletedAt: string | Date;
     isActive: boolean;
     firstName: string;
@@ -11,6 +12,7 @@ export interface User {
     lastName: string;
     mobileNumber: string;
     studentId: string;
+    rfidNo: string;
     section: any;
     role: UserRoles;
 }

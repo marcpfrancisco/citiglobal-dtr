@@ -124,8 +124,6 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 
         // Set user
         this.user$ = this.store.select(AuthenticationReducer.selectCurrentUser);
-
-        this.user$.subscribe((user) => console.log(user));
     }
 
     /**

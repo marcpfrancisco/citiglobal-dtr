@@ -26,8 +26,8 @@ export class UsersListComponent implements OnInit {
     displayedColumns = [
         UserSortables.NAME,
         UserSortables.ROLE,
-        UserSortables.ACTIVE,
         UserSortables.CREATED_AT,
+        UserSortables.ACTIVE,
     ];
 
     // Table Related properties

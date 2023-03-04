@@ -36,7 +36,7 @@ const routes: Routes = [
             actions: [ACTION_LIST, ACTION_READ],
             subject: SUBJECT_DASHBOARD,
         },
-        // canActivate: [AuthGuard, PermissionsGuard],
+        canActivate: [AuthGuard, PermissionsGuard],
     },
 
     {
@@ -49,7 +49,7 @@ const routes: Routes = [
             actions: [ACTION_LIST, ACTION_READ],
             subject: SUBJECT_SECTIONS,
         },
-        // canActivate: [AuthGuard, PermissionsGuard],
+        canActivate: [AuthGuard, PermissionsGuard],
     },
 
     {
@@ -62,7 +62,7 @@ const routes: Routes = [
             actions: [ACTION_LIST, ACTION_READ],
             subject: SUBJECT_STUDENTS,
         },
-        // canActivate: [AuthGuard, PermissionsGuard],
+        canActivate: [AuthGuard, PermissionsGuard],
     },
 
     {
@@ -75,7 +75,7 @@ const routes: Routes = [
             actions: [ACTION_LIST, ACTION_READ],
             subject: SUBJECT_SUBJECTS,
         },
-        // canActivate: [AuthGuard, PermissionsGuard],
+        canActivate: [AuthGuard, PermissionsGuard],
     },
 
     {
@@ -83,7 +83,7 @@ const routes: Routes = [
         loadChildren: () =>
             import('./main/logs/logs.module').then((m) => m.LogsModule),
         data: { actions: [ACTION_LIST, ACTION_READ], subject: SUBJECT_LOGS },
-        // canActivate: [AuthGuard, PermissionsGuard],
+        canActivate: [AuthGuard, PermissionsGuard],
     },
 
     {
@@ -91,7 +91,7 @@ const routes: Routes = [
         loadChildren: () =>
             import('./main/users/users.module').then((m) => m.UsersModule),
         data: { actions: [ACTION_LIST, ACTION_READ], subject: SUBJECT_USER },
-        // canActivate: [AuthGuard, PermissionsGuard],
+        canActivate: [AuthGuard, PermissionsGuard],
     },
 
     // redirect to this component for invalid routes

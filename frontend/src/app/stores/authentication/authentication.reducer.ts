@@ -12,7 +12,6 @@ import { RootState } from '..';
 export const featureKey = 'authentication';
 
 export interface State {
-    isAdmin: boolean;
     signInUserSession: SignInUserSession | null;
     currentUser: User | null;
 }
@@ -20,25 +19,18 @@ export interface State {
 export const initialState: State = {
     signInUserSession: null,
     currentUser: null,
-    isAdmin: false,
 };
 
 export const reducer = createReducer(
     initialState,
     on(
-        AuthenticationActions.onLogInSuccess,
+        AuthenticationActions.onAdminLogInSuccess,
         AuthenticationActions.onCurrentSignInUserSessionSuccess,
         (state, { user }) => ({
             ...state,
-            signInUserSession: null,
-            isAdmin: true,
+            signInUserSession: user.signInUserSession,
         })
     ),
-    on(AuthenticationActions.onLogInSuccess, (state, { user }) => ({
-        ...state,
-
-        isAdmin: user.role === 'superadmin' ? true : false,
-    })),
     on(
         AuthenticationActions.onLoadCurrentUserSuccess,
         AuthenticationActions.onUpdateCurrentUserSuccess,
