@@ -61,8 +61,11 @@ public class WebSecurityConfig {
     http.cors().and().csrf().disable()
         .exceptionHandling().authenticationEntryPoint(jwtAuthEntryPoint).and()
         .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-        .authorizeHttpRequests().requestMatchers("/api/authentication/authenticate").permitAll()
-        .requestMatchers("/api/user/createUser").permitAll()
+        .authorizeHttpRequests()
+        .requestMatchers("/api/authentication/authenticate",
+        "/api/user/createUser",
+        "/api/timesheet/dailyTimeRecord/**")
+        .permitAll()
         .anyRequest().authenticated();
     
     http.authenticationProvider(authenticationProvider());

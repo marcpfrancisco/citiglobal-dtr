@@ -42,14 +42,15 @@ public class AuthenticationController {
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		String jwt = jwtUtil.generateJwtToken(authentication);
 		
-		UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();    
-		List<String> roles = userDetails.getAuthorities().stream()
+		UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+   
+		List<String> role = userDetails.getAuthorities().stream()
 			.map(item -> item.getAuthority())
 			.collect(Collectors.toList());
 	
 		return ResponseEntity.ok(new JwtResponse(userDetails.getId(), 
 							 userDetails.getUsername(), 
-							 roles,
+							 String.valueOf(role.get(0)),
 							 jwt));
 	}
 }
