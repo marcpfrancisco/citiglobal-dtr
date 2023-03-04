@@ -50,7 +50,7 @@ public class AuthenticationController {
 	
 		return ResponseEntity.ok(new JwtResponse(userDetails.getId(), 
 							 userDetails.getUsername(), 
-							 String.valueOf(role.get(0)),
+							 String.valueOf(role == null || role.isEmpty() ? "" : role.get(0)),
 							 jwt));
 	}
 }

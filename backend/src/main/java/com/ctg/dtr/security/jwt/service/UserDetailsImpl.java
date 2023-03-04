@@ -1,5 +1,6 @@
 package com.ctg.dtr.security.jwt.service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
@@ -52,7 +53,7 @@ public class UserDetailsImpl implements UserDetails {
         user.getUpdatedAt(), 
         user.getUsername(), 
         user.getPassword(), 
-        Arrays.asList(new SimpleGrantedAuthority(user.getRole().getName())));
+        user.getRole() != null ? Arrays.asList(new SimpleGrantedAuthority(user.getRole().getName())) : new ArrayList<>());
   }
 
   @Override
