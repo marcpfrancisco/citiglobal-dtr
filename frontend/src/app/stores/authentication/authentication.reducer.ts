@@ -1,4 +1,5 @@
-import { SignInUserSession, User } from '@models';
+import { UserRoles } from '@enums';
+import { AuthUser, SignInUserSession, User } from '@models';
 import {
     createReducer,
     on,
@@ -12,12 +13,16 @@ import { RootState } from '..';
 export const featureKey = 'authentication';
 
 export interface State {
-    signInUserSession: SignInUserSession | null;
+    id: string;
+    token: string;
+    role: UserRoles;
     currentUser: User | null;
 }
 
 export const initialState: State = {
-    signInUserSession: null,
+    id: null,
+    token: null,
+    role: null,
     currentUser: null,
 };
 
@@ -28,13 +33,15 @@ export const reducer = createReducer(
         AuthenticationActions.onCurrentSignInUserSessionSuccess,
         (state, { user }) => ({
             ...state,
-            signInUserSession: user.signInUserSession,
+            id: user.id,
+            token: user.token,
+            role: user.role,
         })
     ),
     on(
         AuthenticationActions.onLoadCurrentUserSuccess,
         AuthenticationActions.onUpdateCurrentUserSuccess,
-        (state, { user }) => ({ ...state, currentUser: user })
+        (state, { user }) => ({ ...state, currentUser: user[0] })
     )
 );
 
@@ -44,9 +51,9 @@ export const selectAuthenticationState = createFeatureSelector<
     State
 >(featureKey);
 
-export const selectSignInUserSession = createSelector(
+export const selectUserId = createSelector(
     selectAuthenticationState,
-    (state) => state.signInUserSession
+    (state) => state.id
 );
 
 export const selectCurrentUser = createSelector(

@@ -21,9 +21,7 @@ export class UsersService {
     constructor(private apiService: ApiService) {}
 
     getUsers(options: FindAllUsersDto): Observable<PaginationResult<User>> {
-        return this.apiService.get('user', {
-            params: this.createListOptions(options),
-        });
+        return this.apiService.get(`${this.USERS_URL}/getAllUsers`);
     }
 
     createListOptions(options: FindAllUsersDto): HttpParams {
@@ -50,27 +48,26 @@ export class UsersService {
         return params;
     }
 
-    getUserById(userId: string | number): Observable<User> {
-        console.log(userId, 'userId');
-        return this.apiService.get(`${this.USERS_URL}/getByUserId/${userId}`);
+    getUserById(id: string | number): Observable<User> {
+        return this.apiService.get(`${this.USERS_URL}/getUserById/${id}`);
     }
 
     createUser(partialUser: CreateUserDto): Observable<User> {
-        return this.apiService.post(this.USERS_URL, partialUser);
-    }
-
-    editUser(
-        partialUser: EditUserDto,
-        userId: string | number
-    ): Observable<User> {
-        return this.apiService.patch(
-            `${this.USERS_URL}/${userId}`,
+        return this.apiService.post(
+            `${this.USERS_URL}/createUser`,
             partialUser
         );
     }
 
-    deleteUser(userId: string): Observable<User> {
-        return this.apiService.delete(`${this.USERS_URL}/${userId}`);
+    editUser(partialUser: EditUserDto, id: string | number): Observable<User> {
+        return this.apiService.patch(
+            `${this.USERS_URL}/updateUser/${id}`,
+            partialUser
+        );
+    }
+
+    deleteUser(id: string): Observable<User> {
+        return this.apiService.delete(`${this.USERS_URL}/${id}`);
     }
 
     changeUserPassword(userId: string): Observable<void> {

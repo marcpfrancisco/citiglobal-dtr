@@ -34,6 +34,17 @@ export const ROOT_REDUCERS = new InjectionToken<
     }),
 });
 
+// Reset State on LogOutSuccess
+export function resetState(reducer: ActionReducer<any>): ActionReducer<any> {
+    return (state, action) =>
+        reducer(
+            action.type === AuthenticationActions.onLogOutSuccess.type
+                ? undefined
+                : state,
+            action
+        );
+}
+
 export function localStorageSyncReducer(
     reducer: ActionReducer<any>
 ): ActionReducer<any> {
@@ -50,17 +61,6 @@ export function storageMetaReducer(
     reducer: ActionReducer<any>
 ): ActionReducer<any, any> {
     return localStorageSyncReducer(reducer);
-}
-
-// Reset State on LogOutSuccess
-export function resetState(reducer: ActionReducer<any>): ActionReducer<any> {
-    return (state, action) =>
-        reducer(
-            action.type === AuthenticationActions.onLogOutSuccess.type
-                ? undefined
-                : state,
-            action
-        );
 }
 
 export const metaReducers: MetaReducer<RootState>[] = [

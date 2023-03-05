@@ -10,6 +10,7 @@ export interface User {
     firstName: string;
     middleName: string;
     lastName: string;
+    fullName: string;
     mobileNumber: string;
     studentId: string;
     rfidNo: string;

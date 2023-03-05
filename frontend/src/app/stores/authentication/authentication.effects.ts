@@ -94,11 +94,11 @@ export class AuthenticationEffects {
             ofType(LoginActions.onLogin),
             switchMap((action) =>
                 this.authService.login(action.email, action.password).pipe(
-                    map((user) =>
-                        AuthenticationActions.onAdminLogInSuccess({
+                    map((user) => {
+                        return AuthenticationActions.onAdminLogInSuccess({
                             user,
-                        })
-                    ),
+                        });
+                    }),
                     catchError((error) =>
                         of(AuthenticationActions.onAdminLoginFailure({ error }))
                     )
@@ -111,26 +111,26 @@ export class AuthenticationEffects {
     loadCurrentUserProfile$ = createEffect(() => {
         return this.actions$.pipe(
             ofType(
-                AuthenticationActions.onAdminLogInSuccess,
                 AuthenticationActions.onLoadCurrentUser,
+                AuthenticationActions.onAdminLogInSuccess,
                 UsersListActions.onUpdateUserSuccess
             ),
             withLatestFrom(
-                this.store.select(AuthenticationReducer.selectSignInUserSession)
+                this.store.select(AuthenticationReducer.selectUserId)
             ),
-            filter(([action, session]) => !!session),
-            switchMap(([action, session]) => {
+            filter(([action, id]) => !!id),
+            switchMap(([action, id]) => {
                 const isLogin =
                     action.type ===
                     AuthenticationActions.onAdminLogInSuccess.type;
 
-                return this.usersService.getUserById(session?.userId).pipe(
-                    map((user) =>
-                        AuthenticationActions.onLoadCurrentUserSuccess({
+                return this.usersService.getUserById(id).pipe(
+                    map((user) => {
+                        return AuthenticationActions.onLoadCurrentUserSuccess({
                             user,
                             isLogin,
-                        })
-                    ),
+                        });
+                    }),
                     catchError((error) =>
                         of(
                             AuthenticationActions.onLoadCurrentUserFailure({
@@ -227,28 +227,24 @@ export class AuthenticationEffects {
         return this.actions$.pipe(
             ofType(AuthenticationActions.onUpdateCurrentUser),
             withLatestFrom(
-                this.store.select(AuthenticationReducer.selectSignInUserSession)
+                this.store.select(AuthenticationReducer.selectUserId)
             ),
-            switchMap(([action, session]) =>
-                this.usersService
-                    .editUser(action.partialUser, session?.userId)
-                    .pipe(
-                        switchMap(() =>
-                            this.usersService.getUserById(session.userId)
-                        ),
-                        map((user) =>
-                            AuthenticationActions.onUpdateCurrentUserSuccess({
-                                user,
+            switchMap(([action, id]) =>
+                this.usersService.editUser(action.partialUser, id).pipe(
+                    switchMap(() => this.usersService.getUserById(id)),
+                    map((user) =>
+                        AuthenticationActions.onUpdateCurrentUserSuccess({
+                            user,
+                        })
+                    ),
+                    catchError((error) =>
+                        of(
+                            AuthenticationActions.onUpdateCurrentUserFailure({
+                                error,
                             })
-                        ),
-                        catchError((error) =>
-                            of(
-                                AuthenticationActions.onUpdateCurrentUserFailure(
-                                    { error }
-                                )
-                            )
                         )
                     )
+                )
             )
         );
     });
@@ -288,7 +284,7 @@ export class AuthenticationEffects {
                 tap((action) => {
                     if (action.isLogin) {
                         this.routerService.navigateToLandingPage(
-                            action.user.role
+                            action.user[0]?.role
                         );
                     }
                 })

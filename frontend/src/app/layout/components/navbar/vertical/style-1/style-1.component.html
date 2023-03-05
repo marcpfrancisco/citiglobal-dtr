@@ -40,8 +40,10 @@
         [ngClass]="fuseConfig.layout.navbar.secondaryBackground"
         *ngIf="user$ | async as user"
     >
-        <div class="h3 username">{{ user?.name }}</div>
-        <div class="h5 email hint-text mt-8">{{ user?.email }}</div>
+        <div class="h3 username">{{ user | userFullName }}</div>
+        <div class="h5 email hint-text mt-8">
+            {{ user?.username | uppercase }}
+        </div>
     </div>
 
     <div class="navbar-content">

@@ -9,6 +9,7 @@ import { MomentizePipe } from './momentize.pipe';
 import { PhoneNumberFormatPipe } from './phone-number-format.pipe';
 import { PhoneNumberUriPipe } from './phone-number-uri.pipe';
 import { TitleCasePipe } from './title-case.pipe';
+import { UserFullNamePipe } from './user-fullname.pipe';
 import { UserRolesPipe } from './user-roles.pipe';
 
 const ALL_PIPES = [
@@ -20,6 +21,7 @@ const ALL_PIPES = [
     PhoneNumberUriPipe,
     TitleCasePipe,
     UserRolesPipe,
+    UserFullNamePipe,
 ];
 
 @NgModule({
@@ -35,6 +37,7 @@ const ALL_PIPES = [
         PhoneNumberUriPipe,
         TitleCasePipe,
         UserRolesPipe,
+        UserFullNamePipe,
     ],
 })
 export class PipesModule {}

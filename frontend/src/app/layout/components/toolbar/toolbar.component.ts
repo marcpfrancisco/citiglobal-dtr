@@ -14,6 +14,7 @@ import { takeUntil } from 'rxjs/operators';
 import {
     UserProfileComponent,
     UserProfileDialogResult,
+    UserProfileDialogResultType,
 } from './../../../main/users/user-profile/user-profile.component';
 import { navigation } from './../../../navigation/navigation';
 
@@ -182,20 +183,20 @@ export class ToolbarComponent implements OnInit, OnDestroy {
             .afterClosed()
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((data: UserProfileDialogResult) => {
-                // switch (data?.type) {
-                //     case UserProfileDialogResultType.SAVE:
-                //         this.store.dispatch(
-                //             AuthenticationActions.onUpdateCurrentUser({
-                //                 partialUser: data?.value,
-                //             })
-                //         );
-                //         return;
-                //     case UserProfileDialogResultType.RESET:
-                //         this.store.dispatch(
-                //             AuthenticationActions.onResetCurrentUserPassword()
-                //         );
-                //         return;
-                // }
+                switch (data?.type) {
+                    case UserProfileDialogResultType.SAVE:
+                        this.store.dispatch(
+                            AuthenticationActions.onUpdateCurrentUser({
+                                partialUser: data?.value,
+                            })
+                        );
+                        return;
+                    case UserProfileDialogResultType.RESET:
+                        this.store.dispatch(
+                            AuthenticationActions.onResetCurrentUserPassword()
+                        );
+                        return;
+                }
             });
     }
 

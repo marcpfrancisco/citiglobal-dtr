@@ -4,7 +4,9 @@
     <div class="center">
         <!-- HEADER -->
         <citiglobal-header iconName="dashboard">
-            <ng-template #title> Welcome back, John Doe </ng-template>
+            <ng-template #title>
+                Welcome back, {{ name$ | async }}
+            </ng-template>
         </citiglobal-header>
         <!-- / HEADER -->
 

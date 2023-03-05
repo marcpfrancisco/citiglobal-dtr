@@ -7,5 +7,5 @@ export interface Subject {
     createdAt: string | Date;
     updatedAt: string | Date;
 
-    active: boolean;
+    isActive: boolean;
 }
