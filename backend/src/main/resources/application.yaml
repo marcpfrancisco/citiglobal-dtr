@@ -17,8 +17,8 @@ spring:
       fail-on-empty-beans: false
   servlet:
     multipart:
-      max-file-size: 200KB
-      max-request-size: 1000KB
+      max-file-size: 10MB
+      max-request-size: 10MB
   jpa:
     generate-ddl: true
     properties:

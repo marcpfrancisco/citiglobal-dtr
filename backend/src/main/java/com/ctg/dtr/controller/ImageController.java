@@ -3,6 +3,8 @@ package com.ctg.dtr.controller;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
@@ -22,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.ctg.dtr.model.Image;
 import com.ctg.dtr.service.ImageService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
@@ -33,11 +36,27 @@ public class ImageController {
     private ImageService imageService;
 
     @PostMapping(value = "/upload/{userId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Image> uploadImage(@RequestPart MultipartFile file, @PathVariable Long userId) {
+    public ResponseEntity<?> uploadImage(@RequestPart MultipartFile file, @PathVariable Long userId, HttpServletRequest request, HttpServletResponse response) {
 
-        Image image = imageService.uploadImage(file, userId);
+        if ((file.getContentType()).startsWith("image/")) {
 
-        return new ResponseEntity<Image>(image, HttpStatus.CREATED);
+            Image image = imageService.uploadImage(file, userId);
+            return new ResponseEntity<Image>(image, HttpStatus.CREATED);
+
+        } else {
+
+		    Map<String, Object> tempMap = new HashMap<String, Object>();
+
+			response.setContentType(MediaType.MULTIPART_FORM_DATA_VALUE);
+			response.setStatus(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE);
+
+			tempMap.put("status", HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE);
+			tempMap.put("error", HttpStatus.UNSUPPORTED_MEDIA_TYPE);
+			tempMap.put("message", "File is not an image.");
+			tempMap.put("path", request.getServletPath());
+
+			return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).body(tempMap);
+        }
     }
 
     @GetMapping("/user/info/{studentId}")
