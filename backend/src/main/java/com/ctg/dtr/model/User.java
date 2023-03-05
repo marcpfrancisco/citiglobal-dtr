@@ -74,6 +74,10 @@ public class User {
 	@JsonIgnore
     private List<Timesheet> timesheets;
 
+    @OneToMany(mappedBy = "user")
+	@JsonIgnore
+    private List<Image> image;
+
     // public void addRole(Role role) {
     //     this.roles.add(role);
     //     role.getUsers().add(this);

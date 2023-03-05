@@ -15,7 +15,10 @@ spring:
   jackson:
     serialization:
       fail-on-empty-beans: false
-
+  servlet:
+    multipart:
+      max-file-size: 200KB
+      max-request-size: 1000KB
   jpa:
     generate-ddl: true
     properties:

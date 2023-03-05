@@ -9,7 +9,6 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -62,8 +61,17 @@ public class WebSecurityConfig {
         .exceptionHandling().authenticationEntryPoint(jwtAuthEntryPoint).and()
         .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
         .authorizeHttpRequests()
+        .requestMatchers("/api/auth/**",
+        "/v3/api-docs/**",
+        "configuration/**",
+        "/swagger*/**",
+        "/webjars/**",
+        "/swagger-ui/**").permitAll()
+        .and()
+        .authorizeHttpRequests()
         .requestMatchers("/api/authentication/authenticate",
         "/api/user/createUser",
+        "/api/user/getUserById/**",
         "/api/timesheet/dailyTimeRecord/**")
         .permitAll()
         .anyRequest().authenticated();
@@ -73,16 +81,5 @@ public class WebSecurityConfig {
     http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
     
     return http.build();
-  }
-
-  @Bean
-  public WebSecurityCustomizer webSecurityCustomizer() {
-  return (web) -> web.ignoring()
-                     .requestMatchers("/api/auth/**")
-                     .requestMatchers("/v3/api-docs/**")
-                     .requestMatchers("configuration/**")
-                     .requestMatchers("/swagger*/**")
-                     .requestMatchers("/webjars/**")
-                     .requestMatchers("/swagger-ui/**");
   }
 }
