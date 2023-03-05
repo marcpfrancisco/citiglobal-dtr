@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
 @OpenAPIDefinition(info =
     @Info(title = "Citi Global API", version = "3.0", description = "Documentation Citi Global API v3.0")
 )
-public class OpenAPIConfiguration {
+public class OpenAPIConfig {
 
     @Bean
     public OpenAPI customizeOpenAPI() {
