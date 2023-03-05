@@ -15,7 +15,7 @@ const routes: Routes = [
     {
         path: 'time-log',
         component: TimeLogComponent,
-        canActivate: [AuthGuard],
+        // canActivate: [AuthGuard],
     },
     {
         path: 'admin-login',

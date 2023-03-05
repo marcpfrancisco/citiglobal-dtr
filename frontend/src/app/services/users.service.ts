@@ -60,7 +60,7 @@ export class UsersService {
     }
 
     editUser(partialUser: EditUserDto, id: string | number): Observable<User> {
-        return this.apiService.patch(
+        return this.apiService.put(
             `${this.USERS_URL}/updateUser/${id}`,
             partialUser
         );

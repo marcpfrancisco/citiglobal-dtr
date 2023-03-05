@@ -19,169 +19,562 @@
         [fusePerfectScrollbarOptions]="{ suppressScrollX: true }"
     >
         <form #filterForm="ngForm" [formGroup]="form">
-            <ng-container *ngFor="let data of inputs">
-                <ng-container [ngSwitch]="getInputType(data.type)">
-                    <!-- TEXT INPUT -->
-                    <div
-                        *ngSwitchCase="INPUT_TYPE.TEXT"
-                        fxLayout="row"
-                        fxLayoutAlign="start start"
-                    >
-                        <mat-form-field appearance="outline" fxFlex>
-                            <mat-label>{{ data.label }}</mat-label>
-                            <input
-                                [name]="data.name"
-                                [formControlName]="data.name"
-                                matInput
-                            />
-                        </mat-form-field>
-                    </div>
-
-                    <!-- NUMBER INPUT -->
-                    <div
-                        *ngSwitchCase="INPUT_TYPE.NUMBER"
-                        fxLayout="row"
-                        fxLayoutAlign="start start"
-                    >
-                        <mat-form-field appearance="outline" fxFlex>
-                            <mat-label>{{ data.label }}</mat-label>
-                            <input
-                                [name]="data.name"
-                                [formControlName]="data.name"
-                                type="number"
-                                matInput
-                            />
-                        </mat-form-field>
-                    </div>
-
-                    <!-- NUMBER RANGE INPUT -->
-                    <div
-                        *ngSwitchCase="INPUT_TYPE.NUMBER_RANGE"
-                        fxLayout="row"
-                        fxLayoutAlign="start center"
-                    >
-                        <mat-form-field appearance="outline" fxFlex>
-                            <mat-label>{{ data.label }}</mat-label>
-                            <citiglobal-number-range-field
-                                [formControlName]="data.name"
-                                [min]="data.fieldConfig?.min"
-                                [max]="data.fieldConfig?.max"
-                                [prefix]="data.fieldConfig?.prefix"
-                                [suffix]="data.fieldConfig?.suffix"
-                            ></citiglobal-number-range-field>
-                        </mat-form-field>
-                    </div>
-
-                    <!-- SELECT INPUT -->
-                    <div
-                        *ngSwitchCase="INPUT_TYPE.SELECT"
-                        fxLayout="row"
-                        fxLayoutAlign="start start"
-                    >
-                        <mat-form-field appearance="outline" fxFlex>
-                            <mat-label>{{ data.label }}</mat-label>
-                            <mat-select [formControlName]="data.name">
-                                <mat-option
-                                    *ngFor="let option of data.options"
-                                    [value]="option.value"
-                                >
-                                    {{ option.label | titlecase }}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </div>
-
-                    <!-- MULTI_SELECT INPUT -->
-                    <div
-                        class="multi-select-input"
-                        *ngSwitchCase="INPUT_TYPE.MULTI_SELECT"
-                        fxLayout="row"
-                        fxLayoutAlign="start start"
-                        (click)="showMultiSelectFiltersDialog(data)"
-                    >
-                        <mat-form-field appearance="outline" fxFlex>
-                            <mat-label>{{ data.label | titlecase }}</mat-label>
-                            <input
-                                matInput
-                                readonly
-                                [value]="getMultiSelectValueLabel(data)"
-                            />
-                        </mat-form-field>
-                    </div>
-
-                    <!-- DATE INPUT -->
-                    <div
-                        *ngSwitchCase="INPUT_TYPE.DATE"
-                        fxLayout="row"
-                        fxLayoutAlign="start start"
-                    >
-                        <mat-form-field appearance="outline" fxFlex>
-                            <mat-label>Delivery Date</mat-label>
-                            <input
-                                [formControlName]="data.name"
-                                matInput
-                                [matDatepicker]="picker"
-                                readonly
-                            />
-                            <mat-datepicker-toggle
-                                matSuffix
-                                [for]="picker"
-                            ></mat-datepicker-toggle>
-                            <mat-datepicker #picker></mat-datepicker>
-                        </mat-form-field>
-                    </div>
-
-                    <!-- DATE RANGE INPUT -->
-                    <div
-                        *ngSwitchCase="INPUT_TYPE.DATE_RANGE"
-                        fxLayout="row"
-                        fxLayoutAlign="start start"
-                    >
-                        <mat-form-field appearance="outline" fxFlex>
-                            <mat-label>{{ data.label | titlecase }}</mat-label>
-                            <mat-date-range-input
-                                [formGroupName]="data.name"
-                                [rangePicker]="dateRangePicker"
+            <div
+                class="wide-row"
+                fxLayout="row"
+                fxLayoutGap="3rem"
+                *ngIf="viewMode === VIEW_MODE.DUAL"
+            >
+                <div class="left-column" fxFlex>
+                    <ng-container *ngFor="let data of inputs">
+                        <ng-container [ngSwitch]="getInputType(data.type)">
+                            <!-- MULTI_SELECT INPUT -->
+                            <div
+                                class="multi-select-input"
+                                *ngSwitchCase="INPUT_TYPE.MULTI_SELECT"
+                                fxLayout="row"
+                                fxLayoutAlign="start start"
+                                (click)="showMultiSelectFiltersDialog(data)"
                             >
-                                <input
-                                    matStartDate
-                                    formControlName="from"
-                                    placeholder="Start date"
-                                />
-                                <input
-                                    matEndDate
-                                    formControlName="to"
-                                    placeholder="End date"
-                                />
-                            </mat-date-range-input>
-                            <mat-datepicker-toggle
-                                matSuffix
-                                [for]="dateRangePicker"
-                            ></mat-datepicker-toggle>
-                            <mat-date-range-picker
-                                #dateRangePicker
-                            ></mat-date-range-picker>
-                        </mat-form-field>
-                    </div>
+                                <mat-form-field appearance="outline" fxFlex>
+                                    <mat-label>{{
+                                        data.label | titlecase
+                                    }}</mat-label>
+                                    <input
+                                        matInput
+                                        readonly
+                                        [value]="getMultiSelectValueLabel(data)"
+                                    />
+                                </mat-form-field>
+                            </div>
 
-                    <!-- CHECKBOX INPUT -->
-                    <div
-                        *ngSwitchCase="INPUT_TYPE.CHECKBOX"
-                        fxLayout="row"
-                        fxLayoutAlign="start center"
-                    >
-                        <mat-checkbox
-                            [name]="data.name"
-                            [formControlName]="data.name"
-                            class="checkbox"
-                        ></mat-checkbox>
-                        {{ data.label | titlecase }}
-                    </div>
+                            <!-- CHECKBOX INPUT -->
+                            <div
+                                *ngSwitchCase="INPUT_TYPE.CHECKBOX"
+                                fxLayout="row"
+                                fxLayoutAlign="start center"
+                            >
+                                <mat-checkbox
+                                    [name]="data.name"
+                                    [formControlName]="data.name"
+                                    class="checkbox"
+                                ></mat-checkbox>
+                                {{ data.label | titlecase }}
+                            </div>
 
-                    <!-- SITES INPUT -->
-                    <ng-container *ngIf="showSiteFilter">
+                            <!-- FLORISTS INPUT -->
+                            <div
+                                *ngSwitchCase="INPUT_TYPE.FLORIST_OPTIONS"
+                                fxLayout="row"
+                                fxLayoutAlign="start start"
+                            >
+                                <mat-form-field appearance="outline" fxFlex>
+                                    <mat-label>{{ data.label }}</mat-label>
+                                    <input
+                                        [name]="data.name"
+                                        [formControlName]="data.name"
+                                        [matAutocomplete]="auto"
+                                        matInput
+                                    />
+                                    <mat-spinner
+                                        *ngIf="
+                                            isSelectOptionsLoading[data.name]
+                                        "
+                                        matSuffix
+                                        [diameter]="20"
+                                    ></mat-spinner>
+                                    <mat-autocomplete
+                                        #auto="matAutocomplete"
+                                        [displayWith]="floristsNameDisplayFn"
+                                    >
+                                        <mat-option
+                                            *ngFor="
+                                                let option of selectOptions[
+                                                    data.name
+                                                ] | async
+                                            "
+                                            [value]="option"
+                                        >
+                                            <span>{{ option.name }}</span>
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                </mat-form-field>
+                            </div>
+
+                            <!-- USERS INPUT -->
+                            <div
+                                *ngSwitchCase="INPUT_TYPE.USER_OPTIONS"
+                                fxLayout="row"
+                                fxLayoutAlign="start start"
+                            >
+                                <mat-form-field appearance="outline" fxFlex>
+                                    <mat-label>{{ data.label }}</mat-label>
+                                    <input
+                                        [name]="data.name"
+                                        [formControlName]="data.name"
+                                        [matAutocomplete]="auto"
+                                        matInput
+                                    />
+                                    <mat-spinner
+                                        *ngIf="
+                                            isSelectOptionsLoading[data.name]
+                                        "
+                                        matSuffix
+                                        [diameter]="20"
+                                    ></mat-spinner>
+                                    <mat-autocomplete
+                                        #auto="matAutocomplete"
+                                        [displayWith]="usersNameDisplayFn"
+                                    >
+                                        <mat-option
+                                            *ngFor="
+                                                let option of selectOptions[
+                                                    data.name
+                                                ] | async
+                                            "
+                                            [value]="option"
+                                        >
+                                            <span>{{ option.name }}</span>
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                </mat-form-field>
+                            </div>
+
+                            <!-- PRODUCT CODE INPUT -->
+                            <div
+                                *ngSwitchCase="
+                                    INPUT_TYPE.PRODUCT_CODE_SUGGESTIONS
+                                "
+                                fxLayout="row"
+                                fxLayoutAlign="start start"
+                            >
+                                <mat-form-field appearance="outline" fxFlex>
+                                    <mat-label>{{ data.label }}</mat-label>
+                                    <input
+                                        [name]="data.name"
+                                        [formControlName]="data.name"
+                                        [matAutocomplete]="auto"
+                                        matInput
+                                    />
+                                    <mat-spinner
+                                        *ngIf="
+                                            isSelectOptionsLoading[data.name]
+                                        "
+                                        matSuffix
+                                        [diameter]="20"
+                                    ></mat-spinner>
+                                    <mat-autocomplete #auto="matAutocomplete">
+                                        <mat-option
+                                            *ngFor="
+                                                let option of selectOptions[
+                                                    data.name
+                                                ] | async
+                                            "
+                                            [value]="option.code"
+                                        >
+                                            <span>{{ option.label }}</span>
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                </mat-form-field>
+                            </div>
+
+                            <!-- SITES INPUT -->
+                            <ng-container *ngIf="showSiteFilter">
+                                <div
+                                    *ngSwitchCase="INPUT_TYPE.SITE_OPTIONS"
+                                    fxLayout="row"
+                                    fxLayoutAlign="start start"
+                                >
+                                    <mat-form-field appearance="outline" fxFlex>
+                                        <mat-label>{{ data.label }}</mat-label>
+                                        <input
+                                            [name]="data.name"
+                                            [formControlName]="data.name"
+                                            [matAutocomplete]="auto"
+                                            matInput
+                                        />
+                                        <mat-spinner
+                                            *ngIf="
+                                                isSelectOptionsLoading[
+                                                    data.name
+                                                ]
+                                            "
+                                            matSuffix
+                                            [diameter]="20"
+                                        ></mat-spinner>
+                                        <mat-autocomplete
+                                            #auto="matAutocomplete"
+                                            [displayWith]="sitesNameDisplayFn"
+                                        >
+                                            <mat-option
+                                                *ngFor="
+                                                    let option of selectOptions[
+                                                        data.name
+                                                    ] | async
+                                                "
+                                                [value]="option"
+                                            >
+                                                <span>{{ option.name }}</span> |
+                                                <small>{{
+                                                    option.domainName
+                                                }}</small>
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </mat-form-field>
+                                </div>
+                            </ng-container>
+                        </ng-container>
+                    </ng-container>
+                </div>
+                <div class="right-column" fxFlex>
+                    <ng-container *ngFor="let data of inputs">
+                        <ng-container [ngSwitch]="getInputType(data.type)">
+                            <!-- PRODUCT GROUP Input  -->
+                            <ng-container
+                                *ngSwitchCase="INPUT_TYPE.PRODUCT_GROUP"
+                            >
+                                <div
+                                    class="multi-select-input"
+                                    *ngIf="isSelectOptionsLoading[data.name]"
+                                    fxLayout="row"
+                                    fxLayoutAlign="start start"
+                                >
+                                    <mat-form-field appearance="outline" fxFlex>
+                                        <mat-label>{{
+                                            data.label | titlecase
+                                        }}</mat-label>
+                                        <input matInput readonly />
+                                    </mat-form-field>
+                                </div>
+                                <div
+                                    class="multi-select-input"
+                                    *ngIf="
+                                        selectOptions[data.name]
+                                            | async as groupOptions
+                                    "
+                                    fxLayout="row"
+                                    fxLayoutAlign="start start"
+                                    (click)="
+                                        showMultiSelectFiltersDialog(
+                                            data,
+                                            groupOptions,
+                                            'name',
+                                            'code'
+                                        )
+                                    "
+                                >
+                                    <mat-form-field appearance="outline" fxFlex>
+                                        <mat-label>{{
+                                            data.label | titlecase
+                                        }}</mat-label>
+                                        <input
+                                            matInput
+                                            readonly
+                                            [value]="
+                                                getMultiSelectValueLabel(
+                                                    data,
+                                                    groupOptions,
+                                                    'name',
+                                                    'code'
+                                                )
+                                            "
+                                        />
+                                    </mat-form-field>
+                                </div>
+                            </ng-container>
+
+                            <!-- DELIVERY TYPE Input  -->
+                            <div
+                                class="multi-select-input"
+                                *ngSwitchCase="INPUT_TYPE.DELIVERY_TYPE"
+                                fxLayout="row"
+                                fxLayoutAlign="start start"
+                                (click)="showMultiSelectFiltersDialog(data)"
+                            >
+                                <mat-form-field appearance="outline" fxFlex>
+                                    <mat-label>{{
+                                        data.label | titlecase
+                                    }}</mat-label>
+                                    <input
+                                        matInput
+                                        readonly
+                                        [value]="getMultiSelectValueLabel(data)"
+                                    />
+                                </mat-form-field>
+                            </div>
+
+                            <!-- DATE INPUT -->
+                            <div
+                                *ngSwitchCase="INPUT_TYPE.DATE"
+                                fxLayout="row"
+                                fxLayoutAlign="start start"
+                            >
+                                <mat-form-field appearance="outline" fxFlex>
+                                    <mat-label>Delivery Date</mat-label>
+                                    <input
+                                        [formControlName]="data.name"
+                                        matInput
+                                        [matDatepicker]="picker"
+                                        readonly
+                                    />
+                                    <mat-datepicker-toggle
+                                        matSuffix
+                                        [for]="picker"
+                                    ></mat-datepicker-toggle>
+                                    <mat-datepicker #picker></mat-datepicker>
+                                </mat-form-field>
+                            </div>
+
+                            <!-- DATE RANGE INPUT -->
+                            <div
+                                *ngSwitchCase="INPUT_TYPE.DATE_RANGE"
+                                fxLayout="row"
+                                fxLayoutAlign="start start"
+                            >
+                                <mat-form-field appearance="outline" fxFlex>
+                                    <mat-label>{{
+                                        data.label | titlecase
+                                    }}</mat-label>
+                                    <mat-date-range-input
+                                        [formGroupName]="data.name"
+                                        [rangePicker]="dateRangePicker"
+                                    >
+                                        <input
+                                            matStartDate
+                                            formControlName="from"
+                                            placeholder="Start date"
+                                        />
+                                        <input
+                                            matEndDate
+                                            formControlName="to"
+                                            placeholder="End date"
+                                        />
+                                    </mat-date-range-input>
+                                    <mat-datepicker-toggle
+                                        matSuffix
+                                        [for]="dateRangePicker"
+                                    ></mat-datepicker-toggle>
+                                    <mat-date-range-picker
+                                        #dateRangePicker
+                                    ></mat-date-range-picker>
+                                </mat-form-field>
+                            </div>
+                        </ng-container>
+                    </ng-container>
+                </div>
+            </div>
+
+            <ng-container *ngFor="let data of inputs">
+                <ng-container *ngIf="!viewMode">
+                    <ng-container [ngSwitch]="getInputType(data.type)">
+                        <!-- TEXT INPUT -->
                         <div
-                            *ngSwitchCase="INPUT_TYPE.SITE_OPTIONS"
+                            *ngSwitchCase="INPUT_TYPE.TEXT"
+                            fxLayout="row"
+                            fxLayoutAlign="start start"
+                        >
+                            <mat-form-field appearance="outline" fxFlex>
+                                <mat-label>{{ data.label }}</mat-label>
+                                <input
+                                    [name]="data.name"
+                                    [formControlName]="data.name"
+                                    matInput
+                                />
+                            </mat-form-field>
+                        </div>
+
+                        <!-- NUMBER INPUT -->
+                        <div
+                            *ngSwitchCase="INPUT_TYPE.NUMBER"
+                            fxLayout="row"
+                            fxLayoutAlign="start start"
+                        >
+                            <mat-form-field appearance="outline" fxFlex>
+                                <mat-label>{{ data.label }}</mat-label>
+                                <input
+                                    [name]="data.name"
+                                    [formControlName]="data.name"
+                                    type="number"
+                                    matInput
+                                />
+                            </mat-form-field>
+                        </div>
+
+                        <!-- NUMBER RANGE INPUT -->
+                        <div
+                            *ngSwitchCase="INPUT_TYPE.NUMBER_RANGE"
+                            fxLayout="row"
+                            fxLayoutAlign="start center"
+                        >
+                            <mat-form-field appearance="outline" fxFlex>
+                                <mat-label>{{ data.label }}</mat-label>
+                                <citiglobal-number-range-field
+                                    [formControlName]="data.name"
+                                    [min]="data.fieldConfig?.min"
+                                    [max]="data.fieldConfig?.max"
+                                    [prefix]="data.fieldConfig?.prefix"
+                                    [suffix]="data.fieldConfig?.suffix"
+                                ></citiglobal-number-range-field>
+                            </mat-form-field>
+                        </div>
+
+                        <!-- SELECT INPUT -->
+                        <div
+                            *ngSwitchCase="INPUT_TYPE.SELECT"
+                            fxLayout="row"
+                            fxLayoutAlign="start start"
+                        >
+                            <mat-form-field appearance="outline" fxFlex>
+                                <mat-label>{{ data.label }}</mat-label>
+                                <mat-select [formControlName]="data.name">
+                                    <mat-option
+                                        *ngFor="let option of data.options"
+                                        [value]="option.value"
+                                    >
+                                        {{ option.label | titlecase }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+
+                        <!-- MULTI_SELECT INPUT -->
+                        <div
+                            class="multi-select-input"
+                            *ngSwitchCase="INPUT_TYPE.MULTI_SELECT"
+                            fxLayout="row"
+                            fxLayoutAlign="start start"
+                            (click)="showMultiSelectFiltersDialog(data)"
+                        >
+                            <mat-form-field appearance="outline" fxFlex>
+                                <mat-label>{{
+                                    data.label | titlecase
+                                }}</mat-label>
+                                <input
+                                    matInput
+                                    readonly
+                                    [value]="getMultiSelectValueLabel(data)"
+                                />
+                            </mat-form-field>
+                        </div>
+
+                        <!-- DATE INPUT -->
+                        <div
+                            *ngSwitchCase="INPUT_TYPE.DATE"
+                            fxLayout="row"
+                            fxLayoutAlign="start start"
+                        >
+                            <mat-form-field appearance="outline" fxFlex>
+                                <mat-label>Delivery Date</mat-label>
+                                <input
+                                    [formControlName]="data.name"
+                                    matInput
+                                    [matDatepicker]="picker"
+                                    readonly
+                                />
+                                <mat-datepicker-toggle
+                                    matSuffix
+                                    [for]="picker"
+                                ></mat-datepicker-toggle>
+                                <mat-datepicker #picker></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+
+                        <!-- DATE RANGE INPUT -->
+                        <div
+                            *ngSwitchCase="INPUT_TYPE.DATE_RANGE"
+                            fxLayout="row"
+                            fxLayoutAlign="start start"
+                        >
+                            <mat-form-field appearance="outline" fxFlex>
+                                <mat-label>{{
+                                    data.label | titlecase
+                                }}</mat-label>
+                                <mat-date-range-input
+                                    [formGroupName]="data.name"
+                                    [rangePicker]="dateRangePicker"
+                                >
+                                    <input
+                                        matStartDate
+                                        formControlName="from"
+                                        placeholder="Start date"
+                                    />
+                                    <input
+                                        matEndDate
+                                        formControlName="to"
+                                        placeholder="End date"
+                                    />
+                                </mat-date-range-input>
+                                <mat-datepicker-toggle
+                                    matSuffix
+                                    [for]="dateRangePicker"
+                                ></mat-datepicker-toggle>
+                                <mat-date-range-picker
+                                    #dateRangePicker
+                                ></mat-date-range-picker>
+                            </mat-form-field>
+                        </div>
+
+                        <!-- CHECKBOX INPUT -->
+                        <div
+                            *ngSwitchCase="INPUT_TYPE.CHECKBOX"
+                            fxLayout="row"
+                            fxLayoutAlign="start center"
+                        >
+                            <mat-checkbox
+                                [name]="data.name"
+                                [formControlName]="data.name"
+                                class="checkbox"
+                            ></mat-checkbox>
+                            {{ data.label | titlecase }}
+                        </div>
+
+                        <!-- SITES INPUT -->
+                        <ng-container *ngIf="showSiteFilter">
+                            <div
+                                *ngSwitchCase="INPUT_TYPE.SITE_OPTIONS"
+                                fxLayout="row"
+                                fxLayoutAlign="start start"
+                            >
+                                <mat-form-field appearance="outline" fxFlex>
+                                    <mat-label>{{ data.label }}</mat-label>
+                                    <input
+                                        [name]="data.name"
+                                        [formControlName]="data.name"
+                                        [matAutocomplete]="auto"
+                                        matInput
+                                    />
+                                    <mat-spinner
+                                        *ngIf="
+                                            isSelectOptionsLoading[data.name]
+                                        "
+                                        matSuffix
+                                        [diameter]="20"
+                                    ></mat-spinner>
+                                    <mat-autocomplete
+                                        #auto="matAutocomplete"
+                                        [displayWith]="sitesNameDisplayFn"
+                                    >
+                                        <mat-option
+                                            *ngFor="
+                                                let option of selectOptions[
+                                                    data.name
+                                                ] | async
+                                            "
+                                            [value]="option"
+                                        >
+                                            <span>{{ option.name }}</span> |
+                                            <small>{{
+                                                option.domainName
+                                            }}</small>
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                </mat-form-field>
+                            </div>
+                        </ng-container>
+
+                        <!-- FLORISTS INPUT -->
+                        <div
+                            *ngSwitchCase="INPUT_TYPE.FLORIST_OPTIONS"
                             fxLayout="row"
                             fxLayoutAlign="start start"
                         >
@@ -200,7 +593,7 @@
                                 ></mat-spinner>
                                 <mat-autocomplete
                                     #auto="matAutocomplete"
-                                    [displayWith]="sitesNameDisplayFn"
+                                    [displayWith]="floristsNameDisplayFn"
                                 >
                                     <mat-option
                                         *ngFor="
@@ -210,118 +603,135 @@
                                         "
                                         [value]="option"
                                     >
-                                        <span>{{ option.name }}</span> |
-                                        <small>{{ option.domainName }}</small>
+                                        <span>{{ option.name }}</span>
                                     </mat-option>
                                 </mat-autocomplete>
                             </mat-form-field>
                         </div>
+
+                        <!-- USERS INPUT -->
+                        <div
+                            *ngSwitchCase="INPUT_TYPE.USER_OPTIONS"
+                            fxLayout="row"
+                            fxLayoutAlign="start start"
+                        >
+                            <mat-form-field appearance="outline" fxFlex>
+                                <mat-label>{{ data.label }}</mat-label>
+                                <input
+                                    [name]="data.name"
+                                    [formControlName]="data.name"
+                                    [matAutocomplete]="auto"
+                                    matInput
+                                />
+                                <mat-spinner
+                                    *ngIf="isSelectOptionsLoading[data.name]"
+                                    matSuffix
+                                    [diameter]="20"
+                                ></mat-spinner>
+                                <mat-autocomplete
+                                    #auto="matAutocomplete"
+                                    [displayWith]="usersNameDisplayFn"
+                                >
+                                    <mat-option
+                                        *ngFor="
+                                            let option of selectOptions[
+                                                data.name
+                                            ] | async
+                                        "
+                                        [value]="option"
+                                    >
+                                        <span>{{ option.name }}</span>
+                                    </mat-option>
+                                </mat-autocomplete>
+                            </mat-form-field>
+                        </div>
+
+                        <!-- PRODUCT CODE INPUT -->
+                        <div
+                            *ngSwitchCase="INPUT_TYPE.PRODUCT_CODE_SUGGESTIONS"
+                            fxLayout="row"
+                            fxLayoutAlign="start start"
+                        >
+                            <mat-form-field appearance="outline" fxFlex>
+                                <mat-label>{{ data.label }}</mat-label>
+                                <input
+                                    [name]="data.name"
+                                    [formControlName]="data.name"
+                                    [matAutocomplete]="auto"
+                                    matInput
+                                />
+                                <mat-spinner
+                                    *ngIf="isSelectOptionsLoading[data.name]"
+                                    matSuffix
+                                    [diameter]="20"
+                                ></mat-spinner>
+                                <mat-autocomplete #auto="matAutocomplete">
+                                    <mat-option
+                                        *ngFor="
+                                            let option of selectOptions[
+                                                data.name
+                                            ] | async
+                                        "
+                                        [value]="option.code"
+                                    >
+                                        <span>{{ option.label }}</span>
+                                    </mat-option>
+                                </mat-autocomplete>
+                            </mat-form-field>
+                        </div>
+
+                        <!-- PRODUCT GROUP Input  -->
+                        <ng-container *ngSwitchCase="INPUT_TYPE.PRODUCT_GROUP">
+                            <div
+                                class="multi-select-input"
+                                *ngIf="isSelectOptionsLoading[data.name]"
+                                fxLayout="row"
+                                fxLayoutAlign="start start"
+                            >
+                                <mat-form-field appearance="outline" fxFlex>
+                                    <mat-label>{{
+                                        data.label | titlecase
+                                    }}</mat-label>
+                                    <input matInput readonly />
+                                </mat-form-field>
+                            </div>
+                            <div
+                                class="multi-select-input"
+                                *ngIf="
+                                    selectOptions[data.name]
+                                        | async as groupOptions
+                                "
+                                fxLayout="row"
+                                fxLayoutAlign="start start"
+                                (click)="
+                                    showMultiSelectFiltersDialog(
+                                        data,
+                                        groupOptions,
+                                        'name',
+                                        'code'
+                                    )
+                                "
+                            >
+                                <mat-form-field appearance="outline" fxFlex>
+                                    <mat-label>{{
+                                        data.label | titlecase
+                                    }}</mat-label>
+                                    <input
+                                        matInput
+                                        readonly
+                                        [value]="
+                                            getMultiSelectValueLabel(
+                                                data,
+                                                groupOptions,
+                                                'name',
+                                                'code'
+                                            )
+                                        "
+                                    />
+                                </mat-form-field>
+                            </div>
+                        </ng-container>
                     </ng-container>
-
-                    <!-- FLORISTS INPUT -->
-                    <div
-                        *ngSwitchCase="INPUT_TYPE.FLORIST_OPTIONS"
-                        fxLayout="row"
-                        fxLayoutAlign="start start"
-                    >
-                        <mat-form-field appearance="outline" fxFlex>
-                            <mat-label>{{ data.label }}</mat-label>
-                            <input
-                                [name]="data.name"
-                                [formControlName]="data.name"
-                                [matAutocomplete]="auto"
-                                matInput
-                            />
-                            <mat-spinner
-                                *ngIf="isSelectOptionsLoading[data.name]"
-                                matSuffix
-                                [diameter]="20"
-                            ></mat-spinner>
-                            <mat-autocomplete
-                                #auto="matAutocomplete"
-                                [displayWith]="floristsNameDisplayFn"
-                            >
-                                <mat-option
-                                    *ngFor="
-                                        let option of selectOptions[data.name]
-                                            | async
-                                    "
-                                    [value]="option"
-                                >
-                                    <span>{{ option.name }}</span>
-                                </mat-option>
-                            </mat-autocomplete>
-                        </mat-form-field>
-                    </div>
-
-                    <!-- USERS INPUT -->
-                    <div
-                        *ngSwitchCase="INPUT_TYPE.USER_OPTIONS"
-                        fxLayout="row"
-                        fxLayoutAlign="start start"
-                    >
-                        <mat-form-field appearance="outline" fxFlex>
-                            <mat-label>{{ data.label }}</mat-label>
-                            <input
-                                [name]="data.name"
-                                [formControlName]="data.name"
-                                [matAutocomplete]="auto"
-                                matInput
-                            />
-                            <mat-spinner
-                                *ngIf="isSelectOptionsLoading[data.name]"
-                                matSuffix
-                                [diameter]="20"
-                            ></mat-spinner>
-                            <mat-autocomplete
-                                #auto="matAutocomplete"
-                                [displayWith]="usersNameDisplayFn"
-                            >
-                                <mat-option
-                                    *ngFor="
-                                        let option of selectOptions[data.name]
-                                            | async
-                                    "
-                                    [value]="option"
-                                >
-                                    <span>{{ option.name }}</span>
-                                </mat-option>
-                            </mat-autocomplete>
-                        </mat-form-field>
-                    </div>
-
-                    <!-- PRODUCT CODE INPUT -->
-                    <div
-                        *ngSwitchCase="INPUT_TYPE.PRODUCT_CODE_SUGGESTIONS"
-                        fxLayout="row"
-                        fxLayoutAlign="start start"
-                    >
-                        <mat-form-field appearance="outline" fxFlex>
-                            <mat-label>{{ data.label }}</mat-label>
-                            <input
-                                [name]="data.name"
-                                [formControlName]="data.name"
-                                [matAutocomplete]="auto"
-                                matInput
-                            />
-                            <mat-spinner
-                                *ngIf="isSelectOptionsLoading[data.name]"
-                                matSuffix
-                                [diameter]="20"
-                            ></mat-spinner>
-                            <mat-autocomplete #auto="matAutocomplete">
-                                <mat-option
-                                    *ngFor="
-                                        let option of selectOptions[data.name]
-                                            | async
-                                    "
-                                    [value]="option.code"
-                                >
-                                    <span>{{ option.label }}</span>
-                                </mat-option>
-                            </mat-autocomplete>
-                        </mat-form-field>
-                    </div>
                 </ng-container>
             </ng-container>
         </form>

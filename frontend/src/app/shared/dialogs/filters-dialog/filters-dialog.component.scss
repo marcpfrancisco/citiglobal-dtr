@@ -1,11 +1,11 @@
 @import "src/@fuse/scss/fuse";
 
-.filters-dialog {
-    @include media-breakpoint("xs") {
+.citiglobal-filters-dialog {
+    @include media-breakpoint('xs') {
         width: 100%;
     }
 
-    @include media-breakpoint("gt-xs") {
+    @include media-breakpoint('gt-xs') {
         width: 400px;
     }
 
@@ -29,6 +29,7 @@
     }
 
     .multi-select-input {
+
         .mat-form-field-flex,
         input {
             cursor: pointer;

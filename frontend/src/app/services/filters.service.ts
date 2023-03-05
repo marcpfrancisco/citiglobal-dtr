@@ -39,8 +39,8 @@ export interface FiltersInputNumberRange {
 // user filter options
 export type UserFiltersInput = [
     FiltersInput<UserRoles>,
-    FiltersInput<boolean>,
     FiltersInput<boolean>
+    // FiltersInput<boolean>
 ];
 
 @Injectable({
@@ -72,7 +72,7 @@ export class FiltersService {
             {
                 type: FiltersType.SELECT,
                 label: 'Active',
-                name: 'active',
+                name: 'isActive',
                 resetValue: null,
                 required: false,
                 options: [
@@ -80,13 +80,13 @@ export class FiltersService {
                     { label: 'Inactive', value: false },
                 ],
             },
-            {
-                type: FiltersType.CHECKBOX,
-                label: 'Show Archived',
-                name: 'withDeleted',
-                resetValue: false,
-                required: false,
-            },
+            // {
+            //     type: FiltersType.CHECKBOX,
+            //     label: 'Show Archived',
+            //     name: 'withDeleted',
+            //     resetValue: false,
+            //     required: false,
+            // },
         ];
     }
 

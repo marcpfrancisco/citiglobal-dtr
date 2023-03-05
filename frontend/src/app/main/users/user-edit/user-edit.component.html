@@ -1,0 +1,161 @@
+<div id="user-edit" class="page-layout carded fullwidth inner-scroll">
+    <!-- TOP BACKGROUND -->
+    <div class="top-bg accent"></div>
+    <!-- / TOP BACKGROUND -->
+    <!-- CENTER -->
+    <div class="center">
+        <!-- HEADER START -->
+        <citiglobal-header
+            [iconName]="'person_add'"
+            (backEvent)="navigateBack()"
+            [isBack]="true"
+        >
+            <ng-template #title>
+                {{ userName }}
+            </ng-template>
+            <ng-template #subTitle> User Detail </ng-template>
+            <ng-template #actions>
+                <ng-container *ngIf="userRecord || mode == 'create'">
+                    <button
+                        *ngIf="'update' | able : 'Users' : userRecord"
+                        [disabled]="userForm.invalid"
+                        mat-raised-button
+                        class="buttons fuse-white mt-24 mt-md-0"
+                        (click)="handleUser()"
+                    >
+                        <span>SAVE</span>
+                    </button>
+                </ng-container>
+            </ng-template>
+        </citiglobal-header>
+        <!-- HEADER END -->
+        <div class="content-card">
+            <!-- CONTENT -->
+            <div class="content">
+                <mat-tab-group fxLayout="column" fxFlex>
+                    <mat-tab label="Basic Info">
+                        <div
+                            class="tab-content p-24"
+                            fusePerfectScrollbar
+                            [fusePerfectScrollbarOptions]="{
+                                suppressScrollX: true
+                            }"
+                        >
+                            <form
+                                class="product w-100-p"
+                                name="userForm"
+                                [formGroup]="userForm"
+                                (ngSubmit)="handleUser()"
+                            >
+                                <mat-form-field
+                                    appearance="outline"
+                                    floatLabel="always"
+                                    class="w-100-p"
+                                >
+                                    <mat-label>Name</mat-label>
+                                    <input
+                                        matInput
+                                        formControlName="fullName"
+                                        required
+                                    />
+                                    <mat-icon matSuffix class="secondary-text"
+                                        >account_circle</mat-icon
+                                    >
+                                    <mat-error>Name is required!</mat-error>
+                                </mat-form-field>
+
+                                <mat-form-field
+                                    appearance="outline"
+                                    floatLabel="always"
+                                    class="w-100-p"
+                                >
+                                    <mat-label>Role</mat-label>
+                                    <mat-select formControlName="role" required>
+                                        <mat-option
+                                            *ngFor="let role of userRoles"
+                                            [value]="role"
+                                        >
+                                            {{ role | userRoles }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-icon matSuffix class="secondary-text"
+                                        >outlined_flag</mat-icon
+                                    >
+                                    <mat-error
+                                        >User role is required!</mat-error
+                                    >
+                                </mat-form-field>
+                                <mat-form-field
+                                    *ngIf="mode == 'edit'"
+                                    appearance="outline"
+                                    floatLabel="always"
+                                    class="w-100-p"
+                                >
+                                    <mat-label>Status</mat-label>
+                                    <mat-select
+                                        formControlName="isActive"
+                                        required
+                                    >
+                                        <mat-option [value]="true">
+                                            ACTIVE
+                                        </mat-option>
+                                        <mat-option [value]="false">
+                                            INACTIVE
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-icon matSuffix class="secondary-text"
+                                        >outlined_flag</mat-icon
+                                    >
+                                    <mat-error
+                                        >User role is required!</mat-error
+                                    >
+                                </mat-form-field>
+                                <div
+                                    fxLayout="row"
+                                    fxLayoutAlign="end center"
+                                    *ngIf="mode === 'edit'"
+                                >
+                                    <ng-container *ngIf="userRecord">
+                                        <button
+                                            mat-raised-button
+                                            class="mat-accent"
+                                            type="button"
+                                            *ngIf="
+                                                'update'
+                                                    | able
+                                                        : 'Users'
+                                                        : userRecord
+                                            "
+                                            (click)="resetPassword()"
+                                            [disabled]="!isActive"
+                                        >
+                                            <span>Reset Password</span>
+                                        </button>
+                                    </ng-container>
+                                </div>
+                            </form>
+                        </div>
+                    </mat-tab>
+                    <!-- // Place here the assignment of Sections and Subjects -->
+                    <mat-tab label="Sections" *ngIf="isEditMode">
+                        <ng-template matTabContent>
+                            <div
+                                class="tab-content p-24 pb-0"
+                                fusePerfectScrollbar
+                            ></div>
+                        </ng-template>
+                    </mat-tab>
+
+                    <mat-tab label="Subjects" *ngIf="isEditMode">
+                        <ng-template matTabContent>
+                            <div
+                                class="tab-content p-24 pb-0"
+                                fusePerfectScrollbar
+                            ></div>
+                        </ng-template>
+                    </mat-tab>
+                </mat-tab-group>
+            </div>
+        </div>
+    </div>
+</div>

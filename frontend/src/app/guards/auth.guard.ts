@@ -54,7 +54,7 @@ export class AuthGuard implements CanActivate {
                 }
 
                 // For other pages, authenticate if not yet authenticated.
-                if (!authenticated) {
+                if (isLoginPage) {
                     this.router.navigate(['auth', 'admin-login']);
                     return false;
                 }

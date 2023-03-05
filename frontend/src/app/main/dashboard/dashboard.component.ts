@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { UserRoles } from '@enums';
 import { fuseAnimations } from '@fuse/animations';
+import { User } from '@models';
 import { Store } from '@ngrx/store';
 import { AuthenticationReducer, RootState } from '@stores/index';
 import { createUserFullName } from '@utils';
@@ -17,7 +18,7 @@ import { map } from 'rxjs/operators';
 export class DashboardComponent implements OnInit {
     isAdmin$: Observable<boolean>;
     isStudent$: Observable<boolean>;
-    name$: Observable<string>;
+    user$: Observable<User>;
 
     constructor(private store: Store<RootState>) {}
 
@@ -40,6 +41,6 @@ export class DashboardComponent implements OnInit {
         this.isStudent$ = currentUser$.pipe(
             map((user) => user?.role === UserRoles.STUDENT)
         );
-        this.name$ = currentUser$.pipe(map((user) => user?.fullName));
+        this.user$ = currentUser$.pipe(map((user) => user));
     }
 }
