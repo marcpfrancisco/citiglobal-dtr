@@ -144,7 +144,7 @@ public class UserController {
 	}
 
 	@SecurityRequirement(name = "Bearer Authentication")
-	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
+	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN') or hasRole('USER')")
 	@GetMapping("/getUserByStudentId")
 	public ResponseEntity<?> getUserByStudentId(@RequestParam String studentId) {
 
