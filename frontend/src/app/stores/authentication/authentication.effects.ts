@@ -294,7 +294,6 @@ export class AuthenticationEffects {
     );
 
     private updateMenuNavigation(sessionUser: User): void {
-        console.log(sessionUser, 'sessionUser');
         const navigationItems: Array<RootToggleNavigationItem> = [
             // HOME
             {

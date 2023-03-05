@@ -29,7 +29,7 @@ export class HttpRequestInterceptor implements HttpInterceptor {
         next: HttpHandler
     ): Observable<HttpEvent<T>> {
         // Get token from session;
-        const authToken = JSON.parse(localStorage.getItem('authenticate'));
+        const storage = JSON.parse(localStorage.getItem('authentication'));
         const headers = {};
 
         if (!request.headers.has('Content-Type')) {
@@ -38,8 +38,8 @@ export class HttpRequestInterceptor implements HttpInterceptor {
 
         const isApiCall = isSameHostname(request.url, this.config.apiUrl);
 
-        if (authToken['token'] && isApiCall) {
-            headers['Authorization'] = 'Bearer ' + authToken['token'];
+        if (storage['token'] && isApiCall) {
+            headers['Authorization'] = 'Bearer ' + storage['token'];
         }
 
         const authReq = request.clone({

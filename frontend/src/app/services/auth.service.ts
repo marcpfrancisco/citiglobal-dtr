@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AuthUser } from '@models';
 import { Observable, of } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { switchMap, tap } from 'rxjs/operators';
 
 import { ApiService } from './api.service';
 
@@ -16,7 +16,8 @@ export class AuthService {
         return this.apiService
             .post(`${this.AUTH_URL}/authenticate`, { username, password })
             .pipe(
-                tap((response: any) => {
+                tap((response: any) => this.getCurrentSignInUser(response)),
+                switchMap((response: any) => {
                     const { id, username, role, token } = response;
 
                     const authUser: AuthUser = {
@@ -33,6 +34,10 @@ export class AuthService {
 
     loginByUserId(userId: string | number): Observable<any> {
         return this.apiService.get(`${this.USERS_URL}/getUserById/${userId}`);
+    }
+
+    getCurrentSignInUser(response: any) {
+        return response;
     }
 
     logOut(global = false): Observable<any> {
