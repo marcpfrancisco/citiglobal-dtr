@@ -41,7 +41,7 @@ public class UserDto {
 
     private Long roleId;
 
-    private Object role;
+    private String roleName;
 
     // private Set<String> roles = new HashSet<>();
 }
