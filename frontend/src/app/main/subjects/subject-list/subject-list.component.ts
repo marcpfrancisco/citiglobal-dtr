@@ -6,7 +6,7 @@ import { ACTION_UPDATE, SUBJECT_SUBJECTS } from '@constants';
 import { SubjectSortables } from '@enums';
 import { fuseAnimations } from '@fuse/animations';
 import { FusePerfectScrollbarDirective } from '@fuse/directives/fuse-perfect-scrollbar/fuse-perfect-scrollbar.directive';
-import { Section, Subject } from '@models';
+import { Section, SubjectModel } from '@models';
 import { Store } from '@ngrx/store';
 import { AblePipe } from '@pipes';
 import { RootState } from '@stores/index';
@@ -78,7 +78,7 @@ export class SubjectListComponent implements OnInit {
     //     );
     //   }
 
-    onSelectRow(data: Subject): void {
+    onSelectRow(data: SubjectModel): void {
         this.router.navigate(['edit', data.id], {
             relativeTo: this.activatedRoute,
         });

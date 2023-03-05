@@ -159,7 +159,6 @@ export class UsersListEffects {
                 ),
                 tap(() => {
                     // redirect to User List
-
                     this.router.navigate(['users']);
                 })
             ),
@@ -178,8 +177,8 @@ export class UsersListEffects {
                     )
                 )
             ),
-            switchMap(([{ userId, payload }, currentUser]) =>
-                this.usersService.editUser(payload, userId).pipe(
+            switchMap(([{ userId, payload }, currentUser]) => {
+                return this.usersService.editUser(payload, userId).pipe(
                     map((user) => {
                         // force logout! if update to self has critical updates that disturbs user session.
                         if (this.isRequireLogout(currentUser, user)) {
@@ -196,8 +195,8 @@ export class UsersListEffects {
                     catchError((error) =>
                         of(UsersListActions.onUpdateUserFailure({ error }))
                     )
-                )
-            )
+                );
+            })
         )
     );
 
