@@ -201,6 +201,6 @@ public class UserServiceImpl implements UserService {
 		userDto.setSection(user.getSection());
 		// userDto.setRoles(user.getRoles().stream().map(Role::getName).collect(Collectors.toSet()));
 		userDto.setRoleId(user.getRole() != null ? user.getRole().getId() : 0);
-		userDto.setRoleName(user.getRole() != null ? user.getRole().getName() : "");
+		userDto.setRole(user.getRole() != null ? user.getRole().getName() : "");
 	}
 }
