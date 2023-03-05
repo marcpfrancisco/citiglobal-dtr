@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,6 +25,7 @@ import com.ctg.dtr.dto.TimesheetDto;
 import com.ctg.dtr.model.Timesheet;
 import com.ctg.dtr.service.TimesheetService;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -35,6 +37,8 @@ public class TimesheetController {
     @Autowired
     private TimesheetService timesheetService;
 
+	@SecurityRequirement(name = "Bearer Authentication")
+	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
 	@PostMapping("/createTimesheet")
 	public ResponseEntity<Timesheet> createTimesheet(@RequestBody TimesheetDto timesheetDto) {
 
@@ -43,6 +47,7 @@ public class TimesheetController {
 		return new ResponseEntity<Timesheet>(timesheet, HttpStatus.CREATED);
 	}
 
+	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN') or hasRole('USER')")
 	@PostMapping("/dailyTimeRecord/{rfidNo}")
 	public ResponseEntity<?> dailyTimeRecord(@PathVariable String rfidNo, HttpServletRequest request, HttpServletResponse response) {
 
@@ -66,6 +71,8 @@ public class TimesheetController {
 		}
 	}
 
+	@SecurityRequirement(name = "Bearer Authentication")
+	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
 	@PutMapping("/updateTimesheet/{id}")
 	public ResponseEntity<?> updateTimesheet(@PathVariable Long id, @RequestBody TimesheetDto timesheetDto,  HttpServletRequest request, HttpServletResponse response) {
 
@@ -90,6 +97,8 @@ public class TimesheetController {
 		}
 	}
 
+	@SecurityRequirement(name = "Bearer Authentication")
+	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
 	@DeleteMapping("/deleteTimesheet/{id}")
 	public ResponseEntity<?> deleteTimesheet(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
 
@@ -118,6 +127,8 @@ public class TimesheetController {
 		}
 	}
 
+	@SecurityRequirement(name = "Bearer Authentication")
+	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
 	@GetMapping("/getTimesheetById/{id}")
 	public ResponseEntity<?> getTimesheetById(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
 
@@ -142,6 +153,8 @@ public class TimesheetController {
 		}
 	}
 
+	@SecurityRequirement(name = "Bearer Authentication")
+	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
 	@GetMapping("/getAllTimesheets")
 	public ResponseEntity<?> getAllTimesheets() {
 

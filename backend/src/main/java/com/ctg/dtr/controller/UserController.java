@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,6 +26,7 @@ import com.ctg.dtr.dto.UserDto;
 import com.ctg.dtr.model.User;
 import com.ctg.dtr.service.UserService;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -60,6 +62,8 @@ public class UserController {
 		return new ResponseEntity<User>(user, HttpStatus.CREATED);
 	}
 
+	@SecurityRequirement(name = "Bearer Authentication")
+	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
 	@PutMapping("/updateUser/{id}")
 	public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody UserDto userDto, HttpServletRequest request, HttpServletResponse response) {
 
@@ -84,6 +88,8 @@ public class UserController {
 		}
 	}
 
+	@SecurityRequirement(name = "Bearer Authentication")
+	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
 	@DeleteMapping("/deleteUser/{id}")
 	public ResponseEntity<?> deleteUser(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
 
@@ -137,8 +143,10 @@ public class UserController {
 		}
 	}
 
+	@SecurityRequirement(name = "Bearer Authentication")
+	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
 	@GetMapping("/getUserByStudentId")
-	public ResponseEntity<?> getUserById(@RequestParam String studentId) {
+	public ResponseEntity<?> getUserByStudentId(@RequestParam String studentId) {
 
 		List<UserDto> userInfo = userService.getUserByStudentId(studentId);
 
@@ -149,6 +157,8 @@ public class UserController {
 		}
 	}
 
+	@SecurityRequirement(name = "Bearer Authentication")
+	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
 	@GetMapping("/getAllUsers")
 	public ResponseEntity<?> getAllUsers() {
 

@@ -10,6 +10,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,6 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ctg.dtr.service.ReportService;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 @RestController
 @CrossOrigin
 @RequestMapping(value = "/api/report")
@@ -28,8 +31,10 @@ public class ReportController {
     @Autowired
     private ReportService reportService;
 
+    @SecurityRequirement(name = "Bearer Authentication")
+	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN') or hasRole('USER')")
     @GetMapping("/generate/xlsx/timesheet/{studentId}")
-    public ResponseEntity<Resource> generateBarcodeTransactionsReport(@PathVariable String studentId, @RequestParam String startDate, @RequestParam String endDate) {
+    public ResponseEntity<Resource> genereateTimesheetReport(@PathVariable String studentId, @RequestParam String startDate, @RequestParam String endDate) {
 
         Date sd = new Date();
         Date ed = new Date();

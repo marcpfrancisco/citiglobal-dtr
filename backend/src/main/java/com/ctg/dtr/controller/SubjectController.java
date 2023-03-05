@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,6 +25,7 @@ import com.ctg.dtr.dto.SubjectDto;
 import com.ctg.dtr.model.Subject;
 import com.ctg.dtr.service.SubjectService;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -35,6 +37,8 @@ public class SubjectController {
     @Autowired
     private SubjectService subjectService;
 
+	@SecurityRequirement(name = "Bearer Authentication")
+	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
 	@PostMapping("/createSubject")
 	public ResponseEntity<Subject> createSubject(@RequestBody SubjectDto subjectDto) {
 
@@ -43,6 +47,8 @@ public class SubjectController {
 		return new ResponseEntity<Subject>(subject, HttpStatus.CREATED);
 	}
 
+	@SecurityRequirement(name = "Bearer Authentication")
+	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
 	@PutMapping("/updateSubject/{id}")
 	public ResponseEntity<?> updateSubject(@PathVariable Long id, @RequestBody SubjectDto subjectDto, HttpServletRequest request, HttpServletResponse response) {
 
@@ -67,6 +73,8 @@ public class SubjectController {
 		}
 	}
 
+	@SecurityRequirement(name = "Bearer Authentication")
+	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
 	@DeleteMapping("/deleteSubject/{id}")
 	public ResponseEntity<?> deleteSubject(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
 
@@ -95,6 +103,8 @@ public class SubjectController {
 		}
 	}
 
+	@SecurityRequirement(name = "Bearer Authentication")
+	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
 	@GetMapping("/getSubjectById/{id}")
 	public ResponseEntity<?> getSubjectById(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
 
@@ -119,6 +129,8 @@ public class SubjectController {
 		}
 	}
 
+	@SecurityRequirement(name = "Bearer Authentication")
+	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
 	@GetMapping("/getSubjectByStudent/{userId}")
 	public ResponseEntity<?> getSubjectByStudentId(@PathVariable Long userId) {
 
@@ -131,6 +143,8 @@ public class SubjectController {
 		}
 	}
 
+	@SecurityRequirement(name = "Bearer Authentication")
+	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
 	@GetMapping("/getSubjectByTeacher/{userId}")
 	public ResponseEntity<?> getSubjectByTeacher(@PathVariable Long userId) {
 
@@ -143,6 +157,8 @@ public class SubjectController {
 		}
 	}
 
+	@SecurityRequirement(name = "Bearer Authentication")
+	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
 	@GetMapping("/getSubjectBySectionId/{sectionId}")
 	public ResponseEntity<?> getSubjectBySectionId(@PathVariable Long sectionId) {
 
@@ -155,6 +171,8 @@ public class SubjectController {
 		}
 	}
 
+	@SecurityRequirement(name = "Bearer Authentication")
+	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
 	@GetMapping("/getAllSubjects")
 	public ResponseEntity<?> getAllSubjects() {
 
