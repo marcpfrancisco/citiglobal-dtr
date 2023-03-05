@@ -34,24 +34,6 @@ export const ROOT_REDUCERS = new InjectionToken<
     }),
 });
 
-export function localStorageSyncReducer(
-    reducer: ActionReducer<any>
-): ActionReducer<any> {
-    return localStorageSync({
-        keys: [
-            // add the store keys for syncing to localStorage
-            AuthenticationReducer.featureKey,
-        ],
-        rehydrate: true, // Pull initial state from local storage on startup
-    })(reducer);
-}
-
-export function storageMetaReducer(
-    reducer: ActionReducer<any>
-): ActionReducer<any, any> {
-    return localStorageSyncReducer(reducer);
-}
-
 // Reset State on LogOutSuccess
 export function resetState(reducer: ActionReducer<any>): ActionReducer<any> {
     return (state, action) =>
@@ -62,8 +44,3 @@ export function resetState(reducer: ActionReducer<any>): ActionReducer<any> {
             action
         );
 }
-
-export const metaReducers: MetaReducer<RootState>[] = [
-    resetState,
-    storageMetaReducer,
-];

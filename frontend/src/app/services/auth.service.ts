@@ -14,29 +14,33 @@ export class AuthService {
 
     constructor(private apiService: ApiService) {}
 
-    login(username: string, password: string): Observable<any> {
+    login(username: string, password: string): Observable<AuthUser> {
+        console.log(username, password);
         return this.apiService
             .post(`${this.AUTH_URL}/authenticate`, { username, password })
-            .pipe(tap((response) => this.setSignInUserSession(response)));
+            .pipe(
+                tap((response: any) => {
+                    const { id, username, role, token } = response;
+                    localStorage.setItem(
+                        'authenticate',
+                        JSON.stringify(response)
+                    );
+
+                    const authUser: AuthUser = {
+                        username,
+                        id,
+                        role,
+                        token,
+                    };
+
+                    console.log(authUser);
+                    return of(authUser);
+                })
+            );
     }
 
     loginByUserId(userId: string | number): Observable<any> {
         return this.apiService.get(`${this.USERS_URL}/getUserById/${userId}`);
-    }
-
-    setSignInUserSession(response: any) {
-        if (!response) return;
-
-        const { username, token, id: userId, roles = [] } = response;
-        const signInUserSession = { username, token, userId, roles };
-        const payload = JSON.stringify(signInUserSession);
-
-        localStorage.setItem('authenticate', payload);
-    }
-
-    getCurrentAuthenticatedUser() {
-        const storage = JSON.parse(localStorage.getItem('authenticate'));
-        return of(storage);
     }
 
     logOut(global = false): Observable<any> {

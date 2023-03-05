@@ -60,6 +60,20 @@ export const onUpdateCurrentUserFailure = createAction(
     props<{ error: Error }>()
 );
 
+export const onResetCurrentUserPassword = createAction(
+    '[Profile Component] On Reset Current User Password'
+);
+export const onChangePasswordSuccess = createAction(
+    '[Users API] On Change Password Success'
+);
+export const onChangePasswordFailure = createAction(
+    '[Users API] On Change Password Failure',
+    props<{ error: any }>()
+);
+export const onConfirmChangePasswordSuccessAlert = createAction(
+    '[Alert Component] On Confirm Change Password Success Alert'
+);
+
 // Force Logout
 export const onForceLogout = createAction('[App] On Force Logout');
 

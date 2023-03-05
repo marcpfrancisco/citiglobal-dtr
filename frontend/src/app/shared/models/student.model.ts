@@ -10,5 +10,5 @@ export interface Student {
     createdAt: string | Date;
     updatedAt: string | Date;
 
-    active: boolean;
+    isActive: boolean;
 }

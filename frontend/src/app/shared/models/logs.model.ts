@@ -4,5 +4,5 @@ export interface Logs {
     createdAt: string | Date;
     time_in: string | Date;
     time_out: string | Date;
-    time_rederred: string | Date;
+    time_rendered: string | Date;
 }
