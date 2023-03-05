@@ -5,7 +5,7 @@
         <!-- HEADER -->
         <citiglobal-header iconName="dashboard">
             <ng-template #title>
-                Welcome back, {{ name$ | async }}
+                Welcome back, {{ user$ | async | userFullName }}
             </ng-template>
         </citiglobal-header>
         <!-- / HEADER -->
