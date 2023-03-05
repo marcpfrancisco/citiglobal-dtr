@@ -1,4 +1,4 @@
-package com.ctg.dtr.security.jwt.service;
+package com.ctg.dtr.security.jwt.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

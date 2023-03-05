@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import com.ctg.dtr.security.jwt.payload.request.JwtRequest;
 import com.ctg.dtr.security.jwt.payload.response.JwtResponse;
-import com.ctg.dtr.security.jwt.service.UserDetailsImpl;
+import com.ctg.dtr.security.jwt.service.impl.UserDetailsImpl;
 import com.ctg.dtr.security.jwt.utils.JwtUtil;
 
 import jakarta.validation.Valid;
