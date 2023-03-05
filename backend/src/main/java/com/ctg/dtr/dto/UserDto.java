@@ -23,6 +23,8 @@ public class UserDto {
 
     private String lastName;
 
+    private String fullName;
+
     private String mobileNumber;
 
     private String studentId;

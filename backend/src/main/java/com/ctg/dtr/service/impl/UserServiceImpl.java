@@ -191,6 +191,7 @@ public class UserServiceImpl implements UserService {
         userDto.setFirstName(user.getFirstName());
         userDto.setMiddleName(user.getMiddleName());
         userDto.setLastName(user.getLastName());
+        userDto.setFullName(user.getLastName() + ", " + user.getFirstName() + (user.getMiddleName() == null ? "" : " " + user.getMiddleName()));
 		userDto.setMobileNumber(user.getMobileNumber());
 		userDto.setStudentId(user.getStudentId());
 		userDto.setRfidNo(user.getRfidNo());
