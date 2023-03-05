@@ -80,9 +80,8 @@ public class ExcelTimesheetReport {
 			    labelNameCell.setCellStyle(tableHeadStyle);
 
 			    Cell cellCompany = companyRow.createCell(1);
-			    cellCompany.setCellValue(checkUser.getLastName() + ", "
-				+ checkUser.getFirstName() + " "
-				+ checkUser.getMiddleName());
+			    cellCompany.setCellValue((checkUser.getLastName() + ", " + 
+                checkUser.getFirstName() + (checkUser.getMiddleName() == null ? "" : " " + checkUser.getMiddleName())));
 
 			    Row employeeRow = sheet.createRow(1);
 			    Cell labelStudentIdCell = employeeRow.createCell(0);
