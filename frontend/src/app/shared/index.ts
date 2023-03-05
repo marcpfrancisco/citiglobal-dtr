@@ -6,6 +6,8 @@ export * from './constants';
 
 // export * from './directives';
 
+export * from './view';
+
 export * from './enums';
 
 export * from './interfaces';

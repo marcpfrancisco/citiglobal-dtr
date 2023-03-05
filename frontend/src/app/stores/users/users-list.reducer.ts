@@ -131,8 +131,9 @@ export const selectList = createSelector(
     }
 );
 
-export const selectHasFilters = createSelector(selectState, (state) =>
-    Object.values(state.filters).some((value) => value !== null)
+export const selectHasFilters = createSelector(
+    selectState,
+    (state) => state.hasFilters
 );
 
 export const selectUpdatedAt = createSelector(
