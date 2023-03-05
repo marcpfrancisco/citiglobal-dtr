@@ -18,7 +18,7 @@ public class OpenAPIConfig {
     @Bean
     public OpenAPI customizeOpenAPI() {
 
-        final String securitySchemeName = "bearerAuth";
+        final String securitySchemeName = "Bearer Authentication";
 
         return new OpenAPI()
                 .addSecurityItem(new SecurityRequirement()
@@ -28,7 +28,8 @@ public class OpenAPIConfig {
                 .name(securitySchemeName)
                 .type(SecurityScheme.Type.HTTP)
                 .scheme("bearer")
-                .description("Provide the JWT token. JWT token can be obtained from the <strong>Authentication Controller</strong>.")
+                .description("A JWT token is required to access the API. JWT token can be obtained by providing correct "
+                + "<strong>username</strong> and <strong>password</strong> in the <strong>Authentication Controller</strong>.")
                 .bearerFormat("JWT")));
     }
 }
