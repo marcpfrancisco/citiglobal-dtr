@@ -41,7 +41,7 @@ export const reducer = createReducer(
     on(
         AuthenticationActions.onLoadCurrentUserSuccess,
         AuthenticationActions.onUpdateCurrentUserSuccess,
-        (state, { user }) => ({ ...state, currentUser: user })
+        (state, { user }) => ({ ...state, currentUser: user[0] })
     )
 );
 

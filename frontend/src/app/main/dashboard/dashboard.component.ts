@@ -40,6 +40,8 @@ export class DashboardComponent implements OnInit {
         this.isStudent$ = currentUser$.pipe(
             map((user) => user?.role === UserRoles.STUDENT)
         );
-        this.name$ = currentUser$.pipe(map((user) => user?.name));
+        this.name$ = currentUser$.pipe(map((user) => user?.fullName));
+
+        this.name$.subscribe((res) => console.log(res));
     }
 }

@@ -33,14 +33,10 @@ export class AuthGuard implements CanActivate {
         const isLoginPage = state.url === '/auth/time-log';
         const isAdminLoginPage = state.url === '/auth/admin-login';
 
-        console.log(state.url);
-
         return this.store.pipe(
             select(AuthenticationReducer.selectAuthenticationState),
             map(({ token, currentUser }) => {
                 const authenticated = token && currentUser;
-
-                console.log(authenticated, 'authenticated');
 
                 // when inside login page
                 if (isAdminLoginPage) {
@@ -59,7 +55,7 @@ export class AuthGuard implements CanActivate {
 
                 // For other pages, authenticate if not yet authenticated.
                 if (!authenticated) {
-                    this.router.navigate(['auth', 'time-log']);
+                    this.router.navigate(['auth', 'admin-login']);
                     return false;
                 }
 

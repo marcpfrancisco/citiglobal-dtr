@@ -1,9 +1,7 @@
-import { HttpParams, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { AuthUser, SignInUserSession } from '@models';
-import { isString } from 'lodash';
-import { from, Observable, of } from 'rxjs';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { AuthUser } from '@models';
+import { Observable, of } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 import { ApiService } from './api.service';
 
@@ -15,7 +13,6 @@ export class AuthService {
     constructor(private apiService: ApiService) {}
 
     login(username: string, password: string): Observable<AuthUser> {
-        console.log(username, password);
         return this.apiService
             .post(`${this.AUTH_URL}/authenticate`, { username, password })
             .pipe(
@@ -33,7 +30,6 @@ export class AuthService {
                         token,
                     };
 
-                    console.log(authUser);
                     return of(authUser);
                 })
             );
