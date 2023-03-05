@@ -42,6 +42,6 @@ export class DashboardComponent implements OnInit {
         );
         this.name$ = currentUser$.pipe(map((user) => user?.fullName));
 
-        this.name$.subscribe((res) => console.log(res));
+        currentUser$.subscribe((res) => console.log(res));
     }
 }

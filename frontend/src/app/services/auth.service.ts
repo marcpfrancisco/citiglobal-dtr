@@ -18,10 +18,6 @@ export class AuthService {
             .pipe(
                 tap((response: any) => {
                     const { id, username, role, token } = response;
-                    localStorage.setItem(
-                        'authenticate',
-                        JSON.stringify(response)
-                    );
 
                     const authUser: AuthUser = {
                         username,
