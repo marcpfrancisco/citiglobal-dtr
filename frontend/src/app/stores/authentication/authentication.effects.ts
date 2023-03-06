@@ -7,6 +7,7 @@ import {
     ACTION_LIST,
     ACTION_READ,
     SUBJECT_DASHBOARD,
+    SUBJECT_LOGS,
     SUBJECT_SECTIONS,
     SUBJECT_STUDENTS,
     SUBJECT_SUBJECTS,
@@ -356,7 +357,7 @@ export class AuthenticationEffects {
                         rules: [
                             {
                                 actions: [ACTION_READ, ACTION_LIST],
-                                subject: SUBJECT_SUBJECTS,
+                                subject: SUBJECT_LOGS,
                             },
                         ],
                     },

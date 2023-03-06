@@ -1,10 +1,10 @@
 import { UserRoles } from '@enums';
-import { AuthUser, SignInUserSession, User } from '@models';
+import { User } from '@models';
 import {
-    createReducer,
-    on,
     createFeatureSelector,
+    createReducer,
     createSelector,
+    on,
 } from '@ngrx/store';
 
 import { AuthenticationActions } from '.';

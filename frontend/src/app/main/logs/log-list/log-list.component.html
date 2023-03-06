@@ -5,7 +5,7 @@
         <!-- HEADER -->
         <citiglobal-header iconName="date_range">
             <ng-template #title> Time Logs </ng-template>
-            <!-- <ng-template #search>
+            <ng-template #search>
                 <citiglobal-search
                     [searchValue]="search$ | async"
                     (search)="handleSearch($event)"
@@ -14,7 +14,18 @@
                     [hasFilters]="hasFilters$ | async"
                     (buttonClick)="onShowFilters()"
                 ></citiglobal-filter-list>
-            </ng-template> -->
+            </ng-template>
+
+            <ng-template #actions>
+                <button
+                    mat-raised-button
+                    class="buttons fuse-white mt-24 mt-md-0"
+                    *ngIf="'exportList' | able : 'Logs'"
+                    (click)="exportTimeSheet()"
+                >
+                    <span>EXPORT</span>
+                </button>
+            </ng-template>
         </citiglobal-header>
         <!-- / HEADER -->
 

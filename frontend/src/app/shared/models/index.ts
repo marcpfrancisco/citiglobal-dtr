@@ -1,6 +1,6 @@
 export * from './auth-user.model';
 export * from './list-state.model';
-export * from './logs.model';
+export * from './time-log.model';
 export * from './mode.models';
 export * from './pagination.model';
 export * from './section.model';
