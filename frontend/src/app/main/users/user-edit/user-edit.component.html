@@ -209,7 +209,7 @@
                         </div>
                     </mat-tab>
                     <!-- // Place here the assignment of Sections and Subjects -->
-                    <mat-tab label="Course & Section" *ngIf="isEditMode">
+                    <mat-tab label="Course & Section">
                         <ng-template matTabContent>
                             <div
                                 class="tab-content p-24 pb-0"
@@ -234,10 +234,6 @@
                                         mat-raised-button
                                         class="mat-accent"
                                         type="button"
-                                        *ngIf="
-                                            ('update' | able : 'Users') &&
-                                            canAssignCourseAndSection
-                                        "
                                         (click)="assignCourseAndSection()"
                                     >
                                         <span>Assign Course and Section</span>
@@ -368,8 +364,8 @@
                                                     </mat-icon>
                                                 </button>
                                                 <mat-menu #menu="matMenu">
-                                                    <!-- && isAssignedFlorist(item.id)
-                            (click)="unassignFlorist(item.id)" -->
+                                                    <!-- && hasAssignedCourseSubject(item.id)
+                            (click)="unassignCourseSection(item.id)" -->
                                                     <button
                                                         mat-menu-item
                                                         type="button"
@@ -416,7 +412,7 @@
                         </ng-template>
                     </mat-tab>
 
-                    <mat-tab label="Subjects" *ngIf="isEditMode">
+                    <mat-tab label="Subjects">
                         <ng-template matTabContent>
                             <div
                                 class="tab-content p-24 pb-0"
@@ -441,10 +437,6 @@
                                         mat-raised-button
                                         class="mat-accent"
                                         type="button"
-                                        *ngIf="
-                                            ('update' | able : 'Users') &&
-                                            canAssignSubject
-                                        "
                                         (click)="assignSubject()"
                                     >
                                         <span>Assign Subject</span>
@@ -596,8 +588,8 @@
                                                     </mat-icon>
                                                 </button>
                                                 <mat-menu #menu="matMenu">
-                                                    <!-- && isAssignedFlorist(item.id)
-                            (click)="unassignFlorist(item.id)" -->
+                                                    <!-- && hasAssignedSubject(item.id)
+                            (click)="unassignSubject(item.id)" -->
                                                     <button
                                                         mat-menu-item
                                                         type="button"
