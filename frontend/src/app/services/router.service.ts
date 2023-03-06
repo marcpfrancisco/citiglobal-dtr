@@ -43,7 +43,7 @@ export class RouterService {
         }
 
         // go back to home page if no URL
-        this.router.navigateByUrl('/');
+        this.router.navigateByUrl('/dashboard');
     }
 
     navigateToLandingPage(role: UserRoles): void {

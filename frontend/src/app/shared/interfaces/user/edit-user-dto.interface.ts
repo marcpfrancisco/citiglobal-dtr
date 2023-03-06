@@ -9,4 +9,5 @@ export interface EditUserDto {
     role?: UserRoles;
     section?: any;
     studentId?: string;
+    rfidNo?: string;
 }

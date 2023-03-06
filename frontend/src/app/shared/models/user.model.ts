@@ -8,12 +8,12 @@ export interface User {
     deletedAt: string | Date;
     isActive: boolean;
     firstName: string;
-    middleName: string;
+    middleName?: string;
     lastName: string;
-    fullName: string;
-    mobileNumber: string;
+    fullName?: string;
+    mobileNumber?: string;
     studentId: string;
     rfidNo: string;
-    section: any;
+    section?: any;
     role: UserRoles;
 }

@@ -83,6 +83,11 @@ export class UsersListEffects {
                     map((result) =>
                         UsersListActions.onLoadUsersSuccess({ result })
                     ),
+                    tap(() =>
+                        this.store.dispatch(
+                            UsersListActions.onCheckForFilters()
+                        )
+                    ),
                     catchError((error) =>
                         of(UsersListActions.onLoadUsersFailure({ error }))
                     )
@@ -127,6 +132,28 @@ export class UsersListEffects {
             );
         },
         { dispatch: false }
+    );
+
+    onCheckForFilters$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType(UsersListActions.onCheckForFilters),
+            concatMap((action) =>
+                of(action).pipe(
+                    withLatestFrom(
+                        this.store.select(UsersListReducer.selectState)
+                    )
+                )
+            ),
+            map(([action, state]) => {
+                const hasFilters = this.filtersService.isEmptyFilterObject(
+                    state.filters
+                );
+
+                return UsersListActions.onHasFilters({
+                    hasFilters: !!hasFilters,
+                });
+            })
+        )
     );
 
     onCreateUser$ = createEffect(() =>
@@ -192,9 +219,12 @@ export class UsersListEffects {
                             USER_UPDATE_SUCCESS_MESSAGE
                         )
                     ),
-                    catchError((error) =>
-                        of(UsersListActions.onUpdateUserFailure({ error }))
-                    )
+                    catchError((error) => {
+                        console.log(error, 'error');
+                        return of(
+                            UsersListActions.onUpdateUserFailure({ error })
+                        );
+                    })
                 );
             })
         )
@@ -234,6 +264,8 @@ export class UsersListEffects {
         loggedInUser: User,
         { id, role, isActive }: User
     ): boolean {
+        console.log(id, role, isActive);
+        console.log(loggedInUser);
         // when no user and not in editing self, no need to logout
         if (!loggedInUser?.id || `${loggedInUser?.id}` !== `${id}`) {
             return false;

@@ -24,7 +24,8 @@ export class SectionListComponent implements OnInit {
     readonly SECTION_SORTABLES = SectionSortables;
 
     SECTION_LIST_DISPLAYED_COLUMNS = [
-        SectionSortables.NAME,
+        SectionSortables.SECTION,
+        SectionSortables.COURSE,
         SectionSortables.PUBLISHED_AT,
         SectionSortables.ACTIVE,
         'options',

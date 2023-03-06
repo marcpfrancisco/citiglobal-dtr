@@ -25,7 +25,7 @@ export class SubjectListComponent implements OnInit {
 
     SUBJECT_LIST_DISPLAYED_COLUMNS = [
         SubjectSortables.SUBJECT_CODE,
-        SubjectSortables.NAME,
+        SubjectSortables.DESCRIPTION,
         SubjectSortables.PUBLISHED_AT,
         SubjectSortables.ACTIVE,
         'options',

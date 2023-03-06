@@ -25,7 +25,7 @@ export const navigation: FuseNavigation[] = [
         children: [
             {
                 id: 'sections',
-                title: 'Sections',
+                title: 'Course & Section',
                 translate: 'NAV.SECTIONS.TITLE',
                 type: 'item',
                 icon: 'info',

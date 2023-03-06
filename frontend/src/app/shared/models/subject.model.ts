@@ -7,5 +7,8 @@ export interface SubjectModel {
     createdAt: string | Date;
     updatedAt: string | Date;
 
+    startTime: string;
+    endTime: string;
+
     isActive: boolean;
 }
