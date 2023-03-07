@@ -20,6 +20,6 @@ public interface TimesheetService {
 
 	List<TimesheetDto> getAllTimesheets();
 
-	Timesheet dailyTimeRecord(String studentId);
+	Timesheet dailyTimeRecord(String rfidNo);
 
 }

@@ -9,13 +9,16 @@ export const locale = {
 
             MANAGEMENT: 'Management',
             SECTIONS: {
-                TITLE: 'Sections',
+                TITLE: 'Course & Section',
             },
             STUDENTS: {
                 TITLE: 'Students',
             },
             SUBJECTS: {
                 TITLE: 'Subjects',
+            },
+            USERS: {
+                TITLE: 'Users',
             },
 
             PROFILE: 'Profile',

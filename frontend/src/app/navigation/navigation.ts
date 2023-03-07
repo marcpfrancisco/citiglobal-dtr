@@ -25,10 +25,10 @@ export const navigation: FuseNavigation[] = [
         children: [
             {
                 id: 'sections',
-                title: 'Sections',
+                title: 'Course & Section',
                 translate: 'NAV.SECTIONS.TITLE',
                 type: 'item',
-                icon: 'people',
+                icon: 'info',
                 url: '/sections',
             },
             {
@@ -36,7 +36,7 @@ export const navigation: FuseNavigation[] = [
                 title: 'Students',
                 translate: 'NAV.STUDENTS.TITLE',
                 type: 'item',
-                icon: 'store',
+                icon: 'groups',
                 url: '/students',
             },
             {
@@ -44,8 +44,16 @@ export const navigation: FuseNavigation[] = [
                 title: 'Subjects',
                 translate: 'NAV.SUBJECTS.TITLE',
                 type: 'item',
-                icon: 'location_on',
+                icon: 'library_books',
                 url: '/subjects',
+            },
+            {
+                id: 'users',
+                title: 'Users',
+                translate: 'NAV.USERS.TITLE',
+                type: 'item',
+                icon: 'people',
+                url: '/users',
             },
         ],
     },
@@ -60,7 +68,7 @@ export const navigation: FuseNavigation[] = [
                 title: 'Time Log',
                 translate: 'NAV.TIMELOG.TITLE',
                 type: 'item',
-                icon: 'people',
+                icon: 'date_range',
                 url: '/logs',
             },
         ],

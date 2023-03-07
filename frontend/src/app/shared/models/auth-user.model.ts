@@ -1,7 +1,8 @@
-import { SignInUserSession } from './signin-user.session.model';
+import { UserRoles } from '../enums/user/user-roles.enum';
 
 export interface AuthUser {
+    id: string;
+    role: UserRoles;
+    token: string;
     username: string;
-    signInUserSession: SignInUserSession;
-    isAdmin: boolean | null;
 }

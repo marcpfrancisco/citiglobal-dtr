@@ -9,14 +9,20 @@ import { MultiSelectFiltersDialogComponent } from './multi-select-filters-dialog
 import { SharedComponentsModule } from '../components/shared-components.module';
 
 const COMPONENTS = [
-  AlertComponent,
-  FiltersDialogComponent,
-  MultiSelectFiltersDialogComponent,
+    AlertComponent,
+    FiltersDialogComponent,
+    MultiSelectFiltersDialogComponent,
 ];
 
 @NgModule({
-  declarations: COMPONENTS,
-  exports: [...COMPONENTS, MatDialogModule],
-  imports: [CommonModule, FuseSharedModule, SharedMaterialModule, MatDialogModule, SharedComponentsModule]
+    declarations: COMPONENTS,
+    exports: [...COMPONENTS, MatDialogModule],
+    imports: [
+        CommonModule,
+        FuseSharedModule,
+        SharedMaterialModule,
+        MatDialogModule,
+        SharedComponentsModule,
+    ],
 })
 export class SharedDialogsModule {}

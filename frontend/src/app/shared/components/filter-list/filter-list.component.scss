@@ -1,0 +1,15 @@
+@import 'src/@fuse/scss/fuse';
+
+citiglobal-filter-list {
+
+  // material overrides
+  .mat-badge.hide-text .mat-badge-content {
+    color: transparent;
+  }
+
+  .mat-badge-content.mat-badge-active {
+    top: -3px !important;
+    right: 0px !important;
+  }
+
+}

@@ -18,4 +18,8 @@ public class SectionDto {
     private Boolean isActive;
 
     private String name;
+
+    private Long courseId;
+
+    private Object course;
 }

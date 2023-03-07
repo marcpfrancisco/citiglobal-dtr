@@ -21,6 +21,8 @@ public class TimesheetDto {
 
     private String timeRendered;
 
+    private String status;
+
     private Long userId;
 
     private Object user;

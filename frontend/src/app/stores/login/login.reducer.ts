@@ -1,4 +1,9 @@
-import { createReducer, on, createFeatureSelector, createSelector } from '@ngrx/store';
+import {
+    createReducer,
+    on,
+    createFeatureSelector,
+    createSelector,
+} from '@ngrx/store';
 import { AuthenticationActions } from '../authentication';
 import { LoginActions } from '.';
 import { RootState } from '..';
@@ -6,34 +11,35 @@ import { RootState } from '..';
 export const featureKey = 'login';
 
 export interface State {
-  loginButtonDisabled: boolean;
+    loginButtonDisabled: boolean;
 }
 
 export const initialState: State = {
-  loginButtonDisabled: false,
-}
+    loginButtonDisabled: false,
+};
 
 export const reducer = createReducer(
-  initialState,
-  // Add `on()` call events here...
-  on(
-    LoginActions.onLogin,
-    (state) => {
-      return {...state, loginButtonDisabled: true };
-  }),
-  on(
-    LoginActions.onInit,
-    AuthenticationActions.onLogInSuccess,
-    AuthenticationActions.onLogInFailure,
-    (state) => {
-      return {...state, loginButtonDisabled: false };
-  }),
+    initialState,
+    // Add `on()` call events here...
+    on(LoginActions.onLogin, (state) => {
+        return { ...state, loginButtonDisabled: true };
+    }),
+    on(
+        LoginActions.onAdminLoginInit,
+        AuthenticationActions.onAdminLogInSuccess,
+        AuthenticationActions.onAdminLoginFailure,
+        (state) => {
+            return { ...state, loginButtonDisabled: false };
+        }
+    )
 );
 
-
 // Selectors
-export const selectLoginComponentState = createFeatureSelector<RootState, State>(featureKey);
+export const selectLoginComponentState = createFeatureSelector<
+    RootState,
+    State
+>(featureKey);
 export const selectLoginButtonDisabled = createSelector(
-  selectLoginComponentState,
-  (state) => state.loginButtonDisabled
+    selectLoginComponentState,
+    (state) => state.loginButtonDisabled
 );

@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ctg.dtr.dto.SubjectDto;
+import com.ctg.dtr.model.Section;
 import com.ctg.dtr.model.Subject;
+import com.ctg.dtr.repository.SectionRepository;
 import com.ctg.dtr.repository.SubjectRepository;
 import com.ctg.dtr.service.SubjectService;
 
@@ -18,6 +20,9 @@ public class SubjectServiceImpl implements SubjectService {
 	@Autowired
     private SubjectRepository subjectRepository;
 
+	@Autowired
+    private SectionRepository sectionRepository;
+
     @Override
     public Optional<Subject> getById(Long id) {
         return subjectRepository.findById(id);
@@ -26,12 +31,21 @@ public class SubjectServiceImpl implements SubjectService {
     @Override
 	public Subject createSubject(SubjectDto subjectDto) {
 
+		Optional<Section> section = sectionRepository.findById(subjectDto.getSectionId());
+
         Subject subject = new Subject();
 
         subject.setPublishedAt(subjectDto.getPublishedAt());
         subject.setIsActive(subjectDto.getIsActive());
         subject.setSubjectCode(subjectDto.getSubjectCode());
-        subject.setName(subjectDto.getName());
+        subject.setDescription(subjectDto.getDescription());
+        subject.setDay(subjectDto.getDay());
+        subject.setStartTime(subjectDto.getStartTime());
+        subject.setEndTime(subjectDto.getEndTime());
+        subject.setGracePeriod(subjectDto.getGracePeriod());
+        subject.setUnits(subjectDto.getUnits());
+
+		subject.setSection(section.isPresent() ? section.get() : null);
 
 		return subjectRepository.save(subject);
 	}
@@ -39,10 +53,19 @@ public class SubjectServiceImpl implements SubjectService {
     @Override
 	public Subject updateSubject(Subject currentSubject, SubjectDto subjectDto) {
 
-        currentSubject.setPublishedAt(subjectDto.getPublishedAt());
-        currentSubject.setIsActive(subjectDto.getIsActive());
-        currentSubject.setSubjectCode(subjectDto.getSubjectCode());
-        currentSubject.setName(subjectDto.getName());
+		Optional<Section> section = sectionRepository.findById(subjectDto.getSectionId());
+
+        currentSubject.setPublishedAt(subjectDto.getPublishedAt() == null ? currentSubject.getPublishedAt() : subjectDto.getPublishedAt());
+        currentSubject.setIsActive(subjectDto.getIsActive() == null ? currentSubject.getIsActive() : subjectDto.getIsActive());
+        currentSubject.setSubjectCode(subjectDto.getSubjectCode() == null ? currentSubject.getSubjectCode() : subjectDto.getSubjectCode());
+        currentSubject.setDescription(subjectDto.getDescription() == null ? currentSubject.getDescription() : subjectDto.getDescription() );
+        currentSubject.setDay(subjectDto.getDay() == null ? currentSubject.getDay() : subjectDto.getDay() );
+        currentSubject.setStartTime(subjectDto.getStartTime() == null ? currentSubject.getStartTime() : subjectDto.getStartTime() );
+        currentSubject.setEndTime(subjectDto.getEndTime() == null ? currentSubject.getEndTime() : subjectDto.getEndTime());
+        currentSubject.setGracePeriod(subjectDto.getGracePeriod() == null ? currentSubject.getGracePeriod() : subjectDto.getGracePeriod());
+        currentSubject.setUnits(subjectDto.getUnits() == null ? currentSubject.getUnits() : subjectDto.getUnits());
+
+		currentSubject.setSection(section.isPresent() ? section.get() : currentSubject.getSection());
 
         return subjectRepository.save(currentSubject);
     }
@@ -72,9 +95,67 @@ public class SubjectServiceImpl implements SubjectService {
 	}
 
     @Override
+	public List<SubjectDto> getSubjectByStudent(Long userId) {
+
+		List<Subject> lSubjects = subjectRepository.findSubjectByStudent(userId);
+
+		List<SubjectDto> lSubjectDto = new ArrayList<SubjectDto>();
+
+		for (Subject subject : lSubjects) {
+
+			SubjectDto tmpSubject = new SubjectDto();
+
+			buildSubjectDto(subject, tmpSubject);
+
+			lSubjectDto.add(tmpSubject);
+
+		}
+		return lSubjectDto;
+	}
+
+    @Override
+	public List<SubjectDto> getSubjectByTeacher(Long userId) {
+
+		List<Subject> lSubjects = subjectRepository.findSubjectByTeacher(userId);
+
+		List<SubjectDto> lSubjectDto = new ArrayList<SubjectDto>();
+
+		for (Subject subject : lSubjects) {
+
+			SubjectDto tmpSubject = new SubjectDto();
+
+			buildSubjectDto(subject, tmpSubject);
+
+			lSubjectDto.add(tmpSubject);
+
+		}
+		return lSubjectDto;
+	}
+
+
+    @Override
 	public List<SubjectDto> getAllSubjects() {
 
 		List<Subject> lSubjects = subjectRepository.findAll();
+
+		List<SubjectDto> lSubjectDto = new ArrayList<SubjectDto>();
+
+		for (Subject subject : lSubjects) {
+
+			SubjectDto tmpSubject = new SubjectDto();
+
+			buildSubjectDto(subject, tmpSubject);
+
+			lSubjectDto.add(tmpSubject);
+
+		}
+		return lSubjectDto;
+	}
+
+    @Override
+	public List<SubjectDto> getSubjectBySectionId(Long sectionId) {
+
+		List<Subject> lSubjects = subjectRepository.findBySectionId(sectionId);
 
 		List<SubjectDto> lSubjectDto = new ArrayList<SubjectDto>();
 
@@ -98,7 +179,13 @@ public class SubjectServiceImpl implements SubjectService {
 		subjectDto.setPublishedAt(subject.getPublishedAt());
         subjectDto.setIsActive(subject.getIsActive());
         subjectDto.setSubjectCode(subject.getSubjectCode());
-        subjectDto.setName(subject.getName());
-
+        subjectDto.setDescription(subject.getDescription());
+        subjectDto.setDay(subject.getDay());
+        subjectDto.setStartTime(subject.getStartTime());
+        subjectDto.setEndTime(subject.getEndTime());
+        subjectDto.setGracePeriod(subject.getGracePeriod());
+        subjectDto.setUnits(subject.getUnits());
+		subjectDto.setSectionId(subject.getSection() != null ? subject.getSection().getId() : 0);
+		subjectDto.setSection(subject.getSection() != null ? subject.getSection() : null);
 	}
 }

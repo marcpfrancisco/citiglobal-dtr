@@ -1,6 +1,7 @@
+import { UserRoles } from '../enums/user/user-roles.enum';
+
 export interface SignInUserSession {
-  accessToken: string;
-  idToken: string;
-  refreshToken: string;
-  userId: string;
+    token: string;
+    id: string | number;
+    role: UserRoles;
 }

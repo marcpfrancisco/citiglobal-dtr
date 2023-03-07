@@ -2,19 +2,37 @@ server:
   port: 5000
 
 spring:
-  datasource:  
+  main:
+    allow-circular-references: true
+  datasource:
     url: jdbc:mysql://localhost:3306/citiglobal
     username: root
     password:
     driver-class-name: com.mysql.cj.jdbc.Driver
+  sql:
+    init:
+      mode: always
   jackson:
     serialization:
       fail-on-empty-beans: false
-
-  jpa:  
-    hibernate:  
-      ddl-auto: create
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+  jpa:
+    generate-ddl: true
+    properties:
+      hibernate:
+        format:
+          sql: true
+    hibernate:
+      # ddl-auto: create
+      ddl-auto: update
     database-platform: org.hibernate.dialect.MySQL8Dialect
-    show-sql: true 
+    show-sql: true
+
+jwt:
+  secret: ctglobalSecretKey
+  expirationMs: 86400000
 
 # http://localhost:5000/swagger-ui/index.html#/

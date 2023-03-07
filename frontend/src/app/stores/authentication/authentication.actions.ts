@@ -6,20 +6,20 @@ import { createAction, props } from '@ngrx/store';
 export const onLogout = createAction('[Toolbar Component] On Logout');
 
 // API Actions
-export const onLogInSuccess = createAction(
+export const onAdminLogInSuccess = createAction(
     '[Authentication API] On Log In Success',
     props<{ user: AuthUser }>()
 );
-export const onLogInFailure = createAction(
+export const onAdminLoginFailure = createAction(
     '[Authentication API] On Log In Failure',
-    props<{ error: any }>()
+    props<{ error: Error }>()
 );
 export const onLogOutSuccess = createAction(
     '[Authentication API] On Log Out Success'
 );
 export const onLogOutFailure = createAction(
     '[Authentication API] On Log Out Failure',
-    props<{ error: any }>()
+    props<{ error: Error }>()
 );
 export const onCurrentSignInUserSessionSuccess = createAction(
     '[Authentication API] On Current Sign In User Session Success',
@@ -27,29 +27,7 @@ export const onCurrentSignInUserSessionSuccess = createAction(
 );
 export const onCurrentSignInUserSessionFailure = createAction(
     '[Authentication API] On Current Sign In User Session Failure',
-    props<{ error: any }>()
-);
-export const onForgotPasswordSuccess = createAction(
-    '[Authentication API] On Forgot Password Success',
-    props<{ result: any }>()
-);
-export const onForgotPasswordFailure = createAction(
-    '[Authentication API] On Forgot Password Failure',
-    props<{ error: any }>()
-);
-export const onForgotPasswordSubmitSuccess = createAction(
-    '[Authentication API] On Forgot Password Submit Success',
-    props<{ result: any }>()
-);
-export const onForgotPasswordSubmitFailure = createAction(
-    '[Authentication API] On Forgot Password Submit Failure',
-    props<{ error: any }>()
-);
-
-// Recover Password Actions
-export const onForgotPassword = createAction(
-    '[Forgot Password Component] On Forgot Password',
-    props<{ email: string }>()
+    props<{ error: Error }>()
 );
 
 // Load Current/Logged In User Profile
@@ -64,7 +42,7 @@ export const onLoadCurrentUserSuccess = createAction(
 
 export const onLoadCurrentUserFailure = createAction(
     '[Authentication API] On Load Current User Failure',
-    props<{ error: any; isLogin?: boolean }>()
+    props<{ error: Error; isLogin?: boolean }>()
 );
 
 // Update Current/Logged In User Profile
@@ -79,10 +57,9 @@ export const onUpdateCurrentUserSuccess = createAction(
 );
 export const onUpdateCurrentUserFailure = createAction(
     '[Authentication API] On Update Current User Failure',
-    props<{ error: any }>()
+    props<{ error: Error }>()
 );
 
-// Reset Current User Password
 export const onResetCurrentUserPassword = createAction(
     '[Profile Component] On Reset Current User Password'
 );

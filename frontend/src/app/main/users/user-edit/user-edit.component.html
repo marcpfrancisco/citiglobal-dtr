@@ -1,0 +1,642 @@
+<div id="user-edit" class="page-layout carded fullwidth inner-scroll">
+    <!-- TOP BACKGROUND -->
+    <div class="top-bg accent"></div>
+    <!-- / TOP BACKGROUND -->
+    <!-- CENTER -->
+    <div class="center">
+        <!-- HEADER START -->
+        <citiglobal-header
+            [iconName]="'person_add'"
+            (backEvent)="navigateBack()"
+            [isBack]="true"
+        >
+            <ng-template #title> {{ firstName }} {{ lastName }} </ng-template>
+            <ng-template #subTitle> User Detail </ng-template>
+            <ng-template #actions>
+                <ng-container *ngIf="userRecord || mode == 'create'">
+                    <button
+                        *ngIf="'update' | able : 'Users' : userRecord"
+                        [disabled]="userForm.invalid"
+                        mat-raised-button
+                        class="buttons fuse-white mt-24 mt-md-0"
+                        (click)="handleUser()"
+                    >
+                        <span>SAVE</span>
+                    </button>
+                </ng-container>
+            </ng-template>
+        </citiglobal-header>
+        <!-- HEADER END -->
+        <div class="content-card">
+            <!-- CONTENT -->
+            <div class="content">
+                <mat-tab-group fxLayout="column" fxFlex>
+                    <mat-tab label="Basic Info">
+                        <div
+                            class="tab-content p-24"
+                            fusePerfectScrollbar
+                            [fusePerfectScrollbarOptions]="{
+                                suppressScrollX: true
+                            }"
+                        >
+                            <form
+                                class="product w-100-p"
+                                name="userForm"
+                                [formGroup]="userForm"
+                                (ngSubmit)="handleUser()"
+                            >
+                                <mat-form-field
+                                    appearance="outline"
+                                    floatLabel="always"
+                                    class="w-100-p"
+                                >
+                                    <mat-label>First Name</mat-label>
+                                    <input
+                                        matInput
+                                        formControlName="firstName"
+                                        required
+                                    />
+                                    <mat-icon matSuffix class="secondary-text"
+                                        >account_circle</mat-icon
+                                    >
+                                    <mat-error
+                                        >First Name is required!</mat-error
+                                    >
+                                </mat-form-field>
+
+                                <mat-form-field
+                                    appearance="outline"
+                                    floatLabel="always"
+                                    class="w-100-p"
+                                >
+                                    <mat-label>Last Name</mat-label>
+                                    <input
+                                        matInput
+                                        formControlName="lastName"
+                                        required
+                                    />
+                                    <mat-icon matSuffix class="secondary-text"
+                                        >account_circle</mat-icon
+                                    >
+                                    <mat-error
+                                        >Last Name is required!</mat-error
+                                    >
+                                </mat-form-field>
+
+                                <mat-form-field
+                                    appearance="outline"
+                                    floatLabel="always"
+                                    class="w-100-p"
+                                >
+                                    <mat-label>Student No.</mat-label>
+                                    <input
+                                        matInput
+                                        formControlName="studentNo"
+                                        required
+                                    />
+                                    <mat-icon matSuffix class="secondary-text"
+                                        >account_circle</mat-icon
+                                    >
+                                    <mat-error
+                                        >Student No. is required!</mat-error
+                                    >
+                                </mat-form-field>
+
+                                <mat-form-field
+                                    appearance="outline"
+                                    floatLabel="always"
+                                    class="w-100-p"
+                                >
+                                    <mat-label>RFID No.</mat-label>
+                                    <input
+                                        matInput
+                                        formControlName="rfidNo"
+                                        required
+                                    />
+                                    <mat-icon matSuffix class="secondary-text"
+                                        >account_circle</mat-icon
+                                    >
+                                    <mat-error>RFID No. is required!</mat-error>
+                                </mat-form-field>
+
+                                <mat-form-field
+                                    appearance="outline"
+                                    floatLabel="always"
+                                    class="w-100-p"
+                                >
+                                    <mat-label>Username</mat-label>
+                                    <input
+                                        matInput
+                                        formControlName="username"
+                                        required
+                                    />
+                                    <mat-icon matSuffix class="secondary-text"
+                                        >account_circle</mat-icon
+                                    >
+                                    <mat-error>Username is required!</mat-error>
+                                </mat-form-field>
+
+                                <mat-form-field
+                                    appearance="outline"
+                                    floatLabel="always"
+                                    class="w-100-p"
+                                >
+                                    <mat-label>Role</mat-label>
+                                    <mat-select formControlName="role" required>
+                                        <mat-option
+                                            *ngFor="let role of userRoles"
+                                            [value]="role"
+                                        >
+                                            {{ role | userRoles }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-icon matSuffix class="secondary-text"
+                                        >outlined_flag</mat-icon
+                                    >
+                                    <mat-error
+                                        >User role is required!</mat-error
+                                    >
+                                </mat-form-field>
+                                <mat-form-field
+                                    *ngIf="mode == 'edit'"
+                                    appearance="outline"
+                                    floatLabel="always"
+                                    class="w-100-p"
+                                >
+                                    <mat-label>Status</mat-label>
+                                    <mat-select
+                                        formControlName="isActive"
+                                        required
+                                    >
+                                        <mat-option [value]="true">
+                                            ACTIVE
+                                        </mat-option>
+                                        <mat-option [value]="false">
+                                            INACTIVE
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-icon matSuffix class="secondary-text"
+                                        >outlined_flag</mat-icon
+                                    >
+                                    <mat-error
+                                        >User role is required!</mat-error
+                                    >
+                                </mat-form-field>
+                                <div
+                                    fxLayout="row"
+                                    fxLayoutAlign="end center"
+                                    *ngIf="mode === 'edit'"
+                                >
+                                    <ng-container *ngIf="userRecord">
+                                        <button
+                                            mat-raised-button
+                                            class="mat-accent"
+                                            type="button"
+                                            *ngIf="
+                                                'update'
+                                                    | able
+                                                        : 'Users'
+                                                        : userRecord
+                                            "
+                                            (click)="resetPassword()"
+                                            [disabled]="!isActive"
+                                        >
+                                            <span>Reset Password</span>
+                                        </button>
+                                    </ng-container>
+                                </div>
+                            </form>
+                        </div>
+                    </mat-tab>
+                    <!-- // Place here the assignment of Sections and Subjects -->
+                    <mat-tab label="Course & Section">
+                        <ng-template matTabContent>
+                            <div
+                                class="tab-content p-24 pb-0"
+                                fusePerfectScrollbar
+                            >
+                                <div
+                                    fxLayout="row"
+                                    fxLayoutAlign="space-between cnter"
+                                    class="pb-16"
+                                >
+                                    <div fxLayoutAlign="start center">
+                                        <mat-icon
+                                            class="m-0 mr-16 secondary-text"
+                                            >info</mat-icon
+                                        >
+                                        <div class="h2 secondary-text">
+                                            Assigned Course and Sections
+                                        </div>
+                                    </div>
+
+                                    <button
+                                        mat-raised-button
+                                        class="mat-accent"
+                                        type="button"
+                                        (click)="assignCourseAndSection()"
+                                    >
+                                        <span>Assign Course and Section</span>
+                                    </button>
+                                </div>
+
+                                <div class="section pb-48">
+                                    <!-- [dataSource]="courseSubjectDateSource$"
+                                    [matSortActive]="
+                                            (
+                                                listState$
+                                                | listStateMatSort
+                                                | async
+                                            ).active
+                                        "
+                                        [matSortDirection]="
+                                            (
+                                                listState$
+                                                | listStateMatSort
+                                                | async
+                                            ).direction
+                                        " -->
+                                    <mat-table
+                                        class="items-table"
+                                        matSort
+                                        [@animateStagger]="{ value: '50' }"
+                                        (matSortChange)="onToggleSort($event)"
+                                    >
+                                        <!-- Section Column -->
+                                        <ng-container
+                                            [matColumnDef]="
+                                                COURSE_SECTION_SORTABLES.SECTION
+                                            "
+                                        >
+                                            <mat-header-cell
+                                                *matHeaderCellDef
+                                                mat-sort-header
+                                                >Section</mat-header-cell
+                                            >
+                                            <mat-cell *matCellDef="let item">
+                                                <p class="text-truncate">
+                                                    {{ item.section }}
+                                                </p>
+                                            </mat-cell>
+                                        </ng-container>
+
+                                        <!-- Course Column -->
+                                        <ng-container
+                                            [matColumnDef]="
+                                                COURSE_SECTION_SORTABLES.COURSE
+                                            "
+                                        >
+                                            <mat-header-cell
+                                                *matHeaderCellDef
+                                                mat-sort-header
+                                                >Course</mat-header-cell
+                                            >
+                                            <mat-cell *matCellDef="let item">
+                                                <p class="text-truncate">
+                                                    {{ item.course }}
+                                                </p>
+                                            </mat-cell>
+                                        </ng-container>
+
+                                        <!-- Published At Column -->
+                                        <ng-container
+                                            [matColumnDef]="
+                                                COURSE_SECTION_SORTABLES.PUBLISHED_AT
+                                            "
+                                        >
+                                            <mat-header-cell
+                                                *matHeaderCellDef
+                                                mat-sort-header
+                                                >Published At</mat-header-cell
+                                            >
+                                            <mat-cell *matCellDef="let item">
+                                                <p class="text-truncate">
+                                                    {{
+                                                        item.publishedAt
+                                                            | dateFormat
+                                                    }}
+                                                </p>
+                                            </mat-cell>
+                                        </ng-container>
+
+                                        <!-- Status Column -->
+                                        <ng-container
+                                            [matColumnDef]="
+                                                COURSE_SECTION_SORTABLES.ACTIVE
+                                            "
+                                        >
+                                            <mat-header-cell
+                                                *matHeaderCellDef
+                                                mat-sort-header
+                                                >Active</mat-header-cell
+                                            >
+                                            <mat-cell *matCellDef="let item">
+                                                <p class="text-truncate">
+                                                    {{ item.isActive }}
+                                                </p>
+                                            </mat-cell>
+                                        </ng-container>
+
+                                        <!-- Options Column -->
+                                        <ng-container matColumnDef="options">
+                                            <mat-header-cell
+                                                *matHeaderCellDef
+                                            ></mat-header-cell>
+                                            <mat-cell *matCellDef="let item">
+                                                <button
+                                                    mat-button
+                                                    [matMenuTriggerFor]="menu"
+                                                    (click)="
+                                                        $event.stopPropagation();
+                                                        $event.preventDefault()
+                                                    "
+                                                >
+                                                    <mat-icon
+                                                        class="logo-icon s-32"
+                                                        [@animate]="{
+                                                            value: '*',
+                                                            params: {
+                                                                delay: '50ms',
+                                                                scale: '0.2'
+                                                            }
+                                                        }"
+                                                        >more_vert
+                                                    </mat-icon>
+                                                </button>
+                                                <mat-menu #menu="matMenu">
+                                                    <!-- && hasAssignedCourseSubject(item.id)
+                            (click)="unassignCourseSection(item.id)" -->
+                                                    <button
+                                                        mat-menu-item
+                                                        type="button"
+                                                        *ngIf="
+                                                            'update'
+                                                                | able : 'Users'
+                                                        "
+                                                    >
+                                                        Remove
+                                                    </button>
+                                                </mat-menu>
+                                            </mat-cell>
+                                        </ng-container>
+
+                                        <mat-header-row
+                                            *matHeaderRowDef="
+                                                courseSectionDisplayedColumns;
+                                                sticky: true
+                                            "
+                                        ></mat-header-row>
+                                        <mat-row
+                                            *matRowDef="
+                                                let item;
+                                                columns: courseSectionDisplayedColumns
+                                            "
+                                            class="item"
+                                            matRipple
+                                            (click)="$event.preventDefault()"
+                                        ></mat-row>
+                                    </mat-table>
+
+                                    <mat-paginator
+                                        [length]="total$ | async"
+                                        [pageIndex]="pageIndex$ | async"
+                                        [pageSize]="pageSize$ | async"
+                                        [pageSizeOptions]="
+                                            pageSizeOptions$ | async
+                                        "
+                                        (page)="onChangePage($event)"
+                                    >
+                                    </mat-paginator>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </mat-tab>
+
+                    <mat-tab label="Subjects">
+                        <ng-template matTabContent>
+                            <div
+                                class="tab-content p-24 pb-0"
+                                fusePerfectScrollbar
+                            >
+                                <div
+                                    fxLayout="row"
+                                    fxLayoutAlign="space-between cnter"
+                                    class="pb-16"
+                                >
+                                    <div fxLayoutAlign="start center">
+                                        <mat-icon
+                                            class="m-0 mr-16 secondary-text"
+                                            >library_books</mat-icon
+                                        >
+                                        <div class="h2 secondary-text">
+                                            Assigned Subjects
+                                        </div>
+                                    </div>
+
+                                    <button
+                                        mat-raised-button
+                                        class="mat-accent"
+                                        type="button"
+                                        (click)="assignSubject()"
+                                    >
+                                        <span>Assign Subject</span>
+                                    </button>
+                                </div>
+
+                                <div class="section pb-48">
+                                    <mat-table
+                                        class="items-table"
+                                        matSort
+                                        [@animateStagger]="{ value: '50' }"
+                                        (matSortChange)="onToggleSort($event)"
+                                    >
+                                        <!-- Subject Code Column -->
+                                        <ng-container
+                                            [matColumnDef]="
+                                                SUBJECT_SORTABLES.SUBJECT_CODE
+                                            "
+                                        >
+                                            <mat-header-cell
+                                                *matHeaderCellDef
+                                                mat-sort-header
+                                                >Subject Code</mat-header-cell
+                                            >
+                                            <mat-cell *matCellDef="let item">
+                                                <p class="text-truncate">
+                                                    {{ item.subjectCode }}
+                                                </p>
+                                            </mat-cell>
+                                        </ng-container>
+
+                                        <!-- Subject Code Column -->
+                                        <ng-container
+                                            [matColumnDef]="
+                                                SUBJECT_SORTABLES.DESCRIPTION
+                                            "
+                                        >
+                                            <mat-header-cell
+                                                *matHeaderCellDef
+                                                mat-sort-header
+                                                >Description</mat-header-cell
+                                            >
+                                            <mat-cell *matCellDef="let item">
+                                                <p class="text-truncate">
+                                                    {{ item.description }}
+                                                </p>
+                                            </mat-cell>
+                                        </ng-container>
+
+                                        <!-- Start Time Column -->
+                                        <ng-container
+                                            [matColumnDef]="
+                                                SUBJECT_SORTABLES.START_TIME
+                                            "
+                                        >
+                                            <mat-header-cell
+                                                *matHeaderCellDef
+                                                mat-sort-header
+                                                >Start Time</mat-header-cell
+                                            >
+                                            <mat-cell *matCellDef="let item">
+                                                <p class="text-truncate">
+                                                    {{ item.startTime }}
+                                                </p>
+                                            </mat-cell>
+                                        </ng-container>
+
+                                        <!-- Start Time Column -->
+                                        <ng-container
+                                            [matColumnDef]="
+                                                SUBJECT_SORTABLES.END_TIME
+                                            "
+                                        >
+                                            <mat-header-cell
+                                                *matHeaderCellDef
+                                                mat-sort-header
+                                                >End Time</mat-header-cell
+                                            >
+                                            <mat-cell *matCellDef="let item">
+                                                <p class="text-truncate">
+                                                    {{ item.endTime }}
+                                                </p>
+                                            </mat-cell>
+                                        </ng-container>
+
+                                        <!-- Published At Column -->
+                                        <ng-container
+                                            [matColumnDef]="
+                                                SUBJECT_SORTABLES.PUBLISHED_AT
+                                            "
+                                        >
+                                            <mat-header-cell
+                                                *matHeaderCellDef
+                                                mat-sort-header
+                                                >Published At</mat-header-cell
+                                            >
+                                            <mat-cell *matCellDef="let item">
+                                                <p class="text-truncate">
+                                                    {{
+                                                        item.publishedAt
+                                                            | dateFormat
+                                                    }}
+                                                </p>
+                                            </mat-cell>
+                                        </ng-container>
+
+                                        <!-- Status Column -->
+                                        <ng-container
+                                            [matColumnDef]="
+                                                SUBJECT_SORTABLES.ACTIVE
+                                            "
+                                        >
+                                            <mat-header-cell
+                                                *matHeaderCellDef
+                                                mat-sort-header
+                                                >Active</mat-header-cell
+                                            >
+                                            <mat-cell *matCellDef="let item">
+                                                <p class="text-truncate">
+                                                    {{ item.isActive }}
+                                                </p>
+                                            </mat-cell>
+                                        </ng-container>
+
+                                        <!-- Options Column -->
+                                        <ng-container matColumnDef="options">
+                                            <mat-header-cell
+                                                *matHeaderCellDef
+                                            ></mat-header-cell>
+                                            <mat-cell *matCellDef="let item">
+                                                <button
+                                                    mat-button
+                                                    [matMenuTriggerFor]="menu"
+                                                    (click)="
+                                                        $event.stopPropagation();
+                                                        $event.preventDefault()
+                                                    "
+                                                >
+                                                    <mat-icon
+                                                        class="logo-icon s-32"
+                                                        [@animate]="{
+                                                            value: '*',
+                                                            params: {
+                                                                delay: '50ms',
+                                                                scale: '0.2'
+                                                            }
+                                                        }"
+                                                        >more_vert
+                                                    </mat-icon>
+                                                </button>
+                                                <mat-menu #menu="matMenu">
+                                                    <!-- && hasAssignedSubject(item.id)
+                            (click)="unassignSubject(item.id)" -->
+                                                    <button
+                                                        mat-menu-item
+                                                        type="button"
+                                                        *ngIf="
+                                                            'update'
+                                                                | able : 'Users'
+                                                        "
+                                                    >
+                                                        Remove
+                                                    </button>
+                                                </mat-menu>
+                                            </mat-cell>
+                                        </ng-container>
+
+                                        <mat-header-row
+                                            *matHeaderRowDef="
+                                                subjectDisplayedColumns;
+                                                sticky: true
+                                            "
+                                        ></mat-header-row>
+                                        <mat-row
+                                            *matRowDef="
+                                                let item;
+                                                columns: subjectDisplayedColumns
+                                            "
+                                            class="item"
+                                            matRipple
+                                            (click)="$event.preventDefault()"
+                                        ></mat-row>
+                                    </mat-table>
+
+                                    <mat-paginator
+                                        [length]="total$ | async"
+                                        [pageIndex]="pageIndex$ | async"
+                                        [pageSize]="pageSize$ | async"
+                                        [pageSizeOptions]="
+                                            pageSizeOptions$ | async
+                                        "
+                                        (page)="onChangePage($event)"
+                                    >
+                                    </mat-paginator>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </mat-tab>
+                </mat-tab-group>
+            </div>
+        </div>
+    </div>
+</div>

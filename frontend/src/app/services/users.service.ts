@@ -1,6 +1,6 @@
 import { HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { UserSortables } from '@enums';
+import { UserRoles, UserSortables } from '@enums';
 import {
     CreateUserDto,
     EditUserDto,
@@ -10,24 +10,22 @@ import {
 } from '@interfaces';
 import { User } from '@models';
 import { isBoolean } from 'lodash';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
 import { ApiService } from './api.service';
 
 @Injectable({ providedIn: 'root' })
 export class UsersService {
-    private readonly USERS_URL = 'users';
+    private readonly USERS_URL = 'user';
 
     constructor(private apiService: ApiService) {}
 
     getUsers(options: FindAllUsersDto): Observable<PaginationResult<User>> {
-        return this.apiService.get('users', {
-            params: this.createListOptions(options),
-        });
+        return this.apiService.get(`${this.USERS_URL}/getAllUsers`);
     }
 
     createListOptions(options: FindAllUsersDto): HttpParams {
-        const { role, roles, active } = options;
+        const { role, roles, isActive } = options;
         let params = this.apiService.createListRecordParameters(options, {
             sortables: UserSortables,
         });
@@ -36,8 +34,8 @@ export class UsersService {
             params = params.append('role', role);
         }
 
-        if (isBoolean(active)) {
-            params = params.append('active', active ? 'true' : 'false');
+        if (isBoolean(isActive)) {
+            params = params.append('isActive', isActive ? 'true' : 'false');
         }
 
         // Filter by multiple user roles
@@ -50,48 +48,26 @@ export class UsersService {
         return params;
     }
 
-    getUserById(
-        userId: string | number,
-        findUser: FindUserDto = null
-    ): Observable<User> {
-        const join = findUser?.join;
-
-        let params = new HttpParams();
-
-        if (join?.length) {
-            join.forEach((relations) => {
-                params = params.append('join', relations);
-            });
-        }
-
-        return this.apiService.get(`${this.USERS_URL}/${userId}`, { params });
+    getUserById(id: string | number): Observable<User> {
+        return this.apiService.get(`${this.USERS_URL}/getUserById/${id}`);
     }
 
     createUser(partialUser: CreateUserDto): Observable<User> {
-        return this.apiService.post(this.USERS_URL, partialUser);
-    }
-
-    editUser(
-        partialUser: EditUserDto,
-        userId: string | number
-    ): Observable<User> {
-        return this.apiService.patch(
-            `${this.USERS_URL}/${userId}`,
+        return this.apiService.post(
+            `${this.USERS_URL}/createUser`,
             partialUser
         );
     }
 
-    deleteUser(userId: string): Observable<User> {
-        return this.apiService.delete(`${this.USERS_URL}/${userId}`);
+    editUser(partialUser: EditUserDto, id: string | number): Observable<User> {
+        return this.apiService.put(
+            `${this.USERS_URL}/updateUser/${id}`,
+            partialUser
+        );
     }
 
-    undeleteUser(userId: string | number): Observable<User> {
-        return this.editUser(
-            {
-                deletedAt: null,
-            },
-            userId as string
-        );
+    deleteUser(id: string): Observable<User> {
+        return this.apiService.delete(`${this.USERS_URL}/${id}`);
     }
 
     changeUserPassword(userId: string): Observable<void> {
@@ -105,24 +81,6 @@ export class UsersService {
         return this.apiService.patch(
             `${this.USERS_URL}/${userId}/admin-reset-password`,
             {}
-        );
-    }
-
-    addFloristToUser(
-        userId: string | number,
-        floristId: string | number
-    ): Observable<User> {
-        return this.apiService.post(`${this.USERS_URL}/${userId}/florists`, {
-            id: floristId,
-        });
-    }
-
-    deleteFloristFromUser(
-        userId: string | number,
-        floristId: string | number
-    ): Observable<User> {
-        return this.apiService.delete(
-            `${this.USERS_URL}/${userId}/florists/${floristId}`
         );
     }
 }

@@ -1,11 +1,36 @@
 <div id="time-log" fxLayout="column">
-    <div class="build-version fixed-position-bottom-right">
-        build: {{ buildVersion }}
+    <div class="logo">
+        <img src="assets/images/logo/citiglobal-logo.png" />
     </div>
 
     <div
-        class="time-log-wrapper top-bg accent"
+        class="time-log-wrapper"
+        fxFlex
         fxLayout="column"
-        fxLayoutAlign="center center"
-    ></div>
+        fxLayoutAlign="space-between center"
+    >
+        <div
+            class="time-log-header"
+            fxLayout="column"
+            fxLayoutAlign="center center"
+        >
+            <h1 class="time-log-heading">
+                {{ currentTime | date : "mediumTime" }}
+            </h1>
+            <h3 class="time-log-subheading">
+                {{ currentTime | date : "fullDate" }}
+            </h3>
+        </div>
+
+        <citiglobal-time-log-field
+            [rfidNumber]="search$ | async"
+            (timeLog)="handleSearch($event)"
+        ></citiglobal-time-log-field>
+
+        <div class="time-log-footer">
+            <a class="footer-title" routerLink="/auth/admin-login"
+                >Administrator Login</a
+            >
+        </div>
+    </div>
 </div>

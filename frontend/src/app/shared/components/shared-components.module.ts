@@ -1,25 +1,40 @@
 import { CommonModule } from '@angular/common';
-import { HttpClientJsonpModule, HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
 import { SharedMaterialModule } from '@material/shared';
-import { TranslateModule } from '@ngx-translate/core';
+import { FocusElementDirective } from '../directives/focus-element.directive';
+import { ObserveVisibilityDirective } from '../directives/observe-visibility.directive';
 
-const COMPONENTS = [];
+import { PipesModule } from '../pipes/pipes.module';
+import { FilterListComponent } from './filter-list/filter-list.component';
+import { HeaderComponent } from './header/header.component';
+import { NumberRangeFieldModule } from './number-range-field/number-range-field.module';
+import { SearchComponent } from './search/search.component';
+import { SnackbarMultilineModule } from './snackbar-multiline';
+import { StudentCardComponent } from './student-card/student-card.component';
+import { TimeLogFieldComponent } from './time-log-field/time-log-field.component';
+
+const COMPONENTS = [
+    HeaderComponent,
+    StudentCardComponent,
+    SearchComponent,
+    FilterListComponent,
+    TimeLogFieldComponent,
+
+    // directives
+    ObserveVisibilityDirective,
+    FocusElementDirective,
+];
+
+const MODULES = [
+    NumberRangeFieldModule,
+    SnackbarMultilineModule,
+    SharedMaterialModule,
+    PipesModule,
+];
 
 @NgModule({
     declarations: COMPONENTS,
-    exports: COMPONENTS,
-    imports: [
-        CommonModule,
-        TranslateModule,
-        SharedMaterialModule,
-        ReactiveFormsModule,
-        FormsModule,
-        RouterModule,
-        HttpClientModule,
-        HttpClientJsonpModule,
-    ],
+    exports: [...COMPONENTS, ...MODULES],
+    imports: [...MODULES, CommonModule],
 })
 export class SharedComponentsModule {}

@@ -1,0 +1,9 @@
+@import 'src/@fuse/scss/fuse';
+
+citiglobal-user-edit {
+  .top-bg {
+    @include media-breakpoint('lt-md') {
+      height: 256px;
+    }
+  }
+}

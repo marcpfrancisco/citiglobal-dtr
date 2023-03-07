@@ -8,7 +8,7 @@ import lombok.Data;
 public class UserDto {
 
     private Long id;
-    
+
     private Date createdAt;
     
     private Date updatedAt;
@@ -23,19 +23,25 @@ public class UserDto {
 
     private String lastName;
 
-    private String mobileNumber;
+    private String fullName;
 
-    private String studentId;
+    private String mobileNo;
+
+    private String studentNo;
+
+    private String rfidNo;
+
+    private String username;
+
+    private String password;
 
     private Long sectionId;
 
     private Object section;
 
-    private Long subjectId;
+    // private Long roleId;
 
-    private Object subject;
+    private String role;
 
-    private Long roleId;
-
-    private Object role;
+    // private Set<String> roles = new HashSet<>();
 }

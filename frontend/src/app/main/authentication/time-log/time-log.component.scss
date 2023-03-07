@@ -1,9 +1,42 @@
-citiglobal-time-log {
-    #time-log {
-        width: 100%;
-        background: #a81620 !important;
+@import 'src/@fuse/scss/fuse';
 
-        height: 100%;
-        overflow: hidden !important;
+citiglobal-time-log {
+  background: #550E10 !important;
+  color: #fff;
+
+  #time-log {
+    width: 100%;
+
+    .logo {
+      padding-top: 20px;
+      padding-left: 60px;
     }
+
+    .time-log-wrapper {
+      height: 100%;
+
+      .time-log-header {
+        margin-top: 150px;
+
+        .time-log-heading {
+          font-size: 9.7rem;
+          margin: 0;
+        }
+
+        .time-log-subheading {
+          font-size: 4.209rem;
+          margin: 0;
+        }
+      }
+
+      .time-log-footer {
+        margin-bottom: 60px;
+
+        .footer-title {
+          color: #F9FAF5;
+        }
+      }
+    }
+  }
+
 }

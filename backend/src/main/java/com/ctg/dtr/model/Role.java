@@ -21,10 +21,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+// @EqualsAndHashCode(exclude="users")
 public class Role {
 
     @Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
     @CreationTimestamp 
@@ -38,6 +39,10 @@ public class Role {
     private Boolean isActive;
 
     private String name;
+
+    // @ManyToMany(mappedBy = "roles")
+    // @JsonIgnore
+    // private Set<User> users;
 
     @OneToMany(mappedBy = "role")
 	@JsonIgnore

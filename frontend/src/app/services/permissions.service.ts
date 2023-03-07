@@ -34,7 +34,6 @@ export class PermissionsService {
             userIds: [user?.id],
         };
 
-        console.log(subject, 'subject');
         let rules = [];
 
         switch (user?.role) {

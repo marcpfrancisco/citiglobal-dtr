@@ -19,5 +19,19 @@ public class SubjectDto {
 
     private String subjectCode;
 
-    private String name;
+    private String description;
+
+    private String day;
+
+    private String startTime;
+
+    private String endTime;
+
+    private String gracePeriod;
+
+    private Integer units;
+
+    private Long sectionId;
+
+    private Object section;
 }

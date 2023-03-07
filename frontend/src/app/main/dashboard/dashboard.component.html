@@ -1,0 +1,19 @@
+<div id="dashboard" class="page-layout carded fullwidth inner-scroll">
+    <div class="top-bg accent"></div>
+
+    <div class="center">
+        <!-- HEADER -->
+        <citiglobal-header iconName="dashboard">
+            <ng-template #title>
+                Welcome back, {{ user$ | async | userFullName }}
+            </ng-template>
+        </citiglobal-header>
+        <!-- / HEADER -->
+
+        <!-- Content Card  -->
+        <div class="content-card">
+            <!-- Content  -->
+            <div class="card"></div>
+        </div>
+    </div>
+</div>

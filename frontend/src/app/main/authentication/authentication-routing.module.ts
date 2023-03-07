@@ -2,19 +2,19 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from 'src/app/guards';
+
 import { AdminLoginComponent } from './admin-login/admin-login.component';
 import { TimeLogComponent } from './time-log/time-log.component';
 
 const routes: Routes = [
     {
         path: '',
-        redirectTo: 'time-log',
+        redirectTo: 'admin-login',
         pathMatch: 'full',
     },
     {
         path: 'time-log',
         component: TimeLogComponent,
-        canActivate: [AuthGuard],
     },
     {
         path: 'admin-login',

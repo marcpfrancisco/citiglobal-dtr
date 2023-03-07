@@ -2,7 +2,11 @@ import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseConfigService } from '@fuse/services/config.service';
 import { Store } from '@ngrx/store';
-import { RootState } from '@stores/index';
+import { RootState, TimeLogReducer } from '@stores/index';
+import { TimeLogActions } from '@stores/time-log';
+import { getCurrentTimeStamp } from '@utils';
+import { interval, Observable, Subject } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
     selector: 'citiglobal-time-log',
@@ -12,6 +16,11 @@ import { RootState } from '@stores/index';
     animations: fuseAnimations,
 })
 export class TimeLogComponent implements OnInit {
+    currentTime: number | null;
+
+    unsubscribe$: Subject<any>;
+    search$: Observable<string>;
+
     /**
      * Constructor
      *
@@ -42,5 +51,19 @@ export class TimeLogComponent implements OnInit {
         };
     }
 
-    ngOnInit(): void { }
+    ngOnInit(): void {
+        this.search$ = this.store.select(TimeLogReducer.selectRFIDNo);
+
+        interval(1000)
+            .pipe(map(() => new Date()))
+            .subscribe((date) => {
+                this.currentTime = getCurrentTimeStamp();
+            });
+    }
+
+    handleSearch(event: Event) {
+        const rfidNo = (event?.target as HTMLInputElement)?.value || '';
+        console.log(rfidNo, 'time log comp');
+        this.store.dispatch(TimeLogActions.onSearchRFID({ rfidNo }));
+    }
 }

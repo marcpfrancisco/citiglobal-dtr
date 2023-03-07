@@ -11,14 +11,26 @@ import { AuthenticationActions } from './authentication';
 
 // Import reducers here...
 import * as AuthenticationReducer from './authentication/authentication.reducer';
-import * as UsersListReducer from './users-list/users-list.reducer'
+import * as UsersListReducer from './users/users-list.reducer';
+import * as LogsListReducer from './logs/logs-list.reducer';
+import * as LoginReducer from './login/login.reducer';
+import * as TimeLogReducer from './time-log/time-log.reducer';
 // export reducers here
-export { AuthenticationReducer, UsersListReducer };
+export {
+    AuthenticationReducer,
+    UsersListReducer,
+    LogsListReducer,
+    LoginReducer,
+    TimeLogReducer,
+};
 
 export interface RootState {
     // Add reducer state here
     [AuthenticationReducer.featureKey]: AuthenticationReducer.State;
     [UsersListReducer.featureKey]: UsersListReducer.State;
+    [LogsListReducer.featureKey]: LogsListReducer.State;
+    [LoginReducer.featureKey]: LoginReducer.State;
+    [TimeLogReducer.featureKey]: TimeLogReducer.State;
 }
 
 export const ROOT_REDUCERS = new InjectionToken<
@@ -28,8 +40,22 @@ export const ROOT_REDUCERS = new InjectionToken<
         // Add reducer state here
         [AuthenticationReducer.featureKey]: AuthenticationReducer.reducer,
         [UsersListReducer.featureKey]: UsersListReducer.reducer,
+        [LogsListReducer.featureKey]: LogsListReducer.reducer,
+        [LoginReducer.featureKey]: LoginReducer.reducer,
+        [TimeLogReducer.featureKey]: TimeLogReducer.reducer,
     }),
 });
+
+// Reset State on LogOutSuccess
+export function resetState(reducer: ActionReducer<any>): ActionReducer<any> {
+    return (state, action) =>
+        reducer(
+            action.type === AuthenticationActions.onLogOutSuccess.type
+                ? undefined
+                : state,
+            action
+        );
+}
 
 export function localStorageSyncReducer(
     reducer: ActionReducer<any>
@@ -47,17 +73,6 @@ export function storageMetaReducer(
     reducer: ActionReducer<any>
 ): ActionReducer<any, any> {
     return localStorageSyncReducer(reducer);
-}
-
-// Reset State on LogOutSuccess
-export function resetState(reducer: ActionReducer<any>): ActionReducer<any> {
-    return (state, action) =>
-        reducer(
-            action.type === AuthenticationActions.onLogOutSuccess.type
-                ? undefined
-                : state,
-            action
-        );
 }
 
 export const metaReducers: MetaReducer<RootState>[] = [

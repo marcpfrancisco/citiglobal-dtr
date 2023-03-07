@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { UserRoles } from '@enums';
 import { User } from '@models';
 import { UserRolesPipe } from '@pipes';
-import { startCase } from 'lodash';
+import { isArray, isObjectLike, startCase } from 'lodash';
 
 export enum FiltersType {
     TEXT,
@@ -39,8 +39,8 @@ export interface FiltersInputNumberRange {
 // user filter options
 export type UserFiltersInput = [
     FiltersInput<UserRoles>,
-    FiltersInput<boolean>,
     FiltersInput<boolean>
+    // FiltersInput<boolean>
 ];
 
 @Injectable({
@@ -72,7 +72,7 @@ export class FiltersService {
             {
                 type: FiltersType.SELECT,
                 label: 'Active',
-                name: 'active',
+                name: 'isActive',
                 resetValue: null,
                 required: false,
                 options: [
@@ -80,13 +80,53 @@ export class FiltersService {
                     { label: 'Inactive', value: false },
                 ],
             },
-            {
-                type: FiltersType.CHECKBOX,
-                label: 'Show Archived',
-                name: 'withDeleted',
-                resetValue: false,
-                required: false,
-            },
+            // {
+            //     type: FiltersType.CHECKBOX,
+            //     label: 'Show Archived',
+            //     name: 'withDeleted',
+            //     resetValue: false,
+            //     required: false,
+            // },
         ];
+    }
+
+    isEmptyFilterObject<Payload extends Record<string, unknown> | unknown>(
+        payload: Payload
+    ): boolean {
+        // Invalid parameters, then consider it as an empty filter
+        if (!payload || !isObjectLike(payload)) {
+            return false;
+        }
+
+        const values = Object.values(payload);
+        // No values in object, then this is empty!
+        if (!values.length) {
+            return false;
+        }
+
+        return values.some((value) => {
+            if (value === false) {
+                return false;
+            }
+            // null value, then this is empty!
+            if (value === null) {
+                return false;
+            }
+            // check empty date range
+            if (
+                isObjectLike(value) &&
+                value?.from === null &&
+                value?.to === null
+            ) {
+                return false;
+            }
+
+            // check empty array
+            if (isArray(value) && !value.length) {
+                return false;
+            }
+
+            return true;
+        });
     }
 }

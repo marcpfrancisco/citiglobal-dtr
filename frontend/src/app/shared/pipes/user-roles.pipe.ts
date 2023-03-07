@@ -13,7 +13,8 @@ export class UserRolesPipe implements PipeTransform {
         }
 
         return role
-            .split('-')
+            .replace('ROLE', '')
+            .split('_')
             .map((roleName) => capitalize(roleName))
             .join(' ');
     }

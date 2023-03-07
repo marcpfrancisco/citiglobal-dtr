@@ -5,7 +5,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { EditUserDto } from '@interfaces';
 import { User } from '@models';
 import { fuseAnimations } from '@fuse/animations';
-import { Subject, Subscription } from 'rxjs';
+import { createUserFullName } from '@utils';
 
 export enum UserProfileDialogResultType {
     SAVE = 'save',
@@ -34,10 +34,7 @@ export class UserProfileComponent implements OnInit {
             return false;
         }
 
-        return (
-            formData?.name !== this.data?.name ||
-            formData?.email !== this.data?.email
-        );
+        return formData?.name !== this.data?.firstName;
     }
 
     constructor(
@@ -51,15 +48,10 @@ export class UserProfileComponent implements OnInit {
     ngOnInit(): void {
         this.userForm = new FormGroup({
             name: new FormControl('', [Validators.required]),
-            email: new FormControl({ value: '', disabled: true }, [
-                Validators.required,
-                Validators.email,
-            ]),
         });
 
         this.userForm.setValue({
-            name: this.data.name,
-            email: this.data.email,
+            name: createUserFullName(this.data),
         });
     }
 
@@ -74,16 +66,16 @@ export class UserProfileComponent implements OnInit {
         });
     }
 
-    handleSave(): void {
-        const { name } = this.userForm.getRawValue();
+    // handleSave(): void {
+    //     const { name } = this.userForm.getRawValue();
 
-        if (this.userForm.valid) {
-            this.matDialogRef.close({
-                type: UserProfileDialogResultType.SAVE,
-                value: { name },
-            });
-        }
-    }
+    //     if (this.userForm.valid) {
+    //         this.matDialogRef.close({
+    //             type: UserProfileDialogResultType.SAVE,
+    //             value: { name },
+    //         });
+    //     }
+    // }
 
     get name(): string {
         return this.userForm.get('name').value;

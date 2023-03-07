@@ -48,6 +48,7 @@ import {
     switchMap,
     tap,
 } from 'rxjs/operators';
+import { FilterViewMode } from '../../view';
 
 import {
     MultiSelectFiltersDialogComponent,
@@ -64,6 +65,7 @@ export interface FiltersDialogData {
     name?: string;
     inputs: FiltersInput[];
     value?: any; // will be used to populate the forms
+    viewMode?: FilterViewMode;
 }
 
 export enum FilterInputType {
@@ -98,11 +100,13 @@ export class FiltersDialogComponent implements OnInit, OnDestroy {
     form: FormGroup;
     readonly types = FiltersType;
     readonly INPUT_TYPE = FilterInputType;
+    readonly VIEW_MODE = FilterViewMode;
 
     filterName: string;
 
     inputs: FiltersInput[];
     value: any;
+    viewMode: FilterViewMode;
 
     sessionUserSubscription: Subscription;
 
@@ -128,6 +132,7 @@ export class FiltersDialogComponent implements OnInit, OnDestroy {
 
         this.inputs = this.data.inputs;
         this.form = this.createForm(this.data);
+        this.viewMode = this.data.viewMode;
 
         this.sessionUserSubscription = this.store
             .select(AuthenticationReducer.selectCurrentUser)
@@ -288,7 +293,7 @@ export class FiltersDialogComponent implements OnInit, OnDestroy {
     }
 
     usersNameDisplayFn(user: User): string {
-        return user && user.name ? user.name : null;
+        return user ? `${user?.firstName} ${user?.lastName}` : null;
     }
 
     applyAndClose(): void {

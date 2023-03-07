@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { SharedComponentsModule } from '@components';
 import { FuseSharedModule } from '@fuse/shared.module';
 import { SharedMaterialModule } from '@material/shared';
 import { AdminLoginComponent } from './admin-login/admin-login.component';
@@ -13,6 +14,7 @@ import { TimeLogComponent } from './time-log/time-log.component';
 
         FuseSharedModule,
         SharedMaterialModule,
+        SharedComponentsModule,
         // Routing
         AuthenticationRoutingModule,
     ],

@@ -3,8 +3,13 @@ import { NgModule } from '@angular/core';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-import { ROOT_REDUCERS, metaReducers } from '@stores/index';
+import { metaReducers, ROOT_REDUCERS } from '@stores/index';
+
 import { AuthenticationModule } from './authentication/authentication.module';
+import { LoginModule } from './login/login.module';
+import { LogsListModule } from './logs/logs-list.module';
+import { TimeLogModule } from './time-log/time-log.module';
+import { UsersListModule } from './users/users-list.module';
 
 @NgModule({
     imports: [
@@ -14,6 +19,11 @@ import { AuthenticationModule } from './authentication/authentication.module';
         StoreDevtoolsModule.instrument(),
 
         AuthenticationModule,
+        LoginModule,
+        LoginModule,
+        LogsListModule,
+        TimeLogModule,
+        UsersListModule,
     ],
 })
 export class StoresModule {}
