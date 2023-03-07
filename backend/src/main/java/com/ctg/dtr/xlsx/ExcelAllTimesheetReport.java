@@ -7,12 +7,9 @@ import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.ctg.dtr.model.Timesheet;
-import com.ctg.dtr.model.User;
-import com.ctg.dtr.repository.UserRepository;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -21,14 +18,11 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 @Component
-public class ExcelTimesheetReport {
+public class ExcelAllTimesheetReport {
 
-    static String[] columnHeader = {"Date", "Day", "Time In", "Time Out", "Time Rendered"};
+    static String[] columnHeader = {"Date", "Day", "Time In", "Time Out", "Time Rendered", "Name", "Student ID"};
 
-    @Autowired
-    private UserRepository userRepository;
-
-    public ByteArrayInputStream generateTimesheetReport(List<Timesheet> timesheets) {
+    public ByteArrayInputStream generateAllTimesheetReport(List<Timesheet> timesheets) {
 
         SXSSFWorkbook workbook = new SXSSFWorkbook(200);
 
@@ -41,6 +35,8 @@ public class ExcelTimesheetReport {
             sheet.setColumnWidth(2, 25 * 256);
             sheet.setColumnWidth(3, 25 * 256);
             sheet.setColumnWidth(4, 25 * 256);
+            sheet.setColumnWidth(5, 25 * 256);
+            sheet.setColumnWidth(6, 25 * 256);
 
             // CREATE HEADER
             CellStyle tableHeadStyle = workbook.createCellStyle();
@@ -51,7 +47,7 @@ public class ExcelTimesheetReport {
             tableHeadFont.setBold(true);
             tableHeadStyle.setFont(tableHeadFont);
 
-            Row header = sheet.createRow(5);
+            Row header = sheet.createRow(0);
 
             // HEADERS ROW
             for (int col = 0; col < columnHeader.length; col++) {
@@ -68,28 +64,9 @@ public class ExcelTimesheetReport {
             SimpleDateFormat timestampFormat = new SimpleDateFormat("HH:mm:ss aa");
             SimpleDateFormat dayFormat = new SimpleDateFormat("EEEEE");
 
-            int rowCount = 6;
+            int rowCount = 1;
 
             for (Timesheet timesheet : timesheets) {
-
-                User checkUser = userRepository.findByStudentNo(timesheet.getUser().getStudentNo());
-
-                Row companyRow = sheet.createRow(0);
-			    Cell labelNameCell = companyRow.createCell(0);
-			    labelNameCell.setCellValue("Name:");
-			    labelNameCell.setCellStyle(tableHeadStyle);
-
-			    Cell cellCompany = companyRow.createCell(1);
-			    cellCompany.setCellValue((checkUser.getLastName() + ", " + 
-                checkUser.getFirstName() + (checkUser.getMiddleName() == null ? "" : " " + checkUser.getMiddleName())));
-
-			    Row employeeRow = sheet.createRow(1);
-			    Cell labelStudentNoCell = employeeRow.createCell(0);
-			    labelStudentNoCell.setCellValue("Student ID: ");
-			    labelStudentNoCell.setCellStyle(tableHeadStyle);
-
-			    Cell cellEmployee = employeeRow.createCell(1);
-			    cellEmployee.setCellValue(checkUser.getStudentNo());
 
                 Row row = sheet.createRow(rowCount++);
 
@@ -110,7 +87,16 @@ public class ExcelTimesheetReport {
                 }
                 if (timesheet.getTimeRendered() != null) {
                     row.createCell(4).setCellValue(timesheet.getTimeRendered());
-                    row.getCell(4).setCellStyle(horizontalRowLeft);             
+                    row.getCell(4).setCellStyle(horizontalRowLeft);      
+                }
+                if (timesheet.getUser() != null) {
+
+                    row.createCell(5).setCellValue((timesheet.getUser().getLastName() + ", " + timesheet.getUser().getFirstName() 
+                    + (timesheet.getUser().getMiddleName() == null ? "" : " " + timesheet.getUser().getMiddleName())));
+                    row.getCell(5).setCellStyle(horizontalRowLeft);    
+    
+                    row.createCell(6).setCellValue(timesheet.getUser().getStudentNo());
+                    row.getCell(6).setCellStyle(horizontalRowLeft);            
                 }
             }
 

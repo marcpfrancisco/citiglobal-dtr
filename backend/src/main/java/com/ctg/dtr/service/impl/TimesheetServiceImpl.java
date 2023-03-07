@@ -125,15 +125,12 @@ public class TimesheetServiceImpl implements TimesheetService {
         String checkDay = formatter.format(new Date());
         
         Subject nextSubject = subjectRepository.findByDayAndSectionId(checkDay.toUpperCase(), checkStudentNo.getSection().getId());
-        Optional<Timesheet> checkTimeLog = timesheetRepository.findTimesheetByUserId(checkStudentNo.getId());
-
+        Timesheet currentTimesheet = timesheetRepository.findTimesheetByUserId(checkStudentNo.getId());
 
         if (nextSubject != null) { 
             if (nextSubject.getDay().equals(checkDay.toUpperCase())) {
 
-                if (checkTimeLog.isPresent()) {
-    
-                    Timesheet currentTimesheet = timesheetRepository.findByUserId(checkTimeLog.get().getUser().getId());
+                if (currentTimesheet != null) {
     
                     Date startTime = new Date();
                     Date endTime = new Date(); 
@@ -238,9 +235,7 @@ public class TimesheetServiceImpl implements TimesheetService {
     
             } else {
     
-                if (checkTimeLog.isPresent()) {
-    
-                    Timesheet currentTimesheet = timesheetRepository.findByUserId(checkTimeLog.get().getUser().getId());
+                if (currentTimesheet != null) {
     
                     long timeDifference = (new Date()).getTime() - currentTimesheet.getTimeIn().getTime();
                     long secondsDifference = timeDifference / 1000 % 60;  
@@ -270,9 +265,7 @@ public class TimesheetServiceImpl implements TimesheetService {
             }       
         } else {
                 
-            if (checkTimeLog.isPresent()) {
-    
-                Timesheet currentTimesheet = timesheetRepository.findByUserId(checkTimeLog.get().getUser().getId());
+            if (currentTimesheet != null) {
 
                 long timeDifference = (new Date()).getTime() - currentTimesheet.getTimeIn().getTime();
                 long secondsDifference = timeDifference / 1000 % 60;  
