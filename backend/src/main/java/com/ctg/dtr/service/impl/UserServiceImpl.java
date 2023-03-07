@@ -41,7 +41,7 @@ public class UserServiceImpl implements UserService {
 	public User createUser(UserDto userDto) {
 
 		Optional<Section> section = sectionRepository.findById(userDto.getSectionId());
-		Optional<Role> role = roleRepository.findById(userDto.getRoleId());
+		Optional<Role> role = roleRepository.findRoleByName(userDto.getRole());
 
         User user = new User();
 
@@ -79,8 +79,13 @@ public class UserServiceImpl implements UserService {
     @Override
 	public User updateUser(User currentUser, UserDto userDto) {
 
-		Optional<Section> section = sectionRepository.findById(userDto.getSectionId());
-		Optional<Role> role = roleRepository.findById(userDto.getRoleId());
+		Optional<Section> section = null;
+
+		if (userDto.getSectionId() != null) {
+			section = sectionRepository.findById(userDto.getSectionId());
+		}
+
+		Optional<Role> role = roleRepository.findRoleByName(userDto.getRole());
 
         currentUser.setPublishedAt(userDto.getPublishedAt() == null ? currentUser.getPublishedAt() : userDto.getPublishedAt());
         currentUser.setIsActive(userDto.getIsActive() == null ? currentUser.getIsActive() : userDto.getIsActive());
@@ -93,7 +98,7 @@ public class UserServiceImpl implements UserService {
 		currentUser.setUsername(userDto.getUsername() == null ? currentUser.getUsername() : userDto.getUsername());
 		currentUser.setPassword(userDto.getPassword() == null ? currentUser.getPassword() : passwordEncoder.encode(userDto.getPassword()));
 
-		currentUser.setSection(section.isPresent() ? section.get() : currentUser.getSection());
+		currentUser.setSection(section != null ? section.get() : currentUser.getSection());
 		currentUser.setRole(role.isPresent() ? role.get() : currentUser.getRole());
 
 		// if (null == currentUser.getRoles()) {
@@ -199,7 +204,7 @@ public class UserServiceImpl implements UserService {
 		userDto.setSectionId(user.getSection() != null ? user.getSection().getId() : 0);
 		userDto.setSection(user.getSection() != null ? user.getSection(): null);
 		// userDto.setRoles(user.getRoles().stream().map(Role::getName).collect(Collectors.toSet()));
-		userDto.setRoleId(user.getRole() != null ? user.getRole().getId() : 0);
+		// userDto.setRoleId(user.getRole() != null ? user.getRole().getId() : 0);
 		userDto.setRole(user.getRole() != null ? user.getRole().getName() : "");
 	}
 }

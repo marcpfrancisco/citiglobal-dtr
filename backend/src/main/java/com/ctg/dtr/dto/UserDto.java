@@ -39,7 +39,7 @@ public class UserDto {
 
     private Object section;
 
-    private Long roleId;
+    // private Long roleId;
 
     private String role;
 
