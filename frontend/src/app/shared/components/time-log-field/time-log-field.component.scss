@@ -1,0 +1,18 @@
+@import 'src/@fuse/scss/fuse';
+
+citiglobal-time-log-field {
+  flex: 1;
+
+  .time-log-field-wrapper {
+    width: 100%;
+    border-radius: 28px;
+    overflow: hidden;
+    // visibility: hidden;
+
+    @include mat-elevation(1);
+
+    @include media-breakpoint('xs') {
+      width: 100%;
+    }
+  }
+}

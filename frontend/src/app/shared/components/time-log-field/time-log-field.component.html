@@ -1,0 +1,16 @@
+<div class="time-log-field-wrapper">
+    <div
+        class="time-log-field"
+        fxFlex
+        fxLayout="row"
+        fxLayoutAlign="start center"
+    >
+        <input
+            citiglobalFocusElement
+            type="hidden"
+            placeholder="Tap your RFID here"
+            [value]="rfidNumber"
+            (input)="handleSearch($event)"
+        />
+    </div>
+</div>

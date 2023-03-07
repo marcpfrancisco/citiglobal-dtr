@@ -22,6 +22,11 @@
             </h3>
         </div>
 
+        <citiglobal-time-log-field
+            [rfidNumber]="search$ | async"
+            (timeLog)="handleSearch($event)"
+        ></citiglobal-time-log-field>
+
         <div class="time-log-footer">
             <a class="footer-title" routerLink="/auth/admin-login"
                 >Administrator Login</a

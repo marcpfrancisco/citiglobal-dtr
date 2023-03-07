@@ -14,6 +14,12 @@ export const onSearch = createAction(
     '[Logs List Component] On Search',
     props<{ search: string }>()
 );
+
+export const onSearchRFID = createAction(
+    '[Time Log Component] On Search RFID',
+    props<{ rfidNo: string }>()
+);
+
 export const onShowFilters = createAction(
     '[Logs List Component] On Show Filters'
 );

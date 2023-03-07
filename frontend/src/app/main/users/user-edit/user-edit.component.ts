@@ -225,7 +225,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
                     this.userForm.setValue({
                         firstName: user[0]?.firstName || '',
                         lastName: user[0]?.lastName || '',
-                        studentId: user[0]?.studentId || '',
+                        studentNo: user[0]?.studentNo || '',
                         rfidNo: user[0]?.rfidNo || '',
                         username: user[0]?.username || '',
                         role: user[0]?.role || '',
@@ -252,7 +252,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
         this.userForm = new FormGroup({
             firstName: new FormControl('', [Validators.required]),
             lastName: new FormControl('', [Validators.required]),
-            studentId: new FormControl('', [Validators.required]),
+            studentNo: new FormControl('', [Validators.required]),
             rfidNo: new FormControl('', [Validators.required]),
             username: new FormControl('', [Validators.required]),
             role: new FormControl('', [Validators.required]),

@@ -8,6 +8,7 @@ import { metaReducers, ROOT_REDUCERS } from '@stores/index';
 import { AuthenticationModule } from './authentication/authentication.module';
 import { LoginModule } from './login/login.module';
 import { LogsListModule } from './logs/logs-list.module';
+import { TimeLogModule } from './time-log/time-log.module';
 import { UsersListModule } from './users/users-list.module';
 
 @NgModule({
@@ -21,6 +22,7 @@ import { UsersListModule } from './users/users-list.module';
         LoginModule,
         LoginModule,
         LogsListModule,
+        TimeLogModule,
         UsersListModule,
     ],
 })
