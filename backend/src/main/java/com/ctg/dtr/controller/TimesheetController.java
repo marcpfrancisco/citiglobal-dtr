@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ctg.dtr.dto.TimesheetDto;
@@ -48,8 +49,8 @@ public class TimesheetController {
 	}
 
 	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN') or hasRole('USER')")
-	@PostMapping("/dailyTimeRecord/{rfidNo}")
-	public ResponseEntity<?> dailyTimeRecord(@PathVariable String rfidNo, HttpServletRequest request, HttpServletResponse response) {
+	@PostMapping("/dailyTimeRecord")
+	public ResponseEntity<?> dailyTimeRecord(@RequestParam String rfidNo, HttpServletRequest request, HttpServletResponse response) {
 
         Timesheet timesheet = timesheetService.dailyTimeRecord(rfidNo);
 		Map<String, Object> tempMap = new HashMap<String, Object>();
