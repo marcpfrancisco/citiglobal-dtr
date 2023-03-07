@@ -127,98 +127,133 @@ public class TimesheetServiceImpl implements TimesheetService {
         Subject nextSubject = subjectRepository.findByDayAndSectionId(checkDay.toUpperCase(), checkStudentId.getSection().getId());
         Optional<Timesheet> checkTimeLog = timesheetRepository.findTimesheetByUserId(checkStudentId.getId());
 
-        if (nextSubject.getDay().equals(checkDay.toUpperCase())) {
 
-            if (checkTimeLog.isPresent()) {
+        if (nextSubject != null) { 
+            if (nextSubject.getDay().equals(checkDay.toUpperCase())) {
 
-                Timesheet currentTimesheet = timesheetRepository.findByUserId(checkTimeLog.get().getUser().getId());
-
-                Date startTime = new Date();
-                Date endTime = new Date(); 
+                if (checkTimeLog.isPresent()) {
     
-                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+                    Timesheet currentTimesheet = timesheetRepository.findByUserId(checkTimeLog.get().getUser().getId());
     
-                try {
-                    startTime = sdf.parse(nextSubject.getStartTime());
-                    endTime = sdf.parse(nextSubject.getEndTime());
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-
-                long timeSchedDifference = endTime.getTime() - startTime.getTime();
-                long timeDifference = (new Date()).getTime() - currentTimesheet.getTimeIn().getTime();
-
-                long secondsDifference = timeDifference / 1000 % 60;  
-                long minutesDifference = timeDifference / (60 * 1000) % 60; 
-                long hoursDifference = timeDifference / (60 * 60 * 1000);
-
-                if (timeDifference > timeSchedDifference) {
-                    
-                    currentTimesheet.setTimeOut(new Date());
-                    currentTimesheet.setTimeRendered(String.format("%02d", hoursDifference)
-                    + ":" + String.format("%02d", minutesDifference)
-                    + ":" + String.format("%02d", secondsDifference));
-
-                    return timesheetRepository.save(currentTimesheet);
-
+                    Date startTime = new Date();
+                    Date endTime = new Date(); 
+        
+                    SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+        
+                    try {
+                        startTime = sdf.parse(nextSubject.getStartTime());
+                        endTime = sdf.parse(nextSubject.getEndTime());
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+    
+                    long timeSchedDifference = endTime.getTime() - startTime.getTime();
+                    long timeDifference = (new Date()).getTime() - currentTimesheet.getTimeIn().getTime();
+    
+                    long secondsDifference = timeDifference / 1000 % 60;  
+                    long minutesDifference = timeDifference / (60 * 1000) % 60; 
+                    long hoursDifference = timeDifference / (60 * 60 * 1000);
+    
+                    if (timeDifference > timeSchedDifference) {
+                        
+                        currentTimesheet.setTimeOut(new Date());
+                        currentTimesheet.setTimeRendered(String.format("%02d", hoursDifference)
+                        + ":" + String.format("%02d", minutesDifference)
+                        + ":" + String.format("%02d", secondsDifference));
+    
+                        return timesheetRepository.save(currentTimesheet);
+    
+                    } else {
+    
+                        currentTimesheet.setTimeOut(new Date());
+                        currentTimesheet.setTimeRendered(String.format("%02d", hoursDifference)
+                        + ":" + String.format("%02d", minutesDifference)
+                        + ":" + String.format("%02d", secondsDifference));
+                        currentTimesheet.setStatus("INCOMPLETE");
+    
+                        return timesheetRepository.save(currentTimesheet);
+                    }
+    
                 } else {
-
-                    currentTimesheet.setTimeOut(new Date());
-                    currentTimesheet.setTimeRendered(String.format("%02d", hoursDifference)
-                    + ":" + String.format("%02d", minutesDifference)
-                    + ":" + String.format("%02d", secondsDifference));
-                    currentTimesheet.setStatus("INCOMPLETE");
-
-                    return timesheetRepository.save(currentTimesheet);
+                
+                    String startMinute = nextSubject.getStartTime();
+                    String endMinute = nextSubject.getGracePeriod();
+        
+                    Date startTime = new Date();
+                    Date endTime = new Date(); 
+                    Date currentTime = new Date(); 
+        
+                    SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+        
+                    try {
+                        startTime = sdf.parse(startMinute);
+                        endTime = sdf.parse(endMinute);
+                        currentTime = sdf.parse(sdf.format(new Date()));
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+        
+                    Calendar startCalendar = Calendar.getInstance();
+                    startCalendar.setTime(startTime);
+                    startCalendar.add(Calendar.DATE, 1);
+                
+                    Calendar endCalendar = Calendar.getInstance();
+                    endCalendar.setTime(endTime);
+                    endCalendar.add(Calendar.DATE, 1);
+                
+                    Calendar currentCalendar = Calendar.getInstance();
+                    currentCalendar.setTime(currentTime);
+                    currentCalendar.add(Calendar.DATE, 1);
+                    currentCalendar.add(Calendar.MINUTE, -1);
+                
+                    Date currentDate = currentCalendar.getTime();
+        
+                    if (currentDate.after(startCalendar.getTime()) && currentDate.before(endCalendar.getTime())) {
+        
+                        Timesheet timesheet = new Timesheet();
+            
+                        timesheet.setDate(new Date());
+                        timesheet.setTimeIn(new Date());
+                        timesheet.setTimeOut(null);
+                        timesheet.setTimeRendered("00:00:00");
+                        timesheet.setStatus("PRESENT");
+                        timesheet.setUser(checkStudentId != null ? checkStudentId : null);
+                
+                        return timesheetRepository.save(timesheet);
+        
+                    } else {
+        
+                        Timesheet timesheet = new Timesheet();
+            
+                        timesheet.setDate(new Date());
+                        timesheet.setTimeIn(new Date());
+                        timesheet.setTimeOut(null);
+                        timesheet.setTimeRendered("00:00:00");
+                        timesheet.setStatus("LATE");
+                        timesheet.setUser(checkStudentId != null ? checkStudentId : null);
+                
+                        return timesheetRepository.save(timesheet);
+                    }
                 }
-
+    
             } else {
-            
-                String startMinute = nextSubject.getStartTime();
-                String endMinute = nextSubject.getGracePeriod();
     
-                Date startTime = new Date();
-                Date endTime = new Date(); 
-                Date currentTime = new Date(); 
+                if (checkTimeLog.isPresent()) {
     
-                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+                    Timesheet currentTimesheet = timesheetRepository.findByUserId(checkTimeLog.get().getUser().getId());
     
-                try {
-                    startTime = sdf.parse(startMinute);
-                    endTime = sdf.parse(endMinute);
-                    currentTime = sdf.parse(sdf.format(new Date()));
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-    
-                Calendar startCalendar = Calendar.getInstance();
-                startCalendar.setTime(startTime);
-                startCalendar.add(Calendar.DATE, 1);
-            
-                Calendar endCalendar = Calendar.getInstance();
-                endCalendar.setTime(endTime);
-                endCalendar.add(Calendar.DATE, 1);
-            
-                Calendar currentCalendar = Calendar.getInstance();
-                currentCalendar.setTime(currentTime);
-                currentCalendar.add(Calendar.DATE, 1);
-                currentCalendar.add(Calendar.MINUTE, -1);
-            
-                Date currentDate = currentCalendar.getTime();
-    
-                if (currentDate.after(startCalendar.getTime()) && currentDate.before(endCalendar.getTime())) {
-    
-                    Timesheet timesheet = new Timesheet();
+                    long timeDifference = (new Date()).getTime() - currentTimesheet.getTimeIn().getTime();
+                    long secondsDifference = timeDifference / 1000 % 60;  
+                    long minutesDifference = timeDifference / (60 * 1000) % 60; 
+                    long hoursDifference = timeDifference / (60 * 60 * 1000);
+                        
+                    currentTimesheet.setTimeOut(new Date());
+                    currentTimesheet.setTimeRendered(String.format("%02d", hoursDifference)
+                    + ":" + String.format("%02d", minutesDifference)
+                    + ":" + String.format("%02d", secondsDifference));
         
-                    timesheet.setDate(new Date());
-                    timesheet.setTimeIn(new Date());
-                    timesheet.setTimeOut(null);
-                    timesheet.setTimeRendered("00:00:00");
-                    timesheet.setStatus("PRESENT");
-                    timesheet.setUser(checkStudentId != null ? checkStudentId : null);
-            
-                    return timesheetRepository.save(timesheet);
-    
+                    return timesheetRepository.save(currentTimesheet);
+                    
                 } else {
     
                     Timesheet timesheet = new Timesheet();
@@ -227,17 +262,16 @@ public class TimesheetServiceImpl implements TimesheetService {
                     timesheet.setTimeIn(new Date());
                     timesheet.setTimeOut(null);
                     timesheet.setTimeRendered("00:00:00");
-                    timesheet.setStatus("LATE");
+                    timesheet.setStatus("LABORATORY");
                     timesheet.setUser(checkStudentId != null ? checkStudentId : null);
             
                     return timesheetRepository.save(timesheet);
                 }
-            }
-
+            }       
         } else {
-
+                
             if (checkTimeLog.isPresent()) {
-
+    
                 Timesheet currentTimesheet = timesheetRepository.findByUserId(checkTimeLog.get().getUser().getId());
 
                 long timeDifference = (new Date()).getTime() - currentTimesheet.getTimeIn().getTime();
@@ -265,7 +299,8 @@ public class TimesheetServiceImpl implements TimesheetService {
         
                 return timesheetRepository.save(timesheet);
             }
-        }       
+        }
+
 	}
 
     private void buildTimesheetDto(Timesheet timesheet, TimesheetDto timesheetDto) {
