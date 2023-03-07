@@ -48,7 +48,6 @@ public class TimesheetController {
 		return new ResponseEntity<Timesheet>(timesheet, HttpStatus.CREATED);
 	}
 
-	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN') or hasRole('USER')")
 	@PostMapping("/dailyTimeRecord")
 	public ResponseEntity<?> dailyTimeRecord(@RequestParam String rfidNo, HttpServletRequest request, HttpServletResponse response) {
 

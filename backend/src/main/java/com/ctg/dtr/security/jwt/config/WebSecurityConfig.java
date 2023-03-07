@@ -72,7 +72,7 @@ public class WebSecurityConfig {
         .requestMatchers("/api/authentication/authenticate",
         "/api/user/createUser",
         "/api/user/getUserById/**",
-        "/api/timesheet/dailyTimeRecord/**")
+        "/api/timesheet/dailyTimeRecord?**")
         .permitAll()
         .anyRequest().authenticated();
     
