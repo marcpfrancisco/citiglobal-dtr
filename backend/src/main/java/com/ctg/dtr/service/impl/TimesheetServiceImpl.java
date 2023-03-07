@@ -124,7 +124,7 @@ public class TimesheetServiceImpl implements TimesheetService {
         SimpleDateFormat formatter = new SimpleDateFormat("EEEE");
         String checkDay = formatter.format(new Date());
         
-        Subject nextSubject = subjectRepository.findByDayAndSectionId(checkDay.toUpperCase(), checkStudentNo.getSection().getId());
+        Subject nextSubject = subjectRepository.findSubjectByDayAndSectionId(checkDay.toUpperCase(), checkStudentNo.getSection().getId());
         Timesheet currentTimesheet = timesheetRepository.findTimesheetByUserId(checkStudentNo.getId());
 
         if (nextSubject != null) { 

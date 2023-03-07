@@ -12,7 +12,9 @@ import com.ctg.dtr.model.Subject;
 @Repository
 public interface SubjectRepository extends JpaRepository<Subject, Long>, JpaSpecificationExecutor<Subject> {
 
-    Subject findByDayAndSectionId(String day, Long sectionId);
+    @Query(value = "SELECT * FROM subject WHERE day = ?1 AND section_id = ?2 "
+    + "AND start_time > CURRENT_TIME() ORDER BY start_time ASC LIMIT 1", nativeQuery = true) 
+    Subject findSubjectByDayAndSectionId(String day, Long sectionId);
 
     List<Subject> findBySectionId(Long sectionId);
 
