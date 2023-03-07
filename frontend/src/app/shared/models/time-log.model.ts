@@ -1,4 +1,4 @@
-export interface Logs {
+export interface TimeLog {
     id: number;
     name: string;
     createdAt: string | Date;

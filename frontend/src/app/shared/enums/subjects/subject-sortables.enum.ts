@@ -1,6 +1,8 @@
 export enum SubjectSortables {
     SUBJECT_CODE = 'subjectCode',
-    NAME = 'name',
+    DESCRIPTION = 'description',
+    START_TIME = 'start-time',
+    END_TIME = 'end-time',
     PUBLISHED_AT = 'publishedAt',
     ACTIVE = 'active',
 }

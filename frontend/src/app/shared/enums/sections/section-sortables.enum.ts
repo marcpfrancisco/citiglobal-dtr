@@ -1,5 +1,6 @@
 export enum SectionSortables {
-    NAME = 'name',
+    SECTION = 'section',
+    COURSE = 'course',
     PUBLISHED_AT = 'publishedAt',
     ACTIVE = 'active',
 }

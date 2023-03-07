@@ -6,18 +6,19 @@ import {
     ViewEncapsulation,
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialogConfig } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
 import { Sort } from '@angular/material/sort';
-import { ActivatedRoute, Params, Router } from '@angular/router';
-import { mode } from '@constants';
+import { ActivatedRoute, Params } from '@angular/router';
+import { ACTION_UPDATE, mode, SUBJECT_SECTIONS } from '@constants';
 import { SectionSortables, SubjectSortables, UserRoles } from '@enums';
 import { fuseAnimations } from '@fuse/animations';
 import { FusePerfectScrollbarDirective } from '@fuse/directives/fuse-perfect-scrollbar/fuse-perfect-scrollbar.directive';
 import { CreateUserDto } from '@interfaces';
-import { User, SubjectModel, Section } from '@models';
+import { Section, SubjectModel, User } from '@models';
 import { Store } from '@ngrx/store';
-import { UsersService } from '@services';
+import { AblePipe } from '@pipes';
+import { RouterService, UsersService } from '@services';
 import {
     AuthenticationReducer,
     RootState,
@@ -25,8 +26,8 @@ import {
 } from '@stores/index';
 import { UsersListActions } from '@stores/users';
 import { getSortData, isNumericInteger } from '@utils';
-import { Subscription, Subject, Observable, of, combineLatest } from 'rxjs';
-import { catchError, switchMap } from 'rxjs/operators';
+import { combineLatest, Observable, of, Subject, Subscription } from 'rxjs';
+import { catchError, switchMap, take } from 'rxjs/operators';
 
 @Component({
     selector: 'citiglobal-user-edit',
@@ -37,8 +38,26 @@ import { catchError, switchMap } from 'rxjs/operators';
 })
 export class UserEditComponent implements OnInit, OnDestroy {
     readonly USER_ROLES = UserRoles;
-    readonly SECTION_SORTABLES = SectionSortables;
+    readonly COURSE_SECTION_SORTABLES = SectionSortables;
     readonly SUBJECT_SORTABLES = SubjectSortables;
+
+    COURSE_SECTION_DISPLAYED_COLUMNS = [
+        SectionSortables.SECTION,
+        SectionSortables.COURSE,
+        SectionSortables.PUBLISHED_AT,
+        SectionSortables.ACTIVE,
+        'options',
+    ];
+
+    SUBJECT_DISPLAYED_COLUMNS = [
+        SubjectSortables.SUBJECT_CODE,
+        SubjectSortables.DESCRIPTION,
+        SubjectSortables.START_TIME,
+        SubjectSortables.END_TIME,
+        SubjectSortables.PUBLISHED_AT,
+        SubjectSortables.ACTIVE,
+        'options',
+    ];
 
     userForm: FormGroup;
 
@@ -61,13 +80,31 @@ export class UserEditComponent implements OnInit, OnDestroy {
     pageIndex$: Observable<number>;
     total$: Observable<number>;
 
-    subjectDateSource$: Observable<SubjectModel[]>;
+    courseSubjectDateSource$: Observable<SubjectModel[]>;
     studentDataSource$: Observable<Section[]>;
 
     @ViewChild(FusePerfectScrollbarDirective)
     directiveScroll: FusePerfectScrollbarDirective;
 
     userRecord: User;
+
+    get courseSectionDisplayedColumns(): Array<string> {
+        if (!this.ablePipe.transform(ACTION_UPDATE, SUBJECT_SECTIONS)) {
+            return this.COURSE_SECTION_DISPLAYED_COLUMNS.filter(
+                (column) => column !== 'options'
+            );
+        }
+        return this.COURSE_SECTION_DISPLAYED_COLUMNS;
+    }
+
+    get subjectDisplayedColumns(): Array<string> {
+        if (!this.ablePipe.transform(ACTION_UPDATE, SUBJECT_SECTIONS)) {
+            return this.SUBJECT_DISPLAYED_COLUMNS.filter(
+                (column) => column !== 'options'
+            );
+        }
+        return this.SUBJECT_DISPLAYED_COLUMNS;
+    }
 
     get role(): UserRoles | '' {
         const value = this.userForm?.get('role')?.value;
@@ -83,8 +120,12 @@ export class UserEditComponent implements OnInit, OnDestroy {
         return this.userForm?.get('isActive')?.value;
     }
 
-    get userName(): string {
-        return this.userForm?.get('fullName')?.value;
+    get firstName(): string {
+        return this.userForm?.get('firstName')?.value;
+    }
+
+    get lastName(): string {
+        return this.userForm?.get('lastName')?.value;
     }
 
     get isEditMode(): boolean {
@@ -118,22 +159,34 @@ export class UserEditComponent implements OnInit, OnDestroy {
 
         // exclude disabled data
         Object.keys(data).forEach((fieldName) => {
-            if (this.isDisabledField(fieldName)) {
-                return;
-            }
-
             payload[fieldName] = data[fieldName];
         });
 
         return payload as CreateUserDto;
     }
 
+    get canAssignCourseAndSection(): boolean {
+        if (!this.role) {
+            return false;
+        }
+
+        return true;
+    }
+
+    get canAssignSubject(): boolean {
+        if (!this.role) {
+            return false;
+        }
+
+        return true;
+    }
+
     constructor(
         private route: ActivatedRoute,
-        private router: Router,
+        private routerService: RouterService,
         private usersService: UsersService,
         private store: Store<RootState>,
-        private dialog: MatDialog
+        private ablePipe: AblePipe
     ) {}
 
     ngOnInit(): void {
@@ -168,13 +221,28 @@ export class UserEditComponent implements OnInit, OnDestroy {
 
                 this.userRecord = user;
 
-                this.userForm.setValue({
-                    fullName: user[0]?.fullName || '',
-                    role: user[0]?.role || '',
-                    isActive: user[0]?.isActive || false,
-                });
+                if (user) {
+                    this.userForm.setValue({
+                        firstName: user[0]?.firstName || '',
+                        lastName: user[0]?.lastName || '',
+                        studentId: user[0]?.studentId || '',
+                        rfidNo: user[0]?.rfidNo || '',
+                        username: user[0]?.username || '',
+                        role: user[0]?.role || '',
+                        isActive: user[0]?.isActive || false,
+                    });
+                }
 
-                this.refreshDisabledFields();
+                // if (user) {
+                //     this.userForm.setValue({
+                //         firstName: user[0]?.firstName || '',
+                //         lastName: user[0]?.lastName || '',
+                //         studentId: user[0]?.studentId || '',
+                //         rfidNo: user[0]?.rfidNo || '',
+                //         role: user[0]?.role || '',
+                //         isActive: user[0]?.isActive || false,
+                //     });
+                // }
             });
 
         this.setupObservables();
@@ -182,7 +250,11 @@ export class UserEditComponent implements OnInit, OnDestroy {
 
     buildUserForm(): void {
         this.userForm = new FormGroup({
-            fullName: new FormControl('', [Validators.required]),
+            firstName: new FormControl('', [Validators.required]),
+            lastName: new FormControl('', [Validators.required]),
+            studentId: new FormControl('', [Validators.required]),
+            rfidNo: new FormControl('', [Validators.required]),
+            username: new FormControl('', [Validators.required]),
             role: new FormControl('', [Validators.required]),
             isActive: new FormControl(true, [Validators.required]),
         });
@@ -191,43 +263,6 @@ export class UserEditComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         this.userDetailSubscription.unsubscribe();
         // this.unsubscribeDialogbox();
-    }
-
-    refreshDisabledFields(): void {
-        const form = this.userForm;
-        const isEditingSelf = this.isEditingSelf;
-
-        // disable form control
-        if (form) {
-            this.setDisabledField('name', false);
-            this.setDisabledField('role', !this.isRoleUpdatable);
-            this.setDisabledField('isActive', isEditingSelf);
-        }
-    }
-
-    setDisabledField(fieldName: string, disabled?: boolean): boolean {
-        const isDisabled = disabled !== false;
-        const field = this.userForm?.get(fieldName);
-
-        if (field) {
-            if (!isDisabled) {
-                field.enable({ onlySelf: true });
-            } else {
-                field.disable({ onlySelf: true });
-            }
-        }
-
-        return isDisabled;
-    }
-
-    isDisabledField(fieldName: string): boolean {
-        const field = this.userForm?.get(fieldName);
-
-        if (field) {
-            return field.disabled;
-        }
-
-        return true;
     }
 
     onToggleSort(sort: Sort): void {
@@ -269,16 +304,18 @@ export class UserEditComponent implements OnInit, OnDestroy {
         this.isLoading = true;
         // Edit User
         if (this.mode === mode.EDIT_MODE) {
+            console.log(formData, 'Update');
             // the id of the user to be edited
             this.store.dispatch(
                 UsersListActions.onUpdateUser({
-                    userId: this.userId,
+                    userId: +this.userId,
                     payload: formData,
                 })
             );
 
             // Create User
         } else {
+            console.log('Create');
             this.store.dispatch(
                 UsersListActions.onCreateUser({
                     payload: formData,
@@ -287,11 +324,59 @@ export class UserEditComponent implements OnInit, OnDestroy {
         }
     }
 
+    assignCourseAndSection(): void {
+        const dialogConfig = new MatDialogConfig();
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        dialogConfig.panelClass = 'citiglobal-user-assign-course-section';
+
+        // this.unsubscribeDialogbox();
+
+        // this.assignFloristDialogSubscription = this.dialog
+        //   .open(UserAssignFloristComponent, dialogConfig)
+        //   .afterClosed()
+        //   .pipe(take(1))
+        //   .subscribe((florist) => {
+        //     if (florist) {
+        //       // assign florist
+        //       if (this.canAssignCourseAndSection && !this.isAssignedFlorist(florist.id)) {
+        //         this.store.dispatch(
+        //           UsersFloristsActions.onAddUserFlorist({ floristId: florist.id })
+        //         );
+        //       }
+        //     }
+        //   });
+    }
+
+    assignSubject(): void {
+        const dialogConfig = new MatDialogConfig();
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        dialogConfig.panelClass = 'citiglobal-user-assign-subject';
+
+        // this.unsubscribeDialogbox();
+
+        // this.assignFloristDialogSubscription = this.dialog
+        //   .open(UserAssignFloristComponent, dialogConfig)
+        //   .afterClosed()
+        //   .pipe(take(1))
+        //   .subscribe((florist) => {
+        //     if (florist) {
+        //       // assign florist
+        //       if (this.canAssignCourseAndSection && !this.isAssignedFlorist(florist.id)) {
+        //         this.store.dispatch(
+        //           UsersFloristsActions.onAddUserFlorist({ floristId: florist.id })
+        //         );
+        //       }
+        //     }
+        //   });
+    }
+
     /**
      * Handles back navigation to specified route
      */
     navigateBack(): void {
-        this.router.navigate(['users']);
+        this.routerService.back(['users']);
     }
 
     /**

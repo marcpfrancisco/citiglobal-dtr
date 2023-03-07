@@ -136,7 +136,7 @@ export class FiltersDialogComponent implements OnInit, OnDestroy {
 
         this.sessionUserSubscription = this.store
             .select(AuthenticationReducer.selectCurrentUser)
-            .subscribe((user) => console.log(user));
+            .subscribe((user) => {});
     }
 
     ngOnDestroy(): void {

@@ -90,7 +90,11 @@ export class ApiService {
         body: Payload,
         options = {} as HttpOptions
     ): Observable<ReturnObject> {
-        return this.httpClient.put<ReturnObject>(url, body, options);
+        return this.httpClient.put<ReturnObject>(
+            `${this.API_URL}/${url}`,
+            body,
+            options
+        );
     }
 
     getHttpClient() {

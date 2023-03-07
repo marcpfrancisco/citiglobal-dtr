@@ -4,7 +4,7 @@
     <div class="center">
         <!-- HEADER -->
         <citiglobal-header iconName="info">
-            <ng-template #title> All Sections </ng-template>
+            <ng-template #title> All Course & Section </ng-template>
             <!-- <ng-template #search>
                 <citiglobal-search
                     [searchValue]="search$ | async"
@@ -52,13 +52,23 @@
                 [fusePerfectScrollbarOptions]="{ suppressScrollX: true }"
                 (matSortChange)="onToggleSort($event)"
             >
-                <!-- Name Column -->
-                <ng-container [matColumnDef]="SECTION_SORTABLES.NAME">
+                <!-- Section Column -->
+                <ng-container [matColumnDef]="SECTION_SORTABLES.SECTION">
                     <mat-header-cell *matHeaderCellDef mat-sort-header
                         >Section</mat-header-cell
                     >
                     <mat-cell *matCellDef="let item">
-                        <p class="text-truncate">{{ item.name }}</p>
+                        <p class="text-truncate">{{ item.section }}</p>
+                    </mat-cell>
+                </ng-container>
+
+                <!-- Course Column -->
+                <ng-container [matColumnDef]="SECTION_SORTABLES.COURSE">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header
+                        >Course</mat-header-cell
+                    >
+                    <mat-cell *matCellDef="let item">
+                        <p class="text-truncate">{{ item.course }}</p>
                     </mat-cell>
                 </ng-container>
 

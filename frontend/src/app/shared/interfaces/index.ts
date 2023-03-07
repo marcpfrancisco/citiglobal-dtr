@@ -8,3 +8,6 @@ export * from './user/find-user-dto.interface';
 
 export * from './pagination/pagination-option.interface';
 export * from './pagination/pagination-result.interface';
+
+export * from './time-log/find-all-time-log-dto.interface';
+export * from './time-log/find-time-log-dto.interface';

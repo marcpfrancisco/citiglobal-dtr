@@ -22,6 +22,7 @@ import {
     PermissionsService,
     RouterService,
     SnackbarService,
+    TimeLogService,
     UsersService,
 } from '@services';
 import { StoresModule } from '@stores/stores.module';
@@ -81,6 +82,7 @@ const { apiUrl } = environment;
         RouterService,
         SnackbarMultilineService,
         SnackbarService,
+        TimeLogService,
         UsersService,
     ],
     bootstrap: [AppComponent],
