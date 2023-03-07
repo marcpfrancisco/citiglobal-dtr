@@ -8,7 +8,7 @@ public interface ImageService {
 
     Image uploadImage(MultipartFile multipartFile, Long userId);
 
-    Image getUserByStudentId(String studentId);
+    Image getUserByStudentNo(String studentNo);
 
     // Image getImageDetails(String name);
 }

@@ -8,7 +8,7 @@ import lombok.Data;
 public class UserDto {
 
     private Long id;
-    
+
     private Date createdAt;
     
     private Date updatedAt;
@@ -25,9 +25,9 @@ public class UserDto {
 
     private String fullName;
 
-    private String mobileNumber;
+    private String mobileNo;
 
-    private String studentId;
+    private String studentNo;
 
     private String rfidNo;
 

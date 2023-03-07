@@ -145,10 +145,10 @@ public class UserController {
 
 	@SecurityRequirement(name = "Bearer Authentication")
 	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN') or hasRole('USER')")
-	@GetMapping("/getUserByStudentId")
-	public ResponseEntity<?> getUserByStudentId(@RequestParam String studentId) {
+	@GetMapping("/getUserByStudentNo")
+	public ResponseEntity<?> getUserByStudentNo(@RequestParam String studentNo) {
 
-		List<UserDto> userInfo = userService.getUserByStudentId(studentId);
+		List<UserDto> userInfo = userService.getUserByStudentNo(studentNo);
 
 		if (userInfo == null) {
 			return new ResponseEntity<List<UserDto>>(userInfo, HttpStatus.NO_CONTENT);

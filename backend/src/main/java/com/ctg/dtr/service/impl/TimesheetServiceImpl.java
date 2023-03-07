@@ -115,17 +115,17 @@ public class TimesheetServiceImpl implements TimesheetService {
     @Override
 	public Timesheet dailyTimeRecord(String rfidNo) {
 
-        User checkStudentId = userRepository.findByRfidNo(rfidNo);
+        User checkStudentNo = userRepository.findByRfidNo(rfidNo);
 
-        if (checkStudentId == null) {
+        if (checkStudentNo == null) {
             return null;
         }
 
         SimpleDateFormat formatter = new SimpleDateFormat("EEEE");
         String checkDay = formatter.format(new Date());
         
-        Subject nextSubject = subjectRepository.findByDayAndSectionId(checkDay.toUpperCase(), checkStudentId.getSection().getId());
-        Optional<Timesheet> checkTimeLog = timesheetRepository.findTimesheetByUserId(checkStudentId.getId());
+        Subject nextSubject = subjectRepository.findByDayAndSectionId(checkDay.toUpperCase(), checkStudentNo.getSection().getId());
+        Optional<Timesheet> checkTimeLog = timesheetRepository.findTimesheetByUserId(checkStudentNo.getId());
 
 
         if (nextSubject != null) { 
@@ -217,7 +217,7 @@ public class TimesheetServiceImpl implements TimesheetService {
                         timesheet.setTimeOut(null);
                         timesheet.setTimeRendered("00:00:00");
                         timesheet.setStatus("PRESENT");
-                        timesheet.setUser(checkStudentId != null ? checkStudentId : null);
+                        timesheet.setUser(checkStudentNo != null ? checkStudentNo : null);
                 
                         return timesheetRepository.save(timesheet);
         
@@ -230,7 +230,7 @@ public class TimesheetServiceImpl implements TimesheetService {
                         timesheet.setTimeOut(null);
                         timesheet.setTimeRendered("00:00:00");
                         timesheet.setStatus("LATE");
-                        timesheet.setUser(checkStudentId != null ? checkStudentId : null);
+                        timesheet.setUser(checkStudentNo != null ? checkStudentNo : null);
                 
                         return timesheetRepository.save(timesheet);
                     }
@@ -263,7 +263,7 @@ public class TimesheetServiceImpl implements TimesheetService {
                     timesheet.setTimeOut(null);
                     timesheet.setTimeRendered("00:00:00");
                     timesheet.setStatus("LABORATORY");
-                    timesheet.setUser(checkStudentId != null ? checkStudentId : null);
+                    timesheet.setUser(checkStudentNo != null ? checkStudentNo : null);
             
                     return timesheetRepository.save(timesheet);
                 }
@@ -295,7 +295,7 @@ public class TimesheetServiceImpl implements TimesheetService {
                 timesheet.setTimeOut(null);
                 timesheet.setTimeRendered("00:00:00");
                 timesheet.setStatus("LABORATORY");
-                timesheet.setUser(checkStudentId != null ? checkStudentId : null);
+                timesheet.setUser(checkStudentNo != null ? checkStudentNo : null);
         
                 return timesheetRepository.save(timesheet);
             }

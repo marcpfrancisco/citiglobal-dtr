@@ -65,10 +65,10 @@ public class ImageController {
 
     @SecurityRequirement(name = "Bearer Authentication")
 	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN') or hasRole('USER')")
-    @GetMapping("/user/info/{studentId}")
-	public void getUserImageDetails(@PathVariable String studentId, HttpServletResponse response) {
+    @GetMapping("/user/info/{studentNo}")
+	public void getUserImageDetails(@PathVariable String studentNo, HttpServletResponse response) {
 
-        Image image = imageService.getUserByStudentId(studentId);
+        Image image = imageService.getUserByStudentNo(studentNo);
         
         String extension = FilenameUtils.getExtension(image.getName());
 

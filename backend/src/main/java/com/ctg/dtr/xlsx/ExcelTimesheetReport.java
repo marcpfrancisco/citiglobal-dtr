@@ -72,7 +72,7 @@ public class ExcelTimesheetReport {
 
             for (Timesheet timesheet : timesheets) {
 
-                User checkUser = userRepository.findByStudentId(timesheet.getUser().getStudentId());
+                User checkUser = userRepository.findByStudentNo(timesheet.getUser().getStudentNo());
 
                 Row companyRow = sheet.createRow(0);
 			    Cell labelNameCell = companyRow.createCell(0);
@@ -84,12 +84,12 @@ public class ExcelTimesheetReport {
                 checkUser.getFirstName() + (checkUser.getMiddleName() == null ? "" : " " + checkUser.getMiddleName())));
 
 			    Row employeeRow = sheet.createRow(1);
-			    Cell labelStudentIdCell = employeeRow.createCell(0);
-			    labelStudentIdCell.setCellValue("Student ID: ");
-			    labelStudentIdCell.setCellStyle(tableHeadStyle);
+			    Cell labelStudentNoCell = employeeRow.createCell(0);
+			    labelStudentNoCell.setCellValue("Student ID: ");
+			    labelStudentNoCell.setCellStyle(tableHeadStyle);
 
 			    Cell cellEmployee = employeeRow.createCell(1);
-			    cellEmployee.setCellValue(checkUser.getStudentId());
+			    cellEmployee.setCellValue(checkUser.getStudentNo());
 
                 Row row = sheet.createRow(rowCount++);
 

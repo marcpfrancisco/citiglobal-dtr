@@ -8,6 +8,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -39,22 +40,29 @@ public class User {
 
     private String publishedAt;
 
+    @Column(nullable = false)
     private Boolean isActive;
 
+    @Column(nullable = false)
     private String firstName;
 
     private String middleName;
 
+    @Column(nullable = false)
     private String lastName;
 
-    private String mobileNumber;
+    private String mobileNo;
 
-    private String studentId;
+    @Column(nullable = false)
+    private String studentNo;
 
+    @Column(nullable = false)
     private String rfidNo;
 
+    @Column(nullable = false)
     private String username;
 
+    @Column(nullable = false)
     private String password;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -67,7 +75,7 @@ public class User {
     // private Set<Role> roles;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "role_id", referencedColumnName = "id", nullable = true)
+    @JoinColumn(name = "role_id", referencedColumnName = "id", nullable = false)
     private Role role;
 
     @OneToMany(mappedBy = "user")

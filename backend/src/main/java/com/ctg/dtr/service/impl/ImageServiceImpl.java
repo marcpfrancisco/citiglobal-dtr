@@ -41,7 +41,7 @@ public class ImageServiceImpl implements ImageService {
 
         if(user.isPresent()) {
             fileName = user.get().getLastName() + "_" 
-            + user.get().getStudentId() + "." 
+            + user.get().getStudentNo() + "." 
             + FilenameUtils.getExtension(multipartFile.getOriginalFilename());
         } else {
             fileName = multipartFile.getOriginalFilename();
@@ -83,7 +83,7 @@ public class ImageServiceImpl implements ImageService {
 	}
 
     @Override
-	public Image getUserByStudentId(String studentId) {
-        return imageRepository.findByUserStudentId(studentId);
+	public Image getUserByStudentNo(String studentNo) {
+        return imageRepository.findByUserStudentNo(studentNo);
     }
 }

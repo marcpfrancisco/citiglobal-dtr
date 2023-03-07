@@ -33,8 +33,8 @@ public class ReportController {
 
     @SecurityRequirement(name = "Bearer Authentication")
 	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN') or hasRole('USER')")
-    @GetMapping("/generate/xlsx/timesheet/{studentId}")
-    public ResponseEntity<Resource> genereateTimesheetReport(@PathVariable String studentId, @RequestParam String startDate, @RequestParam String endDate) {
+    @GetMapping("/generate/xlsx/timesheet/{studentNo}")
+    public ResponseEntity<Resource> genereateTimesheetReport(@PathVariable String studentNo, @RequestParam String startDate, @RequestParam String endDate) {
 
         Date sd = new Date();
         Date ed = new Date();
@@ -45,7 +45,7 @@ public class ReportController {
             e.printStackTrace();
         }
 
-      InputStreamResource file = new InputStreamResource(reportService.generateTimesheetReport(studentId, sd, ed));
+      InputStreamResource file = new InputStreamResource(reportService.generateTimesheetReport(studentNo, sd, ed));
 
       return ResponseEntity.status(HttpStatus.OK)
           .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"TimesheetReport.xlsx\"")

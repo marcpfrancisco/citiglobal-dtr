@@ -132,7 +132,7 @@ public class SubjectController {
 	@SecurityRequirement(name = "Bearer Authentication")
 	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
 	@GetMapping("/getSubjectByStudent/{userId}")
-	public ResponseEntity<?> getSubjectByStudentId(@PathVariable Long userId) {
+	public ResponseEntity<?> getSubjectByStudent(@PathVariable Long userId) {
 
 		List<SubjectDto> subjectInfo = subjectService.getSubjectByStudent(userId);
 

@@ -13,5 +13,5 @@ public interface ImageRepository extends JpaRepository<Image, Long>, JpaSpecific
 
 	Optional<Image> findByName(String name);
 
-	Image findByUserStudentId(String studentId);
+	Image findByUserStudentNo(String studentNo);
 }

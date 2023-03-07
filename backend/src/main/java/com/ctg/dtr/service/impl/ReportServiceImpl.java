@@ -27,9 +27,9 @@ public class ReportServiceImpl implements ReportService {
     private ExcelTimesheetReport excelTimesheetReport;
 
     @Override
-    public ByteArrayInputStream generateTimesheetReport(String studentId, Date startDate, Date endDate) {
+    public ByteArrayInputStream generateTimesheetReport(String studentNo, Date startDate, Date endDate) {
 
-        User checkUser = userRepository.findByStudentId(studentId);
+        User checkUser = userRepository.findByStudentNo(studentNo);
 
         if (checkUser == null) {
             return null;

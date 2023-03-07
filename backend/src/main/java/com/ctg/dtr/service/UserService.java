@@ -18,7 +18,7 @@ public interface UserService {
 
 	List<UserDto> getUserById(Long id);
 
-    List<UserDto> getUserByStudentId(String studentId);
+    List<UserDto> getUserByStudentNo(String studentNo);
 
 	List<UserDto> getAllUsers();
 

@@ -43,7 +43,6 @@ public class UserServiceImpl implements UserService {
 		Optional<Section> section = sectionRepository.findById(userDto.getSectionId());
 		Optional<Role> role = roleRepository.findById(userDto.getRoleId());
 
-
         User user = new User();
 
         user.setPublishedAt(userDto.getPublishedAt());
@@ -51,8 +50,8 @@ public class UserServiceImpl implements UserService {
         user.setFirstName(userDto.getFirstName());
         user.setMiddleName(userDto.getMiddleName());
         user.setLastName(userDto.getLastName());
-		user.setMobileNumber(userDto.getMobileNumber());
-		user.setStudentId(userDto.getStudentId());
+		user.setMobileNo(userDto.getMobileNo());
+		user.setStudentNo(userDto.getStudentNo());
 		user.setRfidNo(userDto.getRfidNo());
 		user.setUsername(userDto.getUsername());
 		user.setPassword(passwordEncoder.encode(userDto.getPassword()));
@@ -83,20 +82,19 @@ public class UserServiceImpl implements UserService {
 		Optional<Section> section = sectionRepository.findById(userDto.getSectionId());
 		Optional<Role> role = roleRepository.findById(userDto.getRoleId());
 
+        currentUser.setPublishedAt(userDto.getPublishedAt() == null ? currentUser.getPublishedAt() : userDto.getPublishedAt());
+        currentUser.setIsActive(userDto.getIsActive() == null ? currentUser.getIsActive() : userDto.getIsActive());
+        currentUser.setFirstName(userDto.getFirstName() == null ? currentUser.getFirstName() : userDto.getFirstName());
+        currentUser.setMiddleName(userDto.getMiddleName() == null ? currentUser.getMiddleName() : userDto.getMiddleName());
+        currentUser.setLastName(userDto.getLastName() == null ? currentUser.getLastName() : userDto.getLastName());
+		currentUser.setMobileNo(userDto.getMobileNo() == null ? currentUser.getMobileNo() : userDto.getMobileNo());
+		currentUser.setStudentNo(userDto.getStudentNo() == null ? currentUser.getStudentNo() : userDto.getStudentNo());
+		currentUser.setRfidNo(userDto.getRfidNo() == null ? currentUser.getRfidNo() : userDto.getRfidNo());
+		currentUser.setUsername(userDto.getUsername() == null ? currentUser.getUsername() : userDto.getUsername());
+		currentUser.setPassword(userDto.getPassword() == null ? currentUser.getPassword() : passwordEncoder.encode(userDto.getPassword()));
 
-        currentUser.setPublishedAt(userDto.getPublishedAt());
-        currentUser.setIsActive(userDto.getIsActive());
-        currentUser.setFirstName(userDto.getFirstName());
-        currentUser.setMiddleName(userDto.getMiddleName());
-        currentUser.setLastName(userDto.getLastName());
-		currentUser.setMobileNumber(userDto.getMobileNumber());
-		currentUser.setStudentId(userDto.getStudentId());
-		currentUser.setRfidNo(userDto.getRfidNo());
-		currentUser.setUsername(userDto.getUsername());
-		currentUser.setPassword(passwordEncoder.encode(userDto.getPassword()));
-		currentUser.setSection(section.isPresent() ? section.get() : null);
-		currentUser.setRole(role.isPresent() ? role.get() : null);
-
+		currentUser.setSection(section.isPresent() ? section.get() : currentUser.getSection());
+		currentUser.setRole(role.isPresent() ? role.get() : currentUser.getRole());
 
 		// if (null == currentUser.getRoles()) {
         //     currentUser.setRoles(new HashSet<>());
@@ -139,9 +137,9 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public List<UserDto> getUserByStudentId(String studentId) {
+	public List<UserDto> getUserByStudentNo(String studentNo) {
 
-		List<User> lUsers = userRepository.findUserByStudentId(studentId);
+		List<User> lUsers = userRepository.findUserByStudentNo(studentNo);
 
 		List<UserDto> lUserDto = new ArrayList<UserDto>();
 
@@ -192,13 +190,14 @@ public class UserServiceImpl implements UserService {
         userDto.setMiddleName(user.getMiddleName());
         userDto.setLastName(user.getLastName());
         userDto.setFullName(user.getFirstName() + (user.getMiddleName() == null ? " " + user.getLastName() : " " + user.getMiddleName() + " " + user.getLastName()));
-		userDto.setMobileNumber(user.getMobileNumber());
-		userDto.setStudentId(user.getStudentId());
+		userDto.setMobileNo(user.getMobileNo());
+		userDto.setStudentNo(user.getStudentNo());
 		userDto.setRfidNo(user.getRfidNo());
 		userDto.setUsername(user.getUsername());
 		userDto.setPassword(user.getPassword());
+
 		userDto.setSectionId(user.getSection() != null ? user.getSection().getId() : 0);
-		userDto.setSection(user.getSection());
+		userDto.setSection(user.getSection() != null ? user.getSection(): null);
 		// userDto.setRoles(user.getRoles().stream().map(Role::getName).collect(Collectors.toSet()));
 		userDto.setRoleId(user.getRole() != null ? user.getRole().getId() : 0);
 		userDto.setRole(user.getRole() != null ? user.getRole().getName() : "");
