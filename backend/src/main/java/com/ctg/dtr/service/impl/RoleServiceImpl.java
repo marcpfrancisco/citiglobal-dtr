@@ -38,9 +38,9 @@ public class RoleServiceImpl implements RoleService {
     @Override
 	public Role updateRole(Role currentRole, RoleDto roleDto) {
 
-        currentRole.setPublishedAt(roleDto.getPublishedAt());
-        currentRole.setIsActive(roleDto.getIsActive());
-        currentRole.setName(roleDto.getName());
+        currentRole.setPublishedAt(roleDto.getPublishedAt() == null ? currentRole.getPublishedAt() : roleDto.getPublishedAt());
+        currentRole.setIsActive(roleDto.getIsActive() == null ? currentRole.getIsActive() : roleDto.getIsActive());
+        currentRole.setName(roleDto.getName() == null ? currentRole.getName() : roleDto.getName());
 
         return roleRepository.save(currentRole);
     }

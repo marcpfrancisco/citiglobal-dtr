@@ -44,6 +44,7 @@ public class SubjectServiceImpl implements SubjectService {
         subject.setEndTime(subjectDto.getEndTime());
         subject.setGracePeriod(subjectDto.getGracePeriod());
         subject.setUnits(subjectDto.getUnits());
+
 		subject.setSection(section.isPresent() ? section.get() : null);
 
 		return subjectRepository.save(subject);
@@ -54,16 +55,17 @@ public class SubjectServiceImpl implements SubjectService {
 
 		Optional<Section> section = sectionRepository.findById(subjectDto.getSectionId());
 
-        currentSubject.setPublishedAt(subjectDto.getPublishedAt());
-        currentSubject.setIsActive(subjectDto.getIsActive());
-        currentSubject.setSubjectCode(subjectDto.getSubjectCode());
-        currentSubject.setDescription(subjectDto.getDescription());
-        currentSubject.setDay(subjectDto.getDay());
-        currentSubject.setStartTime(subjectDto.getStartTime());
-        currentSubject.setEndTime(subjectDto.getEndTime());
-        currentSubject.setGracePeriod(subjectDto.getGracePeriod());
-        currentSubject.setUnits(subjectDto.getUnits());
-		currentSubject.setSection(section.isPresent() ? section.get() : null);
+        currentSubject.setPublishedAt(subjectDto.getPublishedAt() == null ? currentSubject.getPublishedAt() : subjectDto.getPublishedAt());
+        currentSubject.setIsActive(subjectDto.getIsActive() == null ? currentSubject.getIsActive() : subjectDto.getIsActive());
+        currentSubject.setSubjectCode(subjectDto.getSubjectCode() == null ? currentSubject.getSubjectCode() : subjectDto.getSubjectCode());
+        currentSubject.setDescription(subjectDto.getDescription() == null ? currentSubject.getDescription() : subjectDto.getDescription() );
+        currentSubject.setDay(subjectDto.getDay() == null ? currentSubject.getDay() : subjectDto.getDay() );
+        currentSubject.setStartTime(subjectDto.getStartTime() == null ? currentSubject.getStartTime() : subjectDto.getStartTime() );
+        currentSubject.setEndTime(subjectDto.getEndTime() == null ? currentSubject.getEndTime() : subjectDto.getEndTime());
+        currentSubject.setGracePeriod(subjectDto.getGracePeriod() == null ? currentSubject.getGracePeriod() : subjectDto.getGracePeriod());
+        currentSubject.setUnits(subjectDto.getUnits() == null ? currentSubject.getUnits() : subjectDto.getUnits());
+
+		currentSubject.setSection(section.isPresent() ? section.get() : currentSubject.getSection());
 
         return subjectRepository.save(currentSubject);
     }

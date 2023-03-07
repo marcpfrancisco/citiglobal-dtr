@@ -5,7 +5,7 @@ import java.util.Date;
 import lombok.Data;
 
 @Data
-public class SectionDto {
+public class CourseDto {
 
 	private Long id;
 
@@ -18,8 +18,5 @@ public class SectionDto {
     private Boolean isActive;
 
     private String name;
-
-    private Long courseId;
-
-    private Object course;
 }
+    

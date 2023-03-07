@@ -59,12 +59,12 @@ public class TimesheetServiceImpl implements TimesheetService {
 
 		Optional<User> user = userRepository.findById(timesheetDto.getUserId());
 
-        currentTimesheet.setDate(timesheetDto.getDate());
-        currentTimesheet.setTimeIn(timesheetDto.getTimeIn());
-        currentTimesheet.setTimeOut(timesheetDto.getTimeOut());
-        currentTimesheet.setTimeRendered(timesheetDto.getTimeRendered());
-        currentTimesheet.setStatus(timesheetDto.getStatus());
-		currentTimesheet.setUser(user.isPresent() ? user.get() : null);
+        currentTimesheet.setDate(timesheetDto.getDate() == null ? currentTimesheet.getDate() : timesheetDto.getDate());
+        currentTimesheet.setTimeIn(timesheetDto.getTimeIn() == null ? currentTimesheet.getTimeIn() :timesheetDto.getTimeIn());
+        currentTimesheet.setTimeOut(timesheetDto.getTimeOut() == null ? currentTimesheet.getTimeOut() : timesheetDto.getTimeOut());
+        currentTimesheet.setTimeRendered(timesheetDto.getTimeRendered() == null ? currentTimesheet.getTimeRendered() : timesheetDto.getTimeRendered());
+        currentTimesheet.setStatus(timesheetDto.getStatus() == null ? currentTimesheet.getStatus() : timesheetDto.getStatus());
+		currentTimesheet.setUser(user.isPresent() ? user.get() : currentTimesheet.getUser());
 
         return timesheetRepository.save(currentTimesheet);
     }
@@ -314,6 +314,6 @@ public class TimesheetServiceImpl implements TimesheetService {
         timesheetDto.setTimeRendered(timesheet.getTimeRendered());
         timesheetDto.setStatus(timesheet.getStatus());
         timesheetDto.setUserId(timesheet.getUser() != null ? timesheet.getUser().getId() : 0);
-		timesheetDto.setUser(timesheet.getUser());
+		timesheetDto.setUser(timesheet.getUser() != null ? timesheet.getUser(): null);
 	}
 }

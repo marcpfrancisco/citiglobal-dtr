@@ -9,12 +9,9 @@ import org.hibernate.annotations.UpdateTimestamp;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,7 +21,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Section {
+public class Course {
 
     @Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -42,15 +39,7 @@ public class Section {
 
     private String name;
 
-    @OneToMany(mappedBy = "section")
+    @OneToMany(mappedBy = "course")
 	@JsonIgnore
-    private List<User> users;
-
-    @OneToMany(mappedBy = "section")
-	@JsonIgnore
-    private List<Subject> subjects;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "course_id", referencedColumnName = "id", nullable = true)
-    private Course course;
+    private List<Section> sections;
 }
