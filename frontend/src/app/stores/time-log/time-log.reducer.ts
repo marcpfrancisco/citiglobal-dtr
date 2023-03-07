@@ -31,9 +31,9 @@ export const initialState = adapter.getInitialState({
 export const reducer = createReducer(
     initialState,
 
-    on(TimeLogActions.onSearchRFID, (state, { rfidNo }) => ({
+    on(TimeLogActions.onTimeLogSuccess, (state, { result }) => ({
         ...state,
-        rfidNo,
+        rfidNo: result.rfidNo,
     }))
 );
 

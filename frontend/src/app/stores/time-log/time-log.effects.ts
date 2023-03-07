@@ -18,8 +18,8 @@ export class TimeLogEffects {
             ofType(TimeLogActions.onSearchRFID),
             switchMap((action) => {
                 return this.timeLogService.postTimeRecord(action.rfidNo).pipe(
-                    map((timeLog) =>
-                        TimeLogActions.onTimeLogSuccess({ timeLog })
+                    map((result) =>
+                        TimeLogActions.onTimeLogSuccess({ result })
                     ),
                     catchError((error) =>
                         of(TimeLogActions.onTimeLogFailure({ error }))

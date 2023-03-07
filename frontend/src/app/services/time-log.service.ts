@@ -19,7 +19,6 @@ export class TimeLogService {
     }
 
     postTimeRecord(rfidNo: string | number): Observable<TimeLog> {
-        console.log(rfidNo, 'rfidNo');
         return this.apiService.post(`${this.TIMELOG_URL}/dailyTimeRecord`, {
             rfidNo,
         });

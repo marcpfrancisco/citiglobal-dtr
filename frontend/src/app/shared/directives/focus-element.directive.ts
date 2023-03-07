@@ -1,38 +1,41 @@
-import { AfterViewInit, Directive, ElementRef, OnDestroy } from '@angular/core';
-import { fromEvent, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import {
+    Directive,
+    ElementRef,
+    HostListener,
+    Inject,
+    PLATFORM_ID,
+} from '@angular/core';
 
 @Directive({
-    selector: '[citiglobalFocusElement]',
+    selector: '[citiglobalFocusHiddenInput]',
 })
-export class FocusElementDirective implements AfterViewInit, OnDestroy {
-    private destroyed$ = new Subject<void>();
-
-    constructor(private elementRef: ElementRef) {
+export class FocusElementDirective {
+    constructor(
+        private elementRef: ElementRef,
+        @Inject(PLATFORM_ID)
+        private platformId: Object
+    ) {
         if (!elementRef.nativeElement['focus']) {
             throw new Error('Element does not accept focus.');
         }
     }
 
     ngAfterViewInit(): void {
-        const inputElement = this.elementRef.nativeElement.querySelector(
-            'input[type="hidden"]'
-        );
-        inputElement.focus();
+        const hiddenInput: HTMLInputElement =
+            this.elementRef.nativeElement.querySelector('#rfidNoField');
 
-        const outsideClick$ = fromEvent(document, 'click').pipe(
-            takeUntil(this.destroyed$)
-        );
-
-        outsideClick$.subscribe((event: Event) => {
-            if (!inputElement.contains(event.target as HTMLElement)) {
-                inputElement.focus();
-            }
-        });
+        if (hiddenInput) {
+            hiddenInput.focus();
+        }
     }
 
-    ngOnDestroy() {
-        this.destroyed$.next();
-        this.destroyed$.complete();
+    @HostListener('document:click', ['$event.target'])
+    onClick(target: HTMLElement) {
+        const hiddenInput =
+            this.elementRef.nativeElement.querySelector('#rfidNoField');
+
+        if (hiddenInput && !hiddenInput.contains(target)) {
+            hiddenInput.focus();
+        }
     }
 }

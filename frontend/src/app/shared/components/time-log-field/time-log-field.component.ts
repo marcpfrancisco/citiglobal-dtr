@@ -1,6 +1,7 @@
 import {
     Component,
     EventEmitter,
+    HostListener,
     Input,
     OnDestroy,
     OnInit,
@@ -41,7 +42,11 @@ export class TimeLogFieldComponent implements OnInit, OnDestroy {
                 debounceTime(this.finalizedTimeLogInterval),
                 distinctUntilChanged()
             )
-            .subscribe((value) => this.timeLog.emit(value));
+            .subscribe((value) => {
+                this.timeLog.emit(value);
+            });
+
+        console.log(this.rfidNumber);
     }
 
     ngOnDestroy(): void {
@@ -58,7 +63,7 @@ export class TimeLogFieldComponent implements OnInit, OnDestroy {
     }
 
     handleSearch(event: Event): void {
-        const value = (event?.target as HTMLInputElement)?.value;
-        this.timeLogSubject.next(isString(value) ? value : '');
+        const value = (event?.target as HTMLInputElement)?.value || '';
+        this.timeLogSubject.next(value ? value : '');
     }
 }

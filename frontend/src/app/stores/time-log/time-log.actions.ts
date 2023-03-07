@@ -11,7 +11,7 @@ export const onSearchRFID = createAction(
 
 export const onTimeLogSuccess = createAction(
     '[Time Log Component] On Time Log Failure',
-    props<{ timeLog: TimeLog }>()
+    props<{ result: any }>()
 );
 
 export const onTimeLogFailure = createAction(
