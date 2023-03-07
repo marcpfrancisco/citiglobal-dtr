@@ -42,6 +42,10 @@ public class Section {
 
     private String name;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "course_id", referencedColumnName = "id", nullable = true)
+    private Course course;
+
     @OneToMany(mappedBy = "section")
 	@JsonIgnore
     private List<User> users;
@@ -49,8 +53,4 @@ public class Section {
     @OneToMany(mappedBy = "section")
 	@JsonIgnore
     private List<Subject> subjects;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "course_id", referencedColumnName = "id", nullable = true)
-    private Course course;
 }

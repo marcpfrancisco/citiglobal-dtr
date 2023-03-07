@@ -186,7 +186,6 @@ public class SubjectServiceImpl implements SubjectService {
         subjectDto.setGracePeriod(subject.getGracePeriod());
         subjectDto.setUnits(subject.getUnits());
 		subjectDto.setSectionId(subject.getSection() != null ? subject.getSection().getId() : 0);
-		subjectDto.setSection(subject.getSection());
-
+		subjectDto.setSection(subject.getSection() != null ? subject.getSection() : null);
 	}
 }
