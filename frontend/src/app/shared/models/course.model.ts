@@ -1,6 +1,4 @@
-import { Course } from './course.model';
-
-export interface Section {
+export interface Course {
     id: number;
 
     createdAt: string | Date;
@@ -9,6 +7,4 @@ export interface Section {
 
     isActive: boolean;
     name: string;
-
-    course?: Course;
 }

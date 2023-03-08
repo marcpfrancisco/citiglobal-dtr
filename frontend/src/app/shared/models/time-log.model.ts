@@ -7,9 +7,11 @@ export interface TimeLog {
     createdAt: string | Date;
     updatedAt: string | Date;
 
+    date: string | Date;
     timeIn: string | Date;
     timeOut: string | Date;
-    timRendered: string | Date;
+    timeRendered: string | Date;
+    
     status: string;
     user: User;
 }

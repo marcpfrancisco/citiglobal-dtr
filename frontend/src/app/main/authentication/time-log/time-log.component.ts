@@ -13,7 +13,12 @@ import { RootState, TimeLogReducer } from '@stores/index';
 import { TimeLogActions } from '@stores/time-log';
 import { getCurrentTimeStamp, isNumericInteger } from '@utils';
 import { interval, Observable, Subject, Subscription } from 'rxjs';
-import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
+import {
+    debounceTime,
+    distinctUntilChanged,
+    map,
+    switchMap,
+} from 'rxjs/operators';
 
 @Component({
     selector: 'citiglobal-time-log',

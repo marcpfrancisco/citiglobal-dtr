@@ -1,4 +1,5 @@
-import { TimeLog } from '@models';
+import { TimeLogSortables } from '@enums';
+import { ListState, TimeLog } from '@models';
 import { createEntityAdapter, EntityState } from '@ngrx/entity';
 import {
     createFeatureSelector,
@@ -6,34 +7,56 @@ import {
     createSelector,
     on,
 } from '@ngrx/store';
+import { getInitialListState } from '@utils';
 import { TimeLogActions } from '.';
 import { RootState } from '..';
 
 export const featureKey = 'time-log';
 
-export interface State extends EntityState<TimeLog> {
+export interface State
+    extends ListState<TimeLogSortables>,
+        EntityState<TimeLog> {
     rfidNo: string;
-    time_in: string | Date;
-    time_out: string | Date;
-    time_rendered: string | Date;
+    timeIn: string | Date;
+    timeOut: string | Date;
+    timeRendered: string | Date;
 }
 
 export const adapter = createEntityAdapter<TimeLog>();
 
 export const initialState = adapter.getInitialState({
     // Add extra properties here...
+    ...getInitialListState<TimeLogSortables>(),
     rfidNo: null,
-    time_in: null,
-    time_out: null,
-    time_rendered: null,
+    timeIn: null,
+    timeOut: null,
+    timeRendered: null,
 });
 
 export const reducer = createReducer(
     initialState,
 
-    on(TimeLogActions.onTimeLogSuccess, (state, { result }) => ({
+    // SEARCH RFID
+    on(TimeLogActions.onSearchRFID, (state, { rfidNo }) => {
+        return { ...state, rfidNo }; // reset page when searching
+    }),
+
+    // TIME LOG SUCCESS
+    on(TimeLogActions.onTimeLogSuccess, (state, { result }) => {
+        const { user, timeIn, timeOut, timeRendered } = result;
+
+        return {
+            ...state,
+            rfidNo: user?.rfidNo,
+            timeIn,
+            timeOut,
+            timeRendered,
+        };
+    }),
+
+    on(TimeLogActions.onClearTimeLogField, (state) => ({
         ...state,
-        rfidNo: result.rfidNo,
+        rfidNo: null,
     }))
 );
 
@@ -47,3 +70,8 @@ export const selectRFIDNo = createSelector(
     selectState,
     (state) => state.rfidNo
 );
+
+export const clearRFIDNo = createSelector(selectState, (state) => {
+    const rfidNo = state.rfidNo;
+    return rfidNo ? null : rfidNo;
+});

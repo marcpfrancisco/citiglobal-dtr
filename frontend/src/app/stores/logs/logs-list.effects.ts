@@ -52,9 +52,9 @@ export class LogsListEffects {
             ),
             switchMap(([action, listState]) => {
                 // param
-                const param: FindAllTimeLogDto =
+                const params: FindAllTimeLogDto =
                     getParamFromListState(listState);
-                param.search = listState.search;
+                params.search = listState.search;
 
                 // apply not-null filter values
                 if (isObjectLike(listState.filters)) {
@@ -64,11 +64,11 @@ export class LogsListEffects {
                             return;
                         }
 
-                        param[name] = listState.filters[name];
+                        params[name] = listState.filters[name];
                     });
                 }
 
-                return this.timeLogService.getTimeSheet(param).pipe(
+                return this.timeLogService.getTimeSheet(params).pipe(
                     map((result) =>
                         LogsListActions.onLoadLogsSuccess({ result })
                     ),

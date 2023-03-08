@@ -9,8 +9,8 @@
         <input
             class="cdk-visually-hidden"
             placeholder="Tap your RFID here"
-            [value]="rfidNumber"
             (input)="handleSearch($event)"
+            #rfidNoField
             id="rfidNoField"
         />
     </div>
