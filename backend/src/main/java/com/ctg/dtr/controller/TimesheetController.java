@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ctg.dtr.dto.RfidRequest;
 import com.ctg.dtr.dto.TimesheetDto;
 import com.ctg.dtr.model.Timesheet;
 import com.ctg.dtr.service.TimesheetService;
@@ -49,9 +50,9 @@ public class TimesheetController {
 	}
 
 	@PostMapping("/dailyTimeRecord")
-	public ResponseEntity<?> dailyTimeRecord(@RequestParam String rfidNo, HttpServletRequest request, HttpServletResponse response) {
+	public ResponseEntity<?> dailyTimeRecord(@RequestBody RfidRequest rfidRequest, HttpServletRequest request, HttpServletResponse response) {
 
-        Timesheet timesheet = timesheetService.dailyTimeRecord(rfidNo);
+        Timesheet timesheet = timesheetService.dailyTimeRecord(rfidRequest.getRfidNo());
 		Map<String, Object> tempMap = new HashMap<String, Object>();
 
 		if (timesheet == null) {
