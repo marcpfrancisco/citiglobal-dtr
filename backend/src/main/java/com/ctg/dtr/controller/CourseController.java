@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ctg.dtr.dto.CourseDto;
@@ -141,5 +142,21 @@ public class CourseController {
 		tempMap.put("data", courseInfo);
 
 		return ResponseEntity.status(HttpStatus.OK).body(tempMap);
+	}
+
+	@SecurityRequirement(name = "Bearer Authentication")
+	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
+	@GetMapping("/getPaginatedCourseSort")
+	public ResponseEntity<?> getPaginatedCourseSort(@RequestParam int pageNo, @RequestParam int pageSize,
+	@RequestParam String column, @RequestParam boolean asc) {
+
+		List<CourseDto> courseInfo = courseService.findPaginatedCourseSort(pageNo, pageSize, column, asc);
+
+		if (courseInfo != null) {
+			return new ResponseEntity<List<CourseDto>>(courseInfo, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<List<CourseDto>>(courseInfo, HttpStatus.NO_CONTENT);
+		}
+		
 	}
 }

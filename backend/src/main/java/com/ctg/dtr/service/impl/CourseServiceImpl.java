@@ -5,6 +5,10 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.ctg.dtr.dto.CourseDto;
@@ -73,6 +77,35 @@ public class CourseServiceImpl implements CourseService {
 	public List<CourseDto> getAllCourses() {
 
 		List<Course> lCourses = courseRepository.findAll();
+
+		List<CourseDto> lCourseDto = new ArrayList<CourseDto>();
+
+		for (Course course : lCourses) {
+
+			CourseDto tmpCourse = new CourseDto();
+
+			buildCourseDto(course, tmpCourse);
+
+			lCourseDto.add(tmpCourse);
+
+		}
+		return lCourseDto;
+	}
+
+	@Override
+	public List<CourseDto> findPaginatedCourseSort(int pageNo, int pageSize, String column, Boolean asc) {
+
+		Pageable paging = null;
+
+		if (asc) {
+			paging =  PageRequest.of(pageNo, pageSize, Sort.by(column).ascending());
+		} else {
+			paging =  PageRequest.of(pageNo, pageSize, Sort.by(column).descending());
+		}
+ 
+        Page<Course> pagedResult = courseRepository.findAll(paging);
+
+		List<Course> lCourses = pagedResult.getContent();
 
 		List<CourseDto> lCourseDto = new ArrayList<CourseDto>();
 
