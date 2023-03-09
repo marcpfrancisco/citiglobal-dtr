@@ -5,6 +5,8 @@ INSERT INTO role (id, created_at, updated_at, published_at, is_active, name) VAL
 
 -- COURSE
 INSERT INTO course (id, created_at, updated_at, published_at, is_active, name) VALUES (1, NOW(), NOW(), NOW(), 1, 'COMSCI');
+INSERT INTO course (id, created_at, updated_at, published_at, is_active, name) VALUES (2, NOW(), NOW(), NOW(), 1, 'BSIT');
+INSERT INTO course (id, created_at, updated_at, published_at, is_active, name) VALUES (3, NOW(), NOW(), NOW(), 1, 'COMSCI');
 
 -- SECTION
 INSERT INTO section (id, created_at, updated_at, published_at, is_active, name, course_id) VALUES (1, NOW(), NOW(), NOW(), 1, 'BT101A', 1);

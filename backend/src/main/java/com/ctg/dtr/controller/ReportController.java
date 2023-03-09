@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ctg.dtr.service.ReportService;
 
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 @RestController
@@ -34,7 +35,9 @@ public class ReportController {
     @SecurityRequirement(name = "Bearer Authentication")
 	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN') or hasRole('USER')")
     @GetMapping("/generate/user/timesheet/{studentNo}")
-    public ResponseEntity<Resource> genereateUserTimesheetReport(@PathVariable String studentNo, @RequestParam String startDate, @RequestParam String endDate) {
+    public ResponseEntity<Resource> genereateUserTimesheetReport(@PathVariable String studentNo, 
+         @Parameter(description = "<i>Date format:</i> MM-DD-YYYY") @RequestParam String startDate, 
+         @Parameter(description = "<i>Date format:</i> MM-DD-YYYY") @RequestParam String endDate) {
 
         Date sd = new Date();
         Date ed = new Date();
