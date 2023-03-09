@@ -19,12 +19,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ctg.dtr.dto.RfidRequest;
 import com.ctg.dtr.dto.TimesheetDto;
 import com.ctg.dtr.model.Timesheet;
+import com.ctg.dtr.payload.request.RfidRequest;
 import com.ctg.dtr.service.TimesheetService;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;

@@ -1,4 +1,4 @@
-package com.ctg.dtr.dto;
+package com.ctg.dtr.payload.request;
 
 import lombok.Data;
 
