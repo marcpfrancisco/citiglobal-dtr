@@ -36,8 +36,8 @@ public class ReportController {
 	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN') or hasRole('USER')")
     @GetMapping("/generate/user/timesheet/{studentNo}")
     public ResponseEntity<Resource> genereateUserTimesheetReport(@PathVariable String studentNo, 
-         @Parameter(description = "<i>Date format:</i> MM-DD-YYYY") @RequestParam String startDate, 
-         @Parameter(description = "<i>Date format:</i> MM-DD-YYYY") @RequestParam String endDate) {
+         @Parameter(description = "Date format: <i>MM-DD-YYYY</i>") @RequestParam String startDate, 
+         @Parameter(description = "Date format: <i>MM-DD-YYYY</i>") @RequestParam String endDate) {
 
         Date sd = new Date();
         Date ed = new Date();
