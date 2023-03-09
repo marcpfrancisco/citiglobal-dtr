@@ -93,14 +93,14 @@ public class CourseServiceImpl implements CourseService {
 	}
 
 	@Override
-	public List<CourseDto> findPaginatedCourseSort(int pageNo, int pageSize, String column, Boolean asc) {
+	public List<CourseDto> findPaginatedCourseSort(int pageNo, int pageSize, String columnName, Boolean asc) {
 
-		Pageable paging = null;
+		Pageable paging;
 
 		if (asc) {
-			paging =  PageRequest.of(pageNo, pageSize, Sort.by(column).ascending());
+			paging =  PageRequest.of(pageNo, pageSize, Sort.by(columnName).ascending());
 		} else {
-			paging =  PageRequest.of(pageNo, pageSize, Sort.by(column).descending());
+			paging =  PageRequest.of(pageNo, pageSize, Sort.by(columnName).descending());
 		}
  
         Page<Course> pagedResult = courseRepository.findAll(paging);

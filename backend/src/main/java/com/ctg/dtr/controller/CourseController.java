@@ -148,9 +148,9 @@ public class CourseController {
 	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
 	@GetMapping("/getPaginatedCourseSort")
 	public ResponseEntity<?> getPaginatedCourseSort(@RequestParam int pageNo, @RequestParam int pageSize,
-	@RequestParam String column, @RequestParam boolean asc) {
+	@RequestParam String columnName, @RequestParam boolean asc) {
 
-		List<CourseDto> courseInfo = courseService.findPaginatedCourseSort(pageNo, pageSize, column, asc);
+		List<CourseDto> courseInfo = courseService.findPaginatedCourseSort(pageNo, pageSize, columnName, asc);
 
 		if (courseInfo != null) {
 			return new ResponseEntity<List<CourseDto>>(courseInfo, HttpStatus.OK);
