@@ -24,9 +24,8 @@ public class ExcelAllTimesheetReport {
 
     public ByteArrayInputStream generateAllTimesheetReport(List<Timesheet> timesheets) {
 
-        SXSSFWorkbook workbook = new SXSSFWorkbook(200);
-
-        try (ByteArrayOutputStream out = new ByteArrayOutputStream();) {
+        try (SXSSFWorkbook workbook = new SXSSFWorkbook(200);
+            ByteArrayOutputStream out = new ByteArrayOutputStream();) {
 
             Sheet sheet = workbook.createSheet("Timesheet Report");
 
@@ -107,8 +106,6 @@ public class ExcelAllTimesheetReport {
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException("Failed to import data to Excel file: " + e.getMessage());
-        } finally {
-            workbook.dispose();
         }
     }
 }
