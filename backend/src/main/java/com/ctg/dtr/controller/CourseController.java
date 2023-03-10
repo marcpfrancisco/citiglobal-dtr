@@ -147,10 +147,10 @@ public class CourseController {
 	@SecurityRequirement(name = "Bearer Authentication")
 	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
 	@GetMapping("/getPaginatedCourseSort")
-	public ResponseEntity<?> getPaginatedCourseSort(@RequestParam int pageNo, @RequestParam int pageSize,
+	public ResponseEntity<?> getPaginatedCourseSort(@RequestParam(defaultValue = "0") int pageNo, @RequestParam(defaultValue = "10") int pageSize,
 	@RequestParam String columnName, @RequestParam boolean asc) {
 
-		List<CourseDto> courseInfo = courseService.findPaginatedCourseSort(pageNo, pageSize, columnName, asc);
+		List<CourseDto> courseInfo = courseService.getPaginatedCourseSort(pageNo, pageSize, columnName, asc);
 
 		if (courseInfo != null) {
 			return new ResponseEntity<List<CourseDto>>(courseInfo, HttpStatus.OK);
@@ -158,5 +158,19 @@ public class CourseController {
 			return new ResponseEntity<List<CourseDto>>(courseInfo, HttpStatus.NO_CONTENT);
 		}
 		
+	}
+
+	@SecurityRequirement(name = "Bearer Authentication")
+	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
+	@GetMapping("/getPaginatedCourse")
+	public ResponseEntity<?> getPaginatedCourse(@RequestParam(defaultValue = "0") int pageNo, @RequestParam(defaultValue = "10") int pageSize) {
+
+		List<CourseDto> courseInfo = courseService.getPaginatedCourse(pageNo, pageSize);
+
+		if (courseInfo != null) {
+			return new ResponseEntity<List<CourseDto>>(courseInfo, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<List<CourseDto>>(courseInfo, HttpStatus.NO_CONTENT);
+		}
 	}
 }

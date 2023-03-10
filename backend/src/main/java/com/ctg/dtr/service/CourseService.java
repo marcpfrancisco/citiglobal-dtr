@@ -20,5 +20,7 @@ public interface CourseService {
 
 	List<CourseDto> getAllCourses();
 
-    List<CourseDto> findPaginatedCourseSort(int pageNo, int pageSize, String columnName, Boolean asc);
+    List<CourseDto> getPaginatedCourseSort(int pageNo, int pageSize, String columnName, Boolean asc);
+
+	List<CourseDto> getPaginatedCourse(int pageNo, int pageSize);
 }

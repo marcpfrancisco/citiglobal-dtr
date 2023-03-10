@@ -93,7 +93,7 @@ public class CourseServiceImpl implements CourseService {
 	}
 
 	@Override
-	public List<CourseDto> findPaginatedCourseSort(int pageNo, int pageSize, String columnName, Boolean asc) {
+	public List<CourseDto> getPaginatedCourseSort(int pageNo, int pageSize, String columnName, Boolean asc) {
 
 		Pageable paging;
 
@@ -103,6 +103,29 @@ public class CourseServiceImpl implements CourseService {
 			paging =  PageRequest.of(pageNo, pageSize, Sort.by(columnName).descending());
 		}
  
+        Page<Course> pagedResult = courseRepository.findAll(paging);
+
+		List<Course> lCourses = pagedResult.getContent();
+
+		List<CourseDto> lCourseDto = new ArrayList<CourseDto>();
+
+		for (Course course : lCourses) {
+
+			CourseDto tmpCourse = new CourseDto();
+
+			buildCourseDto(course, tmpCourse);
+
+			lCourseDto.add(tmpCourse);
+
+		}
+		return lCourseDto;
+	}
+
+	@Override
+	public List<CourseDto> getPaginatedCourse(int pageNo, int pageSize) {
+
+		Pageable paging =  PageRequest.of(pageNo, pageSize);
+
         Page<Course> pagedResult = courseRepository.findAll(paging);
 
 		List<Course> lCourses = pagedResult.getContent();
