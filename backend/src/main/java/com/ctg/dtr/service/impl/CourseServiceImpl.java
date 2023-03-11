@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.ctg.dtr.dto.CourseDto;
@@ -16,11 +17,26 @@ import com.ctg.dtr.model.Course;
 import com.ctg.dtr.repository.CourseRepository;
 import com.ctg.dtr.service.CourseService;
 
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
+
 @Service
 public class CourseServiceImpl implements CourseService {
 
 	@Autowired
     private CourseRepository courseRepository;
+
+	public static Specification<Course> byColumnNameAndValueCourse(String columnName, String value) {
+        return new Specification<Course>() {
+            @Override
+            public Predicate toPredicate(Root<Course> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
+
+                return builder.equal(root.<String>get(columnName), value);
+            }
+        };
+    }
 
     @Override
     public Optional<Course> getById(Long id) {
@@ -68,7 +84,6 @@ public class CourseServiceImpl implements CourseService {
 			buildCourseDto(course, tmpCourse);
 
 			lCourseDto.add(tmpCourse);
-
 		}
 		return lCourseDto;
 	}
@@ -87,24 +102,40 @@ public class CourseServiceImpl implements CourseService {
 			buildCourseDto(course, tmpCourse);
 
 			lCourseDto.add(tmpCourse);
-
 		}
 		return lCourseDto;
 	}
-
+	
 	@Override
-	public List<CourseDto> getPaginatedCourseSort(int pageNo, int pageSize, String columnName, Boolean asc) {
+	public List<CourseDto> getPaginatedCourseSort(int pageNo, int pageSize, String columnName, String value, String sortDirection) {
 
 		Pageable paging;
+		Page<Course> pagedResult = null;
 
-		if (asc) {
-			paging =  PageRequest.of(pageNo, pageSize, Sort.by(columnName).ascending());
+		if (columnName != null) {
+			if (sortDirection != null) {
+				if (sortDirection.toLowerCase().equals("asc")) {
+					paging =  PageRequest.of(pageNo, pageSize, Sort.by(columnName).ascending());
+				} else if (sortDirection.toLowerCase().equals("desc")) {
+					paging =  PageRequest.of(pageNo, pageSize, Sort.by(columnName).descending());
+				} else {
+					paging =  PageRequest.of(pageNo, pageSize);
+				}
+			} else {
+				paging =  PageRequest.of(pageNo, pageSize);
+			}
 		} else {
-			paging =  PageRequest.of(pageNo, pageSize, Sort.by(columnName).descending());
+			paging =  PageRequest.of(pageNo, pageSize);
 		}
- 
-        Page<Course> pagedResult = courseRepository.findAll(paging);
 
+		if (columnName != null && value != null) {
+			pagedResult = courseRepository.findAll(byColumnNameAndValueCourse(columnName, value), paging);
+		} else if (columnName != null && value == null) {
+			pagedResult = courseRepository.findAll(paging);
+		} else {
+			pagedResult = courseRepository.findAll(paging);
+		}
+		
 		List<Course> lCourses = pagedResult.getContent();
 
 		List<CourseDto> lCourseDto = new ArrayList<CourseDto>();
@@ -116,30 +147,6 @@ public class CourseServiceImpl implements CourseService {
 			buildCourseDto(course, tmpCourse);
 
 			lCourseDto.add(tmpCourse);
-
-		}
-		return lCourseDto;
-	}
-
-	@Override
-	public List<CourseDto> getPaginatedCourse(int pageNo, int pageSize) {
-
-		Pageable paging =  PageRequest.of(pageNo, pageSize);
-
-        Page<Course> pagedResult = courseRepository.findAll(paging);
-
-		List<Course> lCourses = pagedResult.getContent();
-
-		List<CourseDto> lCourseDto = new ArrayList<CourseDto>();
-
-		for (Course course : lCourses) {
-
-			CourseDto tmpCourse = new CourseDto();
-
-			buildCourseDto(course, tmpCourse);
-
-			lCourseDto.add(tmpCourse);
-
 		}
 		return lCourseDto;
 	}

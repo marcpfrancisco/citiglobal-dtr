@@ -147,30 +147,29 @@ public class CourseController {
 	@SecurityRequirement(name = "Bearer Authentication")
 	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
 	@GetMapping("/getPaginatedCourseSort")
-	public ResponseEntity<?> getPaginatedCourseSort(@RequestParam(defaultValue = "0") int pageNo, @RequestParam(defaultValue = "10") int pageSize,
-	@RequestParam String columnName, @RequestParam boolean asc) {
+	public ResponseEntity<?> getPaginatedCourseSort(@RequestParam int pageNo, @RequestParam int pageSize,
+	@RequestParam(required = false) String columnName, 
+	@RequestParam(required = false) String keyword, 
+	@RequestParam(required = false) String sortDirection) {
 
-		List<CourseDto> courseInfo = courseService.getPaginatedCourseSort(pageNo, pageSize, columnName, asc);
+		List<CourseDto> courseInfo = courseService.getPaginatedCourseSort(pageNo, pageSize, columnName, keyword, sortDirection);
 
 		if (courseInfo != null) {
-			return new ResponseEntity<List<CourseDto>>(courseInfo, HttpStatus.OK);
+
+			Map<String, Object> tempMap = new TreeMap<String, Object>();
+
+			tempMap.put("data", courseInfo);
+			tempMap.put("page", pageNo);
+			tempMap.put("limit", pageSize);
+			tempMap.put("search", keyword);
+			tempMap.put("sort", columnName);
+			tempMap.put("sortDirection", sortDirection);
+
+			return ResponseEntity.status(HttpStatus.OK).body(tempMap);
+
 		} else {
-			return new ResponseEntity<List<CourseDto>>(courseInfo, HttpStatus.NO_CONTENT);
+			return ResponseEntity.status(HttpStatus.NO_CONTENT).body(courseInfo);
 		}
 		
-	}
-
-	@SecurityRequirement(name = "Bearer Authentication")
-	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
-	@GetMapping("/getPaginatedCourse")
-	public ResponseEntity<?> getPaginatedCourse(@RequestParam(defaultValue = "0") int pageNo, @RequestParam(defaultValue = "10") int pageSize) {
-
-		List<CourseDto> courseInfo = courseService.getPaginatedCourse(pageNo, pageSize);
-
-		if (courseInfo != null) {
-			return new ResponseEntity<List<CourseDto>>(courseInfo, HttpStatus.OK);
-		} else {
-			return new ResponseEntity<List<CourseDto>>(courseInfo, HttpStatus.NO_CONTENT);
-		}
 	}
 }
