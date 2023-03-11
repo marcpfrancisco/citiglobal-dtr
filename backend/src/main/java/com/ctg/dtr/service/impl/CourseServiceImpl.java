@@ -33,6 +33,12 @@ public class CourseServiceImpl implements CourseService {
             @Override
             public Predicate toPredicate(Root<Course> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
 
+				// if (exact) {
+                //     return builder.equal(root.<String>get(columnName), value);
+                // } else {
+                //     return builder.like(root.<String>get(columnName), "%" + value + "%");
+                // }
+
                 return builder.equal(root.<String>get(columnName), value);
             }
         };
@@ -74,24 +80,6 @@ public class CourseServiceImpl implements CourseService {
 	public List<CourseDto> getCourseById(Long id) {
 
 		List<Course> lCourses = courseRepository.findCourseById(id);
-
-		List<CourseDto> lCourseDto = new ArrayList<CourseDto>();
-
-		for (Course course : lCourses) {
-
-			CourseDto tmpCourse = new CourseDto();
-
-			buildCourseDto(course, tmpCourse);
-
-			lCourseDto.add(tmpCourse);
-		}
-		return lCourseDto;
-	}
-
-    @Override
-	public List<CourseDto> getAllCourses() {
-
-		List<Course> lCourses = courseRepository.findAll();
 
 		List<CourseDto> lCourseDto = new ArrayList<CourseDto>();
 

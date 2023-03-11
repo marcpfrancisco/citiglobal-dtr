@@ -5,6 +5,11 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +21,11 @@ import com.ctg.dtr.repository.RoleRepository;
 import com.ctg.dtr.repository.SectionRepository;
 import com.ctg.dtr.repository.UserRepository;
 import com.ctg.dtr.service.UserService;
+
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -31,6 +41,22 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+
+	public static Specification<User> byColumnNameAndValueUser(String columnName, String value) {
+        return new Specification<User>() {
+            @Override
+            public Predicate toPredicate(Root<User> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
+
+				// if (exact) {
+                //     return builder.equal(root.<String>get(columnName), value);
+                // } else {
+                //     return builder.like(root.<String>get(columnName), "%" + value + "%");
+                // }
+
+                return builder.equal(root.<String>get(columnName), value);
+            }
+        };
+    }
 
     @Override
     public Optional<User> getById(Long id) {
@@ -136,7 +162,6 @@ public class UserServiceImpl implements UserService {
 			buildUserDto(user, tmpUser);
 
 			lUserDto.add(tmpUser);
-
 		}
 		return lUserDto;
 	}
@@ -155,15 +180,41 @@ public class UserServiceImpl implements UserService {
 			buildUserDto(user, tmpUser);
 
 			lUserDto.add(tmpUser);
-
 		}
 		return lUserDto;
 	}
 
-    @Override
-	public List<UserDto> getAllUsers() {
+	@Override
+	public List<UserDto> getPaginatedUserSort(int pageNo, int pageSize, String columnName, String value, String sortDirection) {
 
-		List<User> lUsers = userRepository.findAll();
+		Pageable paging;
+		Page<User> pagedResult = null;
+
+		if (columnName != null) {
+			if (sortDirection != null) {
+				if (sortDirection.toLowerCase().equals("asc")) {
+					paging =  PageRequest.of(pageNo, pageSize, Sort.by(columnName).ascending());
+				} else if (sortDirection.toLowerCase().equals("desc")) {
+					paging =  PageRequest.of(pageNo, pageSize, Sort.by(columnName).descending());
+				} else {
+					paging =  PageRequest.of(pageNo, pageSize);
+				}
+			} else {
+				paging =  PageRequest.of(pageNo, pageSize);
+			}
+		} else {
+			paging =  PageRequest.of(pageNo, pageSize);
+		}
+
+		if (columnName != null && value != null) {
+			pagedResult = userRepository.findAll(byColumnNameAndValueUser(columnName, value), paging);
+		} else if (columnName != null && value == null) {
+			pagedResult = userRepository.findAll(paging);
+		} else {
+			pagedResult = userRepository.findAll(paging);
+		}
+
+		List<User> lUsers = pagedResult.getContent();
 
 		List<UserDto> lUserDto = new ArrayList<UserDto>();
 

@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ctg.dtr.dto.RoleDto;
@@ -131,16 +132,36 @@ public class RoleController {
 
 	@SecurityRequirement(name = "Bearer Authentication")
 	@PreAuthorize("hasRole('SUPER_ADMIN')")
-	@GetMapping("/getAllRoles")
-	public ResponseEntity<?> getAllRoles() {
+	@GetMapping("/getAllRole")
+	public ResponseEntity<?> getAllRole(@RequestParam(value =  "page") int pageNo, @RequestParam(value =  "limit") int pageSize,
+	@RequestParam(value =  "sort", required = false) String columnName, 
+	@RequestParam(value =  "search", required = false) String keyword, 
+	@RequestParam(required = false) String sortDirection) {
 
-		List<RoleDto> roleInfo = roleService.getAllRoles();
+		List<RoleDto> roleInfo = roleService.getPaginatedRoleSort(pageNo, pageSize, columnName, keyword, sortDirection);
 
-		Map<String, Object> tempMap = new TreeMap<String, Object>();
+		if (roleInfo != null) {
 
-		tempMap.put("count", roleInfo.size());
-		tempMap.put("data", roleInfo);
+			Map<String, Object> tempMap = new TreeMap<String, Object>();
 
-		return ResponseEntity.status(HttpStatus.OK).body(tempMap);
+			tempMap.put("data", roleInfo);
+			tempMap.put("page", pageNo);
+			tempMap.put("limit", pageSize);
+
+			if (keyword != null) {
+				tempMap.put("search", keyword);
+			}
+			if (columnName != null) {
+				tempMap.put("sort", columnName);
+			}
+			if (sortDirection != null) {
+				tempMap.put("sortDirection", sortDirection);
+			}
+
+			return ResponseEntity.status(HttpStatus.OK).body(tempMap);
+		} else {
+			return ResponseEntity.status(HttpStatus.NO_CONTENT).body(roleInfo);
+		}
+		
 	}
 }

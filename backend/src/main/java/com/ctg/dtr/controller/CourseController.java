@@ -131,25 +131,10 @@ public class CourseController {
 
 	@SecurityRequirement(name = "Bearer Authentication")
 	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
-	@GetMapping("/getAllCourses")
-	public ResponseEntity<?> getAllCourses() {
-
-		List<CourseDto> courseInfo = courseService.getAllCourses();
-
-		Map<String, Object> tempMap = new TreeMap<String, Object>();
-
-		tempMap.put("count", courseInfo.size());
-		tempMap.put("data", courseInfo);
-
-		return ResponseEntity.status(HttpStatus.OK).body(tempMap);
-	}
-
-	@SecurityRequirement(name = "Bearer Authentication")
-	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
-	@GetMapping("/getPaginatedCourseSort")
-	public ResponseEntity<?> getPaginatedCourseSort(@RequestParam int pageNo, @RequestParam int pageSize,
-	@RequestParam(required = false) String columnName, 
-	@RequestParam(required = false) String keyword, 
+	@GetMapping("/getAllCourse")
+	public ResponseEntity<?> getAllCourse(@RequestParam(value =  "page") int pageNo, @RequestParam(value =  "limit") int pageSize,
+	@RequestParam(value =  "sort", required = false) String columnName, 
+	@RequestParam(value =  "search", required = false) String keyword, 
 	@RequestParam(required = false) String sortDirection) {
 
 		List<CourseDto> courseInfo = courseService.getPaginatedCourseSort(pageNo, pageSize, columnName, keyword, sortDirection);
@@ -161,12 +146,18 @@ public class CourseController {
 			tempMap.put("data", courseInfo);
 			tempMap.put("page", pageNo);
 			tempMap.put("limit", pageSize);
-			tempMap.put("search", keyword);
-			tempMap.put("sort", columnName);
-			tempMap.put("sortDirection", sortDirection);
+
+			if (keyword != null) {
+				tempMap.put("search", keyword);
+			}
+			if (columnName != null) {
+				tempMap.put("sort", columnName);
+			}
+			if (sortDirection != null) {
+				tempMap.put("sortDirection", sortDirection);
+			}
 
 			return ResponseEntity.status(HttpStatus.OK).body(tempMap);
-
 		} else {
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).body(courseInfo);
 		}

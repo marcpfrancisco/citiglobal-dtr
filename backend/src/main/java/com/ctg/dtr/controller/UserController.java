@@ -159,16 +159,36 @@ public class UserController {
 
 	@SecurityRequirement(name = "Bearer Authentication")
 	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
-	@GetMapping("/getAllUsers")
-	public ResponseEntity<?> getAllUsers() {
+	@GetMapping("/getAllUser")
+	public ResponseEntity<?> getAllUser(@RequestParam(value =  "page") int pageNo, @RequestParam(value =  "limit") int pageSize,
+	@RequestParam(value =  "sort", required = false) String columnName, 
+	@RequestParam(value =  "search", required = false) String keyword, 
+	@RequestParam(required = false) String sortDirection) {
 
-		List<UserDto> userInfo = userService.getAllUsers();
+		List<UserDto> userInfo = userService.getPaginatedUserSort(pageNo, pageSize, columnName, keyword, sortDirection);
 
-		Map<String, Object> tempMap = new TreeMap<String, Object>();
+		if (userInfo != null) {
 
-		tempMap.put("count", userInfo.size());
-		tempMap.put("data", userInfo);
+			Map<String, Object> tempMap = new TreeMap<String, Object>();
 
-		return ResponseEntity.status(HttpStatus.OK).body(tempMap);
+			tempMap.put("data", userInfo);
+			tempMap.put("page", pageNo);
+			tempMap.put("limit", pageSize);
+
+			if (keyword != null) {
+				tempMap.put("search", keyword);
+			}
+			if (columnName != null) {
+				tempMap.put("sort", columnName);
+			}
+			if (sortDirection != null) {
+				tempMap.put("sortDirection", sortDirection);
+			}
+
+			return ResponseEntity.status(HttpStatus.OK).body(tempMap);
+		} else {
+			return ResponseEntity.status(HttpStatus.NO_CONTENT).body(userInfo);
+		}
+		
 	}
 }
