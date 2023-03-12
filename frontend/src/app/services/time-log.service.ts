@@ -16,7 +16,9 @@ export class TimeLogService {
     getTimeSheet(
         options: FindAllTimeLogDto
     ): Observable<PaginationResult<TimeLog>> {
-        return this.apiService.get(`${this.TIMELOG_URL}/getAllTimesheets`);
+        return this.apiService.get(`${this.TIMELOG_URL}/getAllTimesheet`, {
+            params: this.createListOptions(options),
+        });
     }
 
     postTimeRecord(rfidNo: string | number): Observable<TimeLog> {

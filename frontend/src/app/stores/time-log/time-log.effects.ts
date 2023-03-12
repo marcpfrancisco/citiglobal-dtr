@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
+import { FindAllTimeLogDto } from '@interfaces';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { TimeLogService } from '@services';
+import { getParamFromListState } from '@utils';
+import { isObjectLike } from 'lodash';
 import { of } from 'rxjs';
 import {
     catchError,
@@ -34,8 +37,25 @@ export class TimeLogEffects {
                 )
             ),
             switchMap(([action, listState]) => {
+                // param
+                const param: FindAllTimeLogDto =
+                    getParamFromListState(listState);
+                param.search = listState.search;
+
+                // apply not-null filter values
+                if (isObjectLike(listState.filters)) {
+                    Object.keys(listState.filters).forEach((name) => {
+                        // exclude nulls
+                        if (listState.filters[name] === null) {
+                            return;
+                        }
+
+                        param[name] = listState.filters[name];
+                    });
+                }
+
                 return this.timeLogService
-                    .postTimeRecord(listState.rfidNo)
+                    .postTimeRecord(listState.timeLog.rfidNo)
                     .pipe(
                         map((result) =>
                             TimeLogActions.onTimeLogSuccess({ result })
