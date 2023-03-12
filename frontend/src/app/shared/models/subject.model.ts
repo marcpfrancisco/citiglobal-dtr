@@ -1,7 +1,7 @@
 import { Section } from './section.model';
 
 export interface SubjectModel {
-    id: number;
+    id: string;
 
     name: string;
     subjectCode: string;
@@ -11,9 +11,9 @@ export interface SubjectModel {
     updatedAt: string | Date;
 
     day: string;
-    startTime: string;
-    endTime: string;
-    gracePeriod: string;
+    startTime: number;
+    endTime: number;
+    gracePeriod: number;
 
     units: number;
 

@@ -248,7 +248,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
         this.setupObservables();
     }
 
-    buildUserForm(): void {
+    private buildUserForm(): void {
         this.userForm = new FormGroup({
             firstName: new FormControl('', [Validators.required]),
             lastName: new FormControl('', [Validators.required]),

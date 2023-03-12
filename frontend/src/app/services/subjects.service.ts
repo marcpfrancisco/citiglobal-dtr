@@ -4,6 +4,8 @@ import { isBoolean, isString } from 'lodash';
 import { Observable } from 'rxjs';
 
 import {
+    CreateSubjectDto,
+    EditSubjectDto,
     PaginationResult,
     Section,
     SectionSortables,
@@ -24,6 +26,23 @@ export class SubjectsService {
         return this.apiService.get(`${this.SUBJECT_URL}/getAllSubject`, {
             params: this.createListOptions(options),
         });
+    }
+
+    getSubjectById(subjectId: string): Observable<SubjectModel> {
+        return this.apiService.get(
+            `${this.SUBJECT_URL}/getSubjectById/${subjectId}`
+        );
+    }
+
+    create(payload: CreateSubjectDto): Observable<SubjectModel> {
+        return this.apiService.post(`${this.SUBJECT_URL}`, payload);
+    }
+
+    update(
+        subjectId: string,
+        payload: EditSubjectDto
+    ): Observable<SubjectModel> {
+        return this.apiService.put(`${this.SUBJECT_URL}/${subjectId}`, payload);
     }
 
     createListOptions(options: FindAllSubjectsDto): HttpParams {

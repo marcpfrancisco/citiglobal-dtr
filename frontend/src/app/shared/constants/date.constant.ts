@@ -8,6 +8,15 @@ export const MOMENT_SQL_DATE_FORMAT = 'YYYY-MM-DD';
 
 export const MOMENT_SQL_DATE_TIME_FORMAT = 'YYYY-MM-DD HH:mm:ss';
 
+export const MOMENT_SQL_TIME_FORMAT_PATTERN =
+    /^[0-2][0-9]:[0-5][0-9]:[0-5][0-9]$/;
+
+export const MOMENT_SQL_DATE_FORMAT_PATTERN =
+    /^[1-2][0-9]{3}-[0-1][0-9]-[0-3][0-9]$/;
+
+export const MOMENT_SQL_DATE_TIME_FORMAT_PATTERN =
+    /^[1-2][0-9]{3}-[0-1][0-9]-[0-3][0-9] [0-2][0-9]:[0-5][0-9]:[0-5][0-9]$/;
+
 // Must use International Date format for MS Excel
 // https://stackoverflow.com/questions/54131599/what-date-format-can-you-use-in-csv-that-excel-will-recognize-unambiguously
 export const CSV_MOMENT_DATE_FORMAT = 'YYYY-MM-DD';
