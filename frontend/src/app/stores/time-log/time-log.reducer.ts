@@ -31,7 +31,7 @@ export interface State
         timeOut: string | Date;
         timeRendered: string | Date;
     };
-    hasFilters: false;
+    hasFilters: boolean;
 }
 
 export const adapter = createEntityAdapter<TimeLog>();
