@@ -15,6 +15,7 @@ import * as UsersListReducer from './users/users-list.reducer';
 import * as LogsListReducer from './logs/logs-list.reducer';
 import * as LoginReducer from './login/login.reducer';
 import * as TimeLogReducer from './time-log/time-log.reducer';
+import * as SectionListReducer from './sections/section-list.reducer';
 // export reducers here
 export {
     AuthenticationReducer,
@@ -22,6 +23,7 @@ export {
     LogsListReducer,
     LoginReducer,
     TimeLogReducer,
+    SectionListReducer,
 };
 
 export interface RootState {
@@ -31,6 +33,7 @@ export interface RootState {
     [LogsListReducer.featureKey]: LogsListReducer.State;
     [LoginReducer.featureKey]: LoginReducer.State;
     [TimeLogReducer.featureKey]: TimeLogReducer.State;
+    [SectionListReducer.featureKey]: SectionListReducer.State;
 }
 
 export const ROOT_REDUCERS = new InjectionToken<
@@ -43,6 +46,7 @@ export const ROOT_REDUCERS = new InjectionToken<
         [LogsListReducer.featureKey]: LogsListReducer.reducer,
         [LoginReducer.featureKey]: LoginReducer.reducer,
         [TimeLogReducer.featureKey]: TimeLogReducer.reducer,
+        [SectionListReducer.featureKey]: SectionListReducer.reducer,
     }),
 });
 

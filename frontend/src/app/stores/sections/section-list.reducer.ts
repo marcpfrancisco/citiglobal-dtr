@@ -1,5 +1,5 @@
-import { UserSortables, UserRoles } from '@enums';
-import { ListState, User } from '@models';
+import { UserSortables, UserRoles, SectionSortables } from '@enums';
+import { ListState, Section, User } from '@models';
 import { createEntityAdapter, EntityState } from '@ngrx/entity';
 import {
     createReducer,
@@ -8,61 +8,68 @@ import {
     createSelector,
 } from '@ngrx/store';
 import { getCurrentTimeStamp, getInitialListState } from '@utils';
-import { UsersListActions } from '.';
+import { SectionListActions } from '.';
 import { RootState } from '..';
-import { AuthenticationActions } from '../authentication';
 
-export const featureKey = 'users-list';
+export const featureKey = 'section-list';
 
-export interface State extends ListState<UserSortables>, EntityState<User> {
+export interface State
+    extends ListState<SectionSortables>,
+        EntityState<Section> {
     // Add extra properties here...
     updatedAtTimestamp: number;
     search: string;
     filters: {
-        role: UserRoles | null;
+        name: string | null;
         isActive: boolean | null;
-        withDeleted: boolean | null;
     };
     hasFilters: boolean;
 }
 
-export const adapter = createEntityAdapter<User>();
+export const adapter = createEntityAdapter<Section>();
 
 export const initialState = adapter.getInitialState({
     // Add extra properties here...
-    ...getInitialListState<UserSortables>(),
+    ...getInitialListState<SectionSortables>(),
     updatedAtTimestamp: getCurrentTimeStamp(),
     search: '',
     filters: {
         role: null,
-        isActive: null,
-        withDeleted: false,
+        isActive: true,
     },
     hasFilters: false,
 });
 
 export const reducer = createReducer(
     initialState,
-    on(UsersListActions.onLoadUsers, (state, { limit, page }) => {
-        return { ...state, page, limit };
-    }),
+
+    on(SectionListActions.onLoadSections, (state, { limit, page }) => ({
+        ...state,
+        page,
+        limit,
+    })),
 
     // SEARCH
-    on(UsersListActions.onSearch, (state, { search }) => {
-        return { ...state, search, page: 0 }; // reset page when searching
-    }),
+    on(SectionListActions.onSearch, (state, { search }) => ({
+        ...state,
+        search,
+        page: 0,
+    })),
 
     // FILTER
-    on(UsersListActions.onApplyFilters, (state, { filters }) => {
-        return { ...state, filters, page: 0 }; // reset page when filtering
-    }),
+    on(SectionListActions.onApplyFilters, (state, { filters }) => ({
+        ...state,
+        filters,
+        page: 0,
+    })),
 
     // UPDATE
-    on(UsersListActions.onLoadUsersSuccess, (state, { result }) => {
+    on(SectionListActions.onLoadSectionsSuccess, (state, { result }) => {
         // Replace current collection with provided collection.
         return adapter.setAll(result.data, state);
     }),
-    on(UsersListActions.onLoadUsersSuccess, (state, { result }) => {
+
+    on(SectionListActions.onLoadSectionsSuccess, (state, { result }) => {
         // update `sortIds` based on API response
         const ids = result.data.map((item) => item.id);
         return {
@@ -73,13 +80,9 @@ export const reducer = createReducer(
             sortIds: ids,
         };
     }),
-    on(AuthenticationActions.onUpdateCurrentUserSuccess, (state, { user }) => {
-        // Replace current collection with provided collection.
-        return adapter.updateOne({ id: user.id, changes: { ...user } }, state);
-    }),
 
     // SORT
-    on(UsersListActions.onToggleSort, (state, action) => {
+    on(SectionListActions.onToggleSort, (state, action) => {
         return {
             ...state,
             sort: action.sort,
@@ -87,23 +90,7 @@ export const reducer = createReducer(
         };
     }),
 
-    on(
-        AuthenticationActions.onUpdateCurrentUserSuccess,
-        UsersListActions.onCreateUserSuccess,
-        UsersListActions.onUpdateUserSuccess,
-        UsersListActions.onDeleteUserSuccess,
-        UsersListActions.onUndeleteUserSuccess,
-        UsersListActions.onResetPasswordUserSuccess,
-        (state) => {
-            // Replace current collection with provided collection.
-            return {
-                ...state,
-                updatedAtTimestamp: getCurrentTimeStamp(),
-            };
-        }
-    ),
-
-    on(UsersListActions.onHasFilters, (state, { hasFilters }) => {
+    on(SectionListActions.onHasFilters, (state, { hasFilters }) => {
         return {
             ...state,
             hasFilters,
@@ -122,7 +109,7 @@ export const selectList = createSelector(
     selectEntities,
     (state, entities) => {
         // use `sortIds` as basis for the sort order of items
-        return state.sortIds.reduce<User[]>((accumulator, id) => {
+        return state.sortIds.reduce<Section[]>((accumulator, id) => {
             if (entities[id]) {
                 accumulator.push(entities[id]);
             }

@@ -10,5 +10,6 @@ export interface Section {
     isActive: boolean;
     name: string;
 
+    courseId?: number;
     course?: Course;
 }

@@ -8,6 +8,7 @@ import { metaReducers, ROOT_REDUCERS } from '@stores/index';
 import { AuthenticationModule } from './authentication/authentication.module';
 import { LoginModule } from './login/login.module';
 import { LogsListModule } from './logs/logs-list.module';
+import { SectionListModule } from './sections/section-list.module';
 import { TimeLogModule } from './time-log/time-log.module';
 import { UsersListModule } from './users/users-list.module';
 
@@ -24,6 +25,7 @@ import { UsersListModule } from './users/users-list.module';
         LogsListModule,
         TimeLogModule,
         UsersListModule,
+        SectionListModule,
     ],
 })
 export class StoresModule {}
