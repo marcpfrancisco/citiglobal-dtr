@@ -37,30 +37,12 @@ export class TimeLogEffects {
                 )
             ),
             switchMap(([action, listState]) => {
-                // param
-                const param: FindAllTimeLogDto =
-                    getParamFromListState(listState);
-                param.search = listState.search;
-
-                // apply not-null filter values
-                if (isObjectLike(listState.filters)) {
-                    Object.keys(listState.filters).forEach((name) => {
-                        // exclude nulls
-                        if (listState.filters[name] === null) {
-                            return;
-                        }
-
-                        param[name] = listState.filters[name];
-                    });
-                }
-
                 return this.timeLogService
-                    .postTimeRecord(listState.timeLog.rfidNo)
+                    .postTimeRecord(listState.rfidNo)
                     .pipe(
                         map((result) =>
                             TimeLogActions.onTimeLogSuccess({ result })
                         ),
-                        tap(() => TimeLogActions.onClearTimeLogField),
                         catchError((error) =>
                             of(TimeLogActions.onTimeLogFailure({ error }))
                         )

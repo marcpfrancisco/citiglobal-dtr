@@ -27,7 +27,7 @@ import { isNumericInteger } from '../../utils/number';
     styleUrls: ['./time-log-field.component.scss'],
     encapsulation: ViewEncapsulation.None,
 })
-export class TimeLogFieldComponent implements OnInit, OnDestroy {
+export class TimeLogFieldComponent implements OnInit {
     private timeLogSubject = new Subject<string>();
     private subscription: Subscription;
     private finalizedTimeLogInterval = 200;
@@ -48,23 +48,13 @@ export class TimeLogFieldComponent implements OnInit, OnDestroy {
                 debounceTime(this.finalizedTimeLogInterval),
                 distinctUntilChanged()
             )
-            .subscribe(
-                (value) => {
-                    this.timeLog.emit(value);
-                    this.input.nativeElement.value = '';
-                },
-                (error) => console.log(error)
-            );
-    }
-
-    ngOnDestroy(): void {
-        // this.timeLogSubject.complete();
-        // this.subscription.unsubscribe();
+            .subscribe((value) => {
+                this.timeLog.emit(value);
+            });
     }
 
     ngOnChanges(changes: SimpleChanges): void {
         const debounceInterval = changes?.timeLogInterval?.currentValue;
-        const rfidNoValue = changes?.input?.currentValue;
 
         if (isNumericInteger(debounceInterval) && debounceInterval > 10) {
             this.finalizedTimeLogInterval = debounceInterval;
@@ -73,7 +63,6 @@ export class TimeLogFieldComponent implements OnInit, OnDestroy {
 
     handleSearch(event: Event): void {
         const value = (event?.target as HTMLInputElement)?.value || '';
-        console.log(value, 'handleSearch');
         this.timeLogSubject.next(value ? value : '');
     }
 }

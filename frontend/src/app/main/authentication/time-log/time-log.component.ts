@@ -12,6 +12,7 @@ import { Store } from '@ngrx/store';
 import { RootState, TimeLogReducer } from '@stores/index';
 import { TimeLogActions } from '@stores/time-log';
 import { getCurrentTimeStamp, isNumericInteger } from '@utils';
+import { isString } from 'lodash';
 import { interval, Observable, Subject, Subscription } from 'rxjs';
 import {
     debounceTime,
@@ -78,27 +79,14 @@ export class TimeLogComponent implements OnInit {
                 this.currentTime = getCurrentTimeStamp();
             });
 
-        this.subscription = this.rfidNoSubject
-            .pipe(
-                debounceTime(this.finalizedTimeLogInterval),
-                distinctUntilChanged()
-            )
-            .subscribe((rfidNo) => {
-                this.store.dispatch(TimeLogActions.onSearchRFID({ rfidNo }));
-            });
+        this.subscription = this.rfidNoSubject.subscribe((rfidNo) => {
+            this.store.dispatch(TimeLogActions.onSearchRFID({ rfidNo }));
+        });
     }
 
     ngOnDestroy(): void {
         this.rfidNoSubject.complete();
         this.subscription.unsubscribe();
-    }
-
-    ngOnChanges(changes: SimpleChanges): void {
-        const debounceInterval = changes?.timeLogInterval?.currentValue;
-
-        if (isNumericInteger(debounceInterval) && debounceInterval > 10) {
-            this.finalizedTimeLogInterval = debounceInterval;
-        }
     }
 
     handleSearch(rfidNo: string): void {

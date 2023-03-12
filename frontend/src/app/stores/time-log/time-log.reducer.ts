@@ -19,6 +19,7 @@ export interface State
     // Add extra properties here...
     updatedAtTimestamp: number;
     search: string;
+    rfidNo: string;
     filters: {
         periodDateRange: {
             from: Date;
@@ -41,6 +42,7 @@ export const initialState = adapter.getInitialState({
     ...getInitialListState<TimeLogSortables>(),
     updatedAtTimestamp: getCurrentTimeStamp(),
     search: '',
+    rfidNo: '',
     filters: {
         periodDateRange: {
             from: null,
@@ -61,7 +63,7 @@ export const reducer = createReducer(
 
     // SEARCH RFID
     on(TimeLogActions.onSearchRFID, (state, { rfidNo }) => {
-        return { ...state, rfidNo }; // reset page when searching
+        return { ...state, rfidNo };
     }),
 
     // TIME LOG SUCCESS

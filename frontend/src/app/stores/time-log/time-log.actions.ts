@@ -6,7 +6,7 @@ export const onInit = createAction('[Time Log Component] On Init');
 
 export const onSearchRFID = createAction(
     '[Time Log Component] On Search RFID',
-    props<{ rfidNo: string | number }>()
+    props<{ rfidNo: User['rfidNo'] }>()
 );
 
 export const onTimeLogSuccess = createAction(
