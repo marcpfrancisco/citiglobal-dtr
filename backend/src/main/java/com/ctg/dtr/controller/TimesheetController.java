@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ctg.dtr.dto.TimesheetDto;
 import com.ctg.dtr.model.Timesheet;
+import com.ctg.dtr.payload.request.RfidRequest;
 import com.ctg.dtr.service.TimesheetService;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -49,9 +50,9 @@ public class TimesheetController {
 	}
 
 	@PostMapping("/dailyTimeRecord")
-	public ResponseEntity<?> dailyTimeRecord(@RequestParam String rfidNo, HttpServletRequest request, HttpServletResponse response) {
+	public ResponseEntity<?> dailyTimeRecord(@RequestBody RfidRequest rfidRequest, HttpServletRequest request, HttpServletResponse response) {
 
-        Timesheet timesheet = timesheetService.dailyTimeRecord(rfidNo);
+        Timesheet timesheet = timesheetService.dailyTimeRecord(rfidRequest.getRfidNo());
 		Map<String, Object> tempMap = new HashMap<String, Object>();
 
 		if (timesheet == null) {
@@ -155,16 +156,36 @@ public class TimesheetController {
 
 	@SecurityRequirement(name = "Bearer Authentication")
 	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
-	@GetMapping("/getAllTimesheets")
-	public ResponseEntity<?> getAllTimesheets() {
+	@GetMapping("/getAllTimesheet")
+	public ResponseEntity<?> getAllTimesheet(@RequestParam(value =  "page") int pageNo, @RequestParam(value =  "limit") int pageSize,
+	@RequestParam(value =  "sort", required = false) String columnName, 
+	@RequestParam(value =  "search", required = false) String keyword, 
+	@RequestParam(required = false) String sortDirection) {
 
-		List<TimesheetDto> timesheetInfo = timesheetService.getAllTimesheets();
+		List<TimesheetDto> timesheetInfo = timesheetService.getPaginatedTimesheetSort(pageNo, pageSize, columnName, keyword, sortDirection);
 
-		Map<String, Object> tempMap = new TreeMap<String, Object>();
+		if (timesheetInfo != null) {
 
-		tempMap.put("count", timesheetInfo.size());
-		tempMap.put("data", timesheetInfo);
+			Map<String, Object> tempMap = new TreeMap<String, Object>();
 
-		return ResponseEntity.status(HttpStatus.OK).body(tempMap);
+			tempMap.put("data", timesheetInfo);
+			tempMap.put("page", pageNo);
+			tempMap.put("limit", pageSize);
+
+			if (keyword != null) {
+				tempMap.put("search", keyword);
+			}
+			if (columnName != null) {
+				tempMap.put("sort", columnName);
+			}
+			if (sortDirection != null) {
+				tempMap.put("sortDirection", sortDirection);
+			}
+
+			return ResponseEntity.status(HttpStatus.OK).body(tempMap);
+		} else {
+			return ResponseEntity.status(HttpStatus.NO_CONTENT).body(timesheetInfo);
+		}
+		
 	}
 }

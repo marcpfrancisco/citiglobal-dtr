@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ctg.dtr.dto.SubjectDto;
@@ -173,16 +174,36 @@ public class SubjectController {
 
 	@SecurityRequirement(name = "Bearer Authentication")
 	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
-	@GetMapping("/getAllSubjects")
-	public ResponseEntity<?> getAllSubjects() {
+	@GetMapping("/getAllSubject")
+	public ResponseEntity<?> getAllSubject(@RequestParam(value =  "page") int pageNo, @RequestParam(value =  "limit") int pageSize,
+	@RequestParam(value =  "sort", required = false) String columnName, 
+	@RequestParam(value =  "search", required = false) String keyword, 
+	@RequestParam(required = false) String sortDirection) {
 
-		List<SubjectDto> subjectInfo = subjectService.getAllSubjects();
+		List<SubjectDto> subjectInfo = subjectService.getPaginatedSubjectSort(pageNo, pageSize, columnName, keyword, sortDirection);
 
-		Map<String, Object> tempMap = new TreeMap<String, Object>();
+		if (subjectInfo != null) {
 
-		tempMap.put("count", subjectInfo.size());
-		tempMap.put("data", subjectInfo);
+			Map<String, Object> tempMap = new TreeMap<String, Object>();
 
-		return ResponseEntity.status(HttpStatus.OK).body(tempMap);
+			tempMap.put("data", subjectInfo);
+			tempMap.put("page", pageNo);
+			tempMap.put("limit", pageSize);
+
+			if (keyword != null) {
+				tempMap.put("search", keyword);
+			}
+			if (columnName != null) {
+				tempMap.put("sort", columnName);
+			}
+			if (sortDirection != null) {
+				tempMap.put("sortDirection", sortDirection);
+			}
+
+			return ResponseEntity.status(HttpStatus.OK).body(tempMap);
+		} else {
+			return ResponseEntity.status(HttpStatus.NO_CONTENT).body(subjectInfo);
+		}
+		
 	}
 }

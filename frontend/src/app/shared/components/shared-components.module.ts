@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { SharedMaterialModule } from '@material/shared';
+import { CleanrInputValueDirective } from '../directives/clear-input-value.directive';
 import { FocusElementDirective } from '../directives/focus-element.directive';
 import { ObserveVisibilityDirective } from '../directives/observe-visibility.directive';
 
@@ -23,6 +24,7 @@ const COMPONENTS = [
     // directives
     ObserveVisibilityDirective,
     FocusElementDirective,
+    CleanrInputValueDirective,
 ];
 
 const MODULES = [

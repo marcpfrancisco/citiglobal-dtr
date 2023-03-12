@@ -12,7 +12,8 @@ import com.ctg.dtr.model.User;
 import com.ctg.dtr.repository.TimesheetRepository;
 import com.ctg.dtr.repository.UserRepository;
 import com.ctg.dtr.service.ReportService;
-import com.ctg.dtr.xlsx.ExcelTimesheetReport;
+import com.ctg.dtr.xlsx.ExcelAllTimesheetReport;
+import com.ctg.dtr.xlsx.ExcelUserTimesheetReport;
 
 @Service
 public class ReportServiceImpl implements ReportService {
@@ -24,18 +25,28 @@ public class ReportServiceImpl implements ReportService {
     private UserRepository userRepository;
 
     @Autowired
-    private ExcelTimesheetReport excelTimesheetReport;
+    private ExcelUserTimesheetReport excelTimesheetReport;
+
+    @Autowired
+    private ExcelAllTimesheetReport excelAllTimesheetReport;
 
     @Override
-    public ByteArrayInputStream generateTimesheetReport(String studentNo, Date startDate, Date endDate) {
+    public ByteArrayInputStream generateUserTimesheetReport(String studentNo, Date startDate, Date endDate) {
 
         User checkUser = userRepository.findByStudentNo(studentNo);
 
         if (checkUser == null) {
             return null;
         } else {
-            List<Timesheet> timesheets = timesheetRepository.getDatetimeRecord(checkUser.getId(), startDate, endDate);
-            return excelTimesheetReport.generateTimesheetReport(timesheets);
+            List<Timesheet> timesheets = timesheetRepository.getUserDatetimeRecord(checkUser.getId(), startDate, endDate);
+            return excelTimesheetReport.generateUserTimesheetReport(timesheets);
         }
+    }
+
+    @Override
+    public ByteArrayInputStream generateAllTimesheetReport() {
+
+        List<Timesheet> timesheets = timesheetRepository.findAll();
+        return excelAllTimesheetReport.generateAllTimesheetReport(timesheets);
     }
 }

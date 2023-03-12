@@ -6,3 +6,4 @@ export * from './router.service';
 export * from './snackbar.service';
 export * from './users.service';
 export * from './time-log.service';
+export * from './sections.service';

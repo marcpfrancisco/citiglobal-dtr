@@ -20,7 +20,7 @@ export interface State extends ListState<UserSortables>, EntityState<User> {
     search: string;
     filters: {
         role: UserRoles | null;
-        active: boolean | null;
+        isActive: boolean | null;
         withDeleted: boolean | null;
     };
     hasFilters: boolean;
@@ -35,7 +35,7 @@ export const initialState = adapter.getInitialState({
     search: '',
     filters: {
         role: null,
-        active: null,
+        isActive: null,
         withDeleted: false,
     },
     hasFilters: false,

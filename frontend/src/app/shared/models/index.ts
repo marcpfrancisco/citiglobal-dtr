@@ -9,3 +9,4 @@ export * from './signin-user.session.model';
 export * from './student.model';
 export * from './subject.model';
 export * from './user.model';
+export * from './course.model';

@@ -11,10 +11,14 @@ export const onSearchRFID = createAction(
 
 export const onTimeLogSuccess = createAction(
     '[Time Log Component] On Time Log Failure',
-    props<{ timeLog: TimeLog }>()
+    props<{ result: TimeLog }>()
 );
 
 export const onTimeLogFailure = createAction(
     '[Time Log Component] On Time Log Failure',
     props<{ error: Error }>()
+);
+
+export const onClearTimeLogField = createAction(
+    '[Time Log Component] On Clear Time Log Field'
 );

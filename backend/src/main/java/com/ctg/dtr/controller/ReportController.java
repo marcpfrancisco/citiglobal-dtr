@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ctg.dtr.service.ReportService;
 
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 @RestController
@@ -33,8 +34,10 @@ public class ReportController {
 
     @SecurityRequirement(name = "Bearer Authentication")
 	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN') or hasRole('USER')")
-    @GetMapping("/generate/xlsx/timesheet/{studentNo}")
-    public ResponseEntity<Resource> genereateTimesheetReport(@PathVariable String studentNo, @RequestParam String startDate, @RequestParam String endDate) {
+    @GetMapping("/generate/user/timesheet/{studentNo}")
+    public ResponseEntity<Resource> genereateUserTimesheetReport(@PathVariable String studentNo, 
+         @Parameter(description = "Date format: <i>MM-DD-YYYY</i>") @RequestParam String startDate, 
+         @Parameter(description = "Date format: <i>MM-DD-YYYY</i>") @RequestParam String endDate) {
 
         Date sd = new Date();
         Date ed = new Date();
@@ -45,10 +48,23 @@ public class ReportController {
             e.printStackTrace();
         }
 
-      InputStreamResource file = new InputStreamResource(reportService.generateTimesheetReport(studentNo, sd, ed));
+      InputStreamResource file = new InputStreamResource(reportService.generateUserTimesheetReport(studentNo, sd, ed));
 
       return ResponseEntity.status(HttpStatus.OK)
           .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"TimesheetReport.xlsx\"")
+          .contentType(MediaType.APPLICATION_OCTET_STREAM)
+          .body(file);
+    }
+
+    @SecurityRequirement(name = "Bearer Authentication")
+	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
+    @GetMapping("/generate/all/timesheet")
+    public ResponseEntity<Resource> genereateAllTimesheetReport() {
+
+      InputStreamResource file = new InputStreamResource(reportService.generateAllTimesheetReport());
+
+      return ResponseEntity.status(HttpStatus.OK)
+          .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"AllTimesheetReport.xlsx\"")
           .contentType(MediaType.APPLICATION_OCTET_STREAM)
           .body(file);
     }

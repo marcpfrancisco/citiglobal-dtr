@@ -9,6 +9,11 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.ctg.dtr.dto.TimesheetDto;
@@ -19,6 +24,11 @@ import com.ctg.dtr.repository.SubjectRepository;
 import com.ctg.dtr.repository.TimesheetRepository;
 import com.ctg.dtr.repository.UserRepository;
 import com.ctg.dtr.service.TimesheetService;
+
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 
 @Service
 public class TimesheetServiceImpl implements TimesheetService {
@@ -31,6 +41,22 @@ public class TimesheetServiceImpl implements TimesheetService {
 
     @Autowired
     private UserRepository userRepository;
+
+    public static Specification<Timesheet> byColumnNameAndValueTimesheet(String columnName, String value) {
+        return new Specification<Timesheet>() {
+            @Override
+            public Predicate toPredicate(Root<Timesheet> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
+
+				// if (exact) {
+                //     return builder.equal(root.<String>get(columnName), value);
+                // } else {
+                //     return builder.like(root.<String>get(columnName), "%" + value + "%");
+                // }
+
+                return builder.equal(root.<String>get(columnName), value);
+            }
+        };
+    }
 
     @Override
     public Optional<Timesheet> getById(Long id) {
@@ -88,15 +114,41 @@ public class TimesheetServiceImpl implements TimesheetService {
 			buildTimesheetDto(timesheet, tmpTimesheet);
 
 			lTimesheetDto.add(tmpTimesheet);
-
 		}
 		return lTimesheetDto;
 	}
 
-    @Override
-	public List<TimesheetDto> getAllTimesheets() {
+	@Override
+	public List<TimesheetDto> getPaginatedTimesheetSort(int pageNo, int pageSize, String columnName, String value, String sortDirection) {
 
-		List<Timesheet> lTimesheets = timesheetRepository.findAll();
+		Pageable paging;
+		Page<Timesheet> pagedResult = null;
+
+		if (columnName != null) {
+			if (sortDirection != null) {
+				if (sortDirection.toLowerCase().equals("asc")) {
+					paging =  PageRequest.of(pageNo, pageSize, Sort.by(columnName).ascending());
+				} else if (sortDirection.toLowerCase().equals("desc")) {
+					paging =  PageRequest.of(pageNo, pageSize, Sort.by(columnName).descending());
+				} else {
+					paging =  PageRequest.of(pageNo, pageSize);
+				}
+			} else {
+				paging =  PageRequest.of(pageNo, pageSize);
+			}
+		} else {
+			paging =  PageRequest.of(pageNo, pageSize);
+		}
+
+		if (columnName != null && value != null) {
+			pagedResult = timesheetRepository.findAll(byColumnNameAndValueTimesheet(columnName, value), paging);
+		} else if (columnName != null && value == null) {
+			pagedResult = timesheetRepository.findAll(paging);
+		} else {
+			pagedResult = timesheetRepository.findAll(paging);
+		}
+        
+		List<Timesheet> lTimesheets = pagedResult.getContent();
 
 		List<TimesheetDto> lTimesheetDto = new ArrayList<TimesheetDto>();
 
@@ -107,7 +159,6 @@ public class TimesheetServiceImpl implements TimesheetService {
 			buildTimesheetDto(timesheet, tmpTimesheet);
 
 			lTimesheetDto.add(tmpTimesheet);
-
 		}
 		return lTimesheetDto;
 	}
@@ -124,16 +175,13 @@ public class TimesheetServiceImpl implements TimesheetService {
         SimpleDateFormat formatter = new SimpleDateFormat("EEEE");
         String checkDay = formatter.format(new Date());
         
-        Subject nextSubject = subjectRepository.findByDayAndSectionId(checkDay.toUpperCase(), checkStudentNo.getSection().getId());
-        Optional<Timesheet> checkTimeLog = timesheetRepository.findTimesheetByUserId(checkStudentNo.getId());
-
+        Subject nextSubject = subjectRepository.findSubjectByDayAndSectionId(checkDay.toUpperCase(), checkStudentNo.getSection().getId());
+        Timesheet currentTimesheet = timesheetRepository.findTimesheetByUserId(checkStudentNo.getId());
 
         if (nextSubject != null) { 
             if (nextSubject.getDay().equals(checkDay.toUpperCase())) {
 
-                if (checkTimeLog.isPresent()) {
-    
-                    Timesheet currentTimesheet = timesheetRepository.findByUserId(checkTimeLog.get().getUser().getId());
+                if (currentTimesheet != null) {
     
                     Date startTime = new Date();
                     Date endTime = new Date(); 
@@ -238,9 +286,7 @@ public class TimesheetServiceImpl implements TimesheetService {
     
             } else {
     
-                if (checkTimeLog.isPresent()) {
-    
-                    Timesheet currentTimesheet = timesheetRepository.findByUserId(checkTimeLog.get().getUser().getId());
+                if (currentTimesheet != null) {
     
                     long timeDifference = (new Date()).getTime() - currentTimesheet.getTimeIn().getTime();
                     long secondsDifference = timeDifference / 1000 % 60;  
@@ -270,9 +316,7 @@ public class TimesheetServiceImpl implements TimesheetService {
             }       
         } else {
                 
-            if (checkTimeLog.isPresent()) {
-    
-                Timesheet currentTimesheet = timesheetRepository.findByUserId(checkTimeLog.get().getUser().getId());
+            if (currentTimesheet != null) {
 
                 long timeDifference = (new Date()).getTime() - currentTimesheet.getTimeIn().getTime();
                 long secondsDifference = timeDifference / 1000 % 60;  

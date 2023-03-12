@@ -18,7 +18,7 @@ public interface TimesheetService {
 
 	List<TimesheetDto> getTimesheetById(Long id);
 
-	List<TimesheetDto> getAllTimesheets();
+    List<TimesheetDto> getPaginatedTimesheetSort(int pageNo, int pageSize, String columnName, String value, String asc);
 
 	Timesheet dailyTimeRecord(String rfidNo);
 

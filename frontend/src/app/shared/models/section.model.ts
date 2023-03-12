@@ -1,8 +1,15 @@
+import { Course } from './course.model';
+
 export interface Section {
     id: number;
-    name: string;
-    isActive: boolean;
 
     createdAt: string | Date;
     updatedAt: string | Date;
+    publishedAt: string | Date;
+
+    isActive: boolean;
+    name: string;
+
+    courseId?: number;
+    course?: Course;
 }

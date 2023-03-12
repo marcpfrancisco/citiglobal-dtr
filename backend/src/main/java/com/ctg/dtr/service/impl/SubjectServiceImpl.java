@@ -5,6 +5,11 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.ctg.dtr.dto.SubjectDto;
@@ -14,6 +19,11 @@ import com.ctg.dtr.repository.SectionRepository;
 import com.ctg.dtr.repository.SubjectRepository;
 import com.ctg.dtr.service.SubjectService;
 
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
+
 @Service
 public class SubjectServiceImpl implements SubjectService {
 
@@ -22,6 +32,22 @@ public class SubjectServiceImpl implements SubjectService {
 
 	@Autowired
     private SectionRepository sectionRepository;
+
+	public static Specification<Subject> byColumnNameAndValueSubject(String columnName, String value) {
+        return new Specification<Subject>() {
+            @Override
+            public Predicate toPredicate(Root<Subject> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
+
+				// if (exact) {
+                //     return builder.equal(root.<String>get(columnName), value);
+                // } else {
+                //     return builder.like(root.<String>get(columnName), "%" + value + "%");
+                // }
+
+                return builder.equal(root.<String>get(columnName), value);
+            }
+        };
+    }
 
     @Override
     public Optional<Subject> getById(Long id) {
@@ -89,7 +115,6 @@ public class SubjectServiceImpl implements SubjectService {
 			buildSubjectDto(subject, tmpSubject);
 
 			lSubjectDto.add(tmpSubject);
-
 		}
 		return lSubjectDto;
 	}
@@ -108,7 +133,6 @@ public class SubjectServiceImpl implements SubjectService {
 			buildSubjectDto(subject, tmpSubject);
 
 			lSubjectDto.add(tmpSubject);
-
 		}
 		return lSubjectDto;
 	}
@@ -127,16 +151,41 @@ public class SubjectServiceImpl implements SubjectService {
 			buildSubjectDto(subject, tmpSubject);
 
 			lSubjectDto.add(tmpSubject);
-
 		}
 		return lSubjectDto;
 	}
 
+	@Override
+	public List<SubjectDto> getPaginatedSubjectSort(int pageNo, int pageSize, String columnName, String value, String sortDirection) {
 
-    @Override
-	public List<SubjectDto> getAllSubjects() {
+		Pageable paging;
+		Page<Subject> pagedResult = null;
 
-		List<Subject> lSubjects = subjectRepository.findAll();
+		if (columnName != null) {
+			if (sortDirection != null) {
+				if (sortDirection.toLowerCase().equals("asc")) {
+					paging =  PageRequest.of(pageNo, pageSize, Sort.by(columnName).ascending());
+				} else if (sortDirection.toLowerCase().equals("desc")) {
+					paging =  PageRequest.of(pageNo, pageSize, Sort.by(columnName).descending());
+				} else {
+					paging =  PageRequest.of(pageNo, pageSize);
+				}
+			} else {
+				paging =  PageRequest.of(pageNo, pageSize);
+			}
+		} else {
+			paging =  PageRequest.of(pageNo, pageSize);
+		}
+
+		if (columnName != null && value != null) {
+			pagedResult = subjectRepository.findAll(byColumnNameAndValueSubject(columnName, value), paging);
+		} else if (columnName != null && value == null) {
+			pagedResult = subjectRepository.findAll(paging);
+		} else {
+			pagedResult = subjectRepository.findAll(paging);
+		}
+
+		List<Subject> lSubjects = pagedResult.getContent();
 
 		List<SubjectDto> lSubjectDto = new ArrayList<SubjectDto>();
 
@@ -147,7 +196,6 @@ public class SubjectServiceImpl implements SubjectService {
 			buildSubjectDto(subject, tmpSubject);
 
 			lSubjectDto.add(tmpSubject);
-
 		}
 		return lSubjectDto;
 	}
@@ -166,7 +214,6 @@ public class SubjectServiceImpl implements SubjectService {
 			buildSubjectDto(subject, tmpSubject);
 
 			lSubjectDto.add(tmpSubject);
-
 		}
 		return lSubjectDto;
 	}

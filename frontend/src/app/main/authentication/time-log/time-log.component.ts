@@ -1,12 +1,24 @@
-import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
+import {
+    Component,
+    HostListener,
+    Inject,
+    OnInit,
+    SimpleChanges,
+    ViewEncapsulation,
+} from '@angular/core';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseConfigService } from '@fuse/services/config.service';
 import { Store } from '@ngrx/store';
 import { RootState, TimeLogReducer } from '@stores/index';
 import { TimeLogActions } from '@stores/time-log';
-import { getCurrentTimeStamp } from '@utils';
-import { interval, Observable, Subject } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { getCurrentTimeStamp, isNumericInteger } from '@utils';
+import { interval, Observable, Subject, Subscription } from 'rxjs';
+import {
+    debounceTime,
+    distinctUntilChanged,
+    map,
+    switchMap,
+} from 'rxjs/operators';
 
 @Component({
     selector: 'citiglobal-time-log',
@@ -16,6 +28,12 @@ import { map } from 'rxjs/operators';
     animations: fuseAnimations,
 })
 export class TimeLogComponent implements OnInit {
+    private rfidNoSubject = new Subject<string>();
+    private subscription: Subscription;
+    private finalizedTimeLogInterval = 200;
+
+    timeLogInterval = this.finalizedTimeLogInterval;
+
     currentTime: number | null;
 
     unsubscribe$: Subject<any>;
@@ -59,11 +77,33 @@ export class TimeLogComponent implements OnInit {
             .subscribe((date) => {
                 this.currentTime = getCurrentTimeStamp();
             });
+
+        this.subscription = this.rfidNoSubject
+            .pipe(
+                debounceTime(this.finalizedTimeLogInterval),
+                distinctUntilChanged()
+            )
+            .subscribe((rfidNo) => {
+                this.store.dispatch(TimeLogActions.onSearchRFID({ rfidNo }));
+            });
     }
 
-    handleSearch(event: Event) {
-        const rfidNo = (event?.target as HTMLInputElement)?.value || '';
-        console.log(rfidNo, 'time log comp');
-        this.store.dispatch(TimeLogActions.onSearchRFID({ rfidNo }));
+    ngOnDestroy(): void {
+        this.rfidNoSubject.complete();
+        this.subscription.unsubscribe();
+    }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        const debounceInterval = changes?.timeLogInterval?.currentValue;
+
+        if (isNumericInteger(debounceInterval) && debounceInterval > 10) {
+            this.finalizedTimeLogInterval = debounceInterval;
+        }
+    }
+
+    handleSearch(rfidNo: string): void {
+        if (rfidNo) {
+            this.rfidNoSubject.next(rfidNo ? rfidNo : '');
+        }
     }
 }

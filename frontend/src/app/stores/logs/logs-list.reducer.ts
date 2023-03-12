@@ -20,9 +20,12 @@ export interface State
     // Add extra properties here...
     updatedAtTimestamp: number;
     search: string;
+    rfidNo: string | number;
     filters: {
-        role: UserRoles | null;
-        active: boolean | null;
+        periodDateRange: {
+            from: string | Date;
+            to: string | Date;
+        };
         withDeleted: boolean | null;
     };
     hasFilters: boolean;
@@ -34,10 +37,13 @@ export const initialState = adapter.getInitialState({
     // Add extra properties here...
     ...getInitialListState<TimeLogSortables>(),
     updatedAtTimestamp: getCurrentTimeStamp(),
+    rfidNo: '',
     search: '',
     filters: {
-        role: null,
-        active: null,
+        periodDateRange: {
+            from: null,
+            to: null,
+        },
         withDeleted: false,
     },
     hasFilters: false,

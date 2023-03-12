@@ -1,16 +1,15 @@
 import { HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { UserRoles, UserSortables } from '@enums';
+import { UserSortables } from '@enums';
 import {
     CreateUserDto,
     EditUserDto,
     FindAllUsersDto,
-    FindUserDto,
     PaginationResult,
 } from '@interfaces';
 import { User } from '@models';
 import { isBoolean } from 'lodash';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 
 import { ApiService } from './api.service';
 
@@ -21,7 +20,9 @@ export class UsersService {
     constructor(private apiService: ApiService) {}
 
     getUsers(options: FindAllUsersDto): Observable<PaginationResult<User>> {
-        return this.apiService.get(`${this.USERS_URL}/getAllUsers`);
+        return this.apiService.get(`${this.USERS_URL}/getAllUser`, {
+            params: this.createListOptions(options),
+        });
     }
 
     createListOptions(options: FindAllUsersDto): HttpParams {

@@ -18,5 +18,5 @@ public interface SectionService {
 
 	List<SectionDto> getSectionById(Long id);
 
-	List<SectionDto> getAllSections();
+    List<SectionDto> getPaginatedSectionSort(int pageNo, int pageSize, String columnName, String value, String asc);
 }

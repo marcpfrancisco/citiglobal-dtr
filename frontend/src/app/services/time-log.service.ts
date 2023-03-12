@@ -1,8 +1,9 @@
+import { HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { FindAllTimeLogDto } from '@interfaces';
 import { Observable } from 'rxjs';
 
-import { PaginationResult, TimeLog } from '../shared';
+import { PaginationResult, TimeLog, TimeLogSortables } from '../shared';
 import { CreateTimeLogDto } from '../shared/interfaces/time-log/create-time-log-dto.interface';
 import { ApiService } from './api.service';
 
@@ -19,9 +20,21 @@ export class TimeLogService {
     }
 
     postTimeRecord(rfidNo: string | number): Observable<TimeLog> {
-        console.log(rfidNo, 'rfidNo');
         return this.apiService.post(`${this.TIMELOG_URL}/dailyTimeRecord`, {
             rfidNo,
         });
+    }
+
+    createListOptions(options: any): HttpParams {
+        const { rfidNo } = options;
+        let params = this.apiService.createListRecordParameters(options, {
+            sortables: TimeLogSortables,
+        });
+
+        if (rfidNo) {
+            params = params.append('rfidNo', rfidNo);
+        }
+
+        return params;
     }
 }

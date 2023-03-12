@@ -18,5 +18,5 @@ public interface RoleService {
 
 	List<RoleDto> getRoleById(Long id);
 
-	List<RoleDto> getAllRoles();
+    List<RoleDto> getPaginatedRoleSort(int pageNo, int pageSize, String columnName, String value, String asc);
 }

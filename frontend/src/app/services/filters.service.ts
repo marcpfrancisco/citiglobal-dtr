@@ -43,6 +43,8 @@ export type UserFiltersInput = [
     // FiltersInput<boolean>
 ];
 
+export type SectionsFitlersInput = [FiltersInput<boolean>];
+
 @Injectable({
     providedIn: 'root',
 })
@@ -87,6 +89,22 @@ export class FiltersService {
             //     resetValue: false,
             //     required: false,
             // },
+        ];
+    }
+
+    getSectionListFilters(): SectionsFitlersInput {
+        return [
+            {
+                type: FiltersType.SELECT,
+                label: 'Active',
+                name: 'isActive',
+                resetValue: null,
+                required: false,
+                options: [
+                    { label: 'Active', value: true },
+                    { label: 'Inactive', value: false },
+                ],
+            },
         ];
     }
 

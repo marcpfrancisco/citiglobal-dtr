@@ -20,7 +20,7 @@ public interface UserService {
 
     List<UserDto> getUserByStudentNo(String studentNo);
 
-	List<UserDto> getAllUsers();
+    List<UserDto> getPaginatedUserSort(int pageNo, int pageSize, String columnName, String value, String asc);
 
     Boolean checkUsernameExists(String username);
 }

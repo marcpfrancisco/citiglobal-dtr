@@ -19,4 +19,3 @@ public class CourseDto {
 
     private String name;
 }
-    

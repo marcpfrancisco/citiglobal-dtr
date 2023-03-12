@@ -5,5 +5,7 @@ import java.util.Date;
 
 public interface ReportService {
 
-    ByteArrayInputStream generateTimesheetReport(String studentNo, Date startDate, Date endDate);
+    ByteArrayInputStream generateUserTimesheetReport(String studentNo, Date startDate, Date endDate);
+
+    ByteArrayInputStream generateAllTimesheetReport();
 }
