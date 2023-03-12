@@ -39,7 +39,9 @@ public class CourseServiceImpl implements CourseService {
                 //     return builder.like(root.<String>get(columnName), "%" + value + "%");
                 // }
 
-                return builder.equal(root.<String>get(columnName), value);
+                // return builder.equal(root.<String>get(columnName), value);
+
+				return builder.like(root.<String>get(columnName), "%" + value + "%");
             }
         };
     }
@@ -107,7 +109,7 @@ public class CourseServiceImpl implements CourseService {
 				} else if (sortDirection.toLowerCase().equals("desc")) {
 					paging =  PageRequest.of(pageNo, pageSize, Sort.by(columnName).descending());
 				} else {
-					paging =  PageRequest.of(pageNo, pageSize);
+					paging =  PageRequest.of(pageNo, pageSize, Sort.by(columnName));
 				}
 			} else {
 				paging =  PageRequest.of(pageNo, pageSize);
@@ -118,8 +120,6 @@ public class CourseServiceImpl implements CourseService {
 
 		if (columnName != null && value != null) {
 			pagedResult = courseRepository.findAll(byColumnNameAndValueCourse(columnName, value), paging);
-		} else if (columnName != null && value == null) {
-			pagedResult = courseRepository.findAll(paging);
 		} else {
 			pagedResult = courseRepository.findAll(paging);
 		}

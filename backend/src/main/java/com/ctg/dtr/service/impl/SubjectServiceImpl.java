@@ -44,7 +44,9 @@ public class SubjectServiceImpl implements SubjectService {
                 //     return builder.like(root.<String>get(columnName), "%" + value + "%");
                 // }
 
-                return builder.equal(root.<String>get(columnName), value);
+                // return builder.equal(root.<String>get(columnName), value);
+
+                return builder.like(root.<String>get(columnName), "%" + value + "%");
             }
         };
     }
@@ -168,7 +170,7 @@ public class SubjectServiceImpl implements SubjectService {
 				} else if (sortDirection.toLowerCase().equals("desc")) {
 					paging =  PageRequest.of(pageNo, pageSize, Sort.by(columnName).descending());
 				} else {
-					paging =  PageRequest.of(pageNo, pageSize);
+					paging =  PageRequest.of(pageNo, pageSize, Sort.by(columnName));
 				}
 			} else {
 				paging =  PageRequest.of(pageNo, pageSize);
@@ -179,8 +181,6 @@ public class SubjectServiceImpl implements SubjectService {
 
 		if (columnName != null && value != null) {
 			pagedResult = subjectRepository.findAll(byColumnNameAndValueSubject(columnName, value), paging);
-		} else if (columnName != null && value == null) {
-			pagedResult = subjectRepository.findAll(paging);
 		} else {
 			pagedResult = subjectRepository.findAll(paging);
 		}

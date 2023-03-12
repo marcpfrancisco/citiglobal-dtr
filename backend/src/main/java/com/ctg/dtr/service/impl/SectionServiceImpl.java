@@ -44,7 +44,9 @@ public class SectionServiceImpl implements SectionService {
                 //     return builder.like(root.<String>get(columnName), "%" + value + "%");
                 // }
 
-                return builder.equal(root.<String>get(columnName), value);
+                // return builder.equal(root.<String>get(columnName), value);
+
+				return builder.like(root.<String>get(columnName), "%" + value + "%");
             }
         };
     }
@@ -118,7 +120,7 @@ public class SectionServiceImpl implements SectionService {
 				} else if (sortDirection.toLowerCase().equals("desc")) {
 					paging =  PageRequest.of(pageNo, pageSize, Sort.by(columnName).descending());
 				} else {
-					paging =  PageRequest.of(pageNo, pageSize);
+					paging =  PageRequest.of(pageNo, pageSize, Sort.by(columnName));
 				}
 			} else {
 				paging =  PageRequest.of(pageNo, pageSize);
@@ -129,8 +131,6 @@ public class SectionServiceImpl implements SectionService {
 
 		if (columnName != null && value != null) {
 			pagedResult = sectionRepository.findAll(byColumnNameAndValueSection(columnName, value), paging);
-		} else if (columnName != null && value == null) {
-			pagedResult = sectionRepository.findAll(paging);
 		} else {
 			pagedResult = sectionRepository.findAll(paging);
 		}
