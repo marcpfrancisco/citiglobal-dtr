@@ -157,6 +157,8 @@ public class SectionController {
 				tempMap.put("sortDirection", sortDirection);
 			}
 
+			tempMap.put("total", sectionInfo.size());
+
 			return ResponseEntity.status(HttpStatus.OK).body(tempMap);
 		} else {
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).body(sectionInfo);

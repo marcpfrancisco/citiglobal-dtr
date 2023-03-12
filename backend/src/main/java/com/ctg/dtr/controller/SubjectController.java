@@ -200,6 +200,8 @@ public class SubjectController {
 				tempMap.put("sortDirection", sortDirection);
 			}
 
+			tempMap.put("total", subjectInfo.size());
+
 			return ResponseEntity.status(HttpStatus.OK).body(tempMap);
 		} else {
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).body(subjectInfo);

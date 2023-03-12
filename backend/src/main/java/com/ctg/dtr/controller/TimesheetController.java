@@ -182,6 +182,8 @@ public class TimesheetController {
 				tempMap.put("sortDirection", sortDirection);
 			}
 
+			tempMap.put("total", timesheetInfo.size());
+
 			return ResponseEntity.status(HttpStatus.OK).body(tempMap);
 		} else {
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).body(timesheetInfo);
