@@ -9,6 +9,7 @@ import { AuthenticationModule } from './authentication/authentication.module';
 import { LoginModule } from './login/login.module';
 import { LogsListModule } from './logs/logs-list.module';
 import { SectionListModule } from './sections/section-list.module';
+import { SubjectListModule } from './subjects/subject-list.module';
 import { TimeLogModule } from './time-log/time-log.module';
 import { UsersListModule } from './users/users-list.module';
 
@@ -26,6 +27,7 @@ import { UsersListModule } from './users/users-list.module';
         TimeLogModule,
         UsersListModule,
         SectionListModule,
+        SubjectListModule,
     ],
 })
 export class StoresModule {}

@@ -5,7 +5,7 @@
         <!-- HEADER -->
         <citiglobal-header iconName="library_books">
             <ng-template #title> All Subjects </ng-template>
-            <!-- <ng-template #search>
+            <ng-template #search>
                 <citiglobal-search
                     [searchValue]="search$ | async"
                     (search)="handleSearch($event)"
@@ -14,17 +14,9 @@
                     [hasFilters]="hasFilters$ | async"
                     (buttonClick)="onShowFilters()"
                 ></citiglobal-filter-list>
-            </ng-template> -->
+            </ng-template>
 
             <ng-template #actions>
-                <!-- <button
-                  mat-raised-button
-                  class="buttons accent mt-24 mt-md-0"
-                  *ngIf="'exportList' | able: 'Subjects'"
-                  (click)="exportSubject()"
-                >
-                  <span>EXPORT</span>
-                </button> -->
                 <button
                     mat-raised-button
                     class="buttons warn mt-24 mt-md-0"
@@ -38,11 +30,6 @@
 
         <!-- Content Card  -->
         <div class="content-card">
-            <!-- [dataSource]="dataSource$" -->
-            <!-- [matSortActive]="(listState$ | listStateMatSort | async).active"
-            [matSortDirection]="
-                (listState$ | listStateMatSort | async).direction
-            " -->
             <mat-table
                 #table
                 matSort
@@ -50,6 +37,11 @@
                 [@animateStagger]="{ value: '50' }"
                 fusePerfectScrollbar
                 [fusePerfectScrollbarOptions]="{ suppressScrollX: true }"
+                [dataSource]="dataSource$"
+                [matSortActive]="(listState$ | listStateMatSort | async).active"
+                [matSortDirection]="
+                    (listState$ | listStateMatSort | async).direction
+                "
                 (matSortChange)="onToggleSort($event)"
             >
                 <!-- Subject Code Column -->
@@ -84,51 +76,24 @@
                     </mat-cell>
                 </ng-container>
 
-                <!-- Status Column -->
+                <!-- Active Column -->
                 <ng-container [matColumnDef]="SUBJECT_SORTABLES.ACTIVE">
                     <mat-header-cell *matHeaderCellDef mat-sort-header
                         >Active</mat-header-cell
                     >
                     <mat-cell *matCellDef="let item">
-                        <p class="text-truncate">{{ item.active }}</p>
-                    </mat-cell>
-                </ng-container>
-
-                <!-- Options Column -->
-                <ng-container matColumnDef="options">
-                    <mat-header-cell *matHeaderCellDef>Options</mat-header-cell>
-                    <mat-cell *matCellDef="let item">
-                        <button
-                            mat-button
-                            [matMenuTriggerFor]="menu"
-                            (click)="$event.stopPropagation()"
-                            *ngIf="'update' | able : 'Subjects' : item"
-                        >
+                        <span>
                             <mat-icon
-                                class="logo-icon s-32"
-                                [@animate]="{
-                                    value: '*',
-                                    params: { delay: '50ms', scale: '0.2' }
-                                }"
-                                >more_vert
-                            </mat-icon>
-                        </button>
-                        <!-- <mat-menu #menu="matMenu">
-                <button
-                  mat-menu-item
-                  *ngIf="!isDeleted(item) && ('delete' | able : 'Subjects': item)"
-                  (click)="deleteFlorist(item)"
-                >
-                  Archive
-                </button>
-                <button
-                  mat-menu-item
-                  *ngIf="isDeleted(item) && ('delete' | able : 'Subjects': item)"
-                  (click)="undeleteFlorist(item)"
-                >
-                  Unarchive
-                </button>
-              </mat-menu> -->
+                                *ngIf="item.isActive"
+                                class="active-icon green-600 s-16"
+                                >check</mat-icon
+                            >
+                            <mat-icon
+                                *ngIf="!item.isActive"
+                                class="active-icon red-500 s-16"
+                                >close</mat-icon
+                            >
+                        </span>
                     </mat-cell>
                 </ng-container>
 
@@ -143,6 +108,16 @@
                     (click)="onSelectRow(item)"
                 ></mat-row>
             </mat-table>
+
+            <mat-paginator
+                #paginator
+                [length]="total$ | async"
+                [pageIndex]="pageIndex$ | async"
+                [pageSize]="pageSize$ | async"
+                [pageSizeOptions]="pageSizeOptions$ | async"
+                (page)="onChangePage($event)"
+            >
+            </mat-paginator>
         </div>
     </div>
 </div>

@@ -45,6 +45,11 @@ export type UserFiltersInput = [
 
 export type SectionsFitlersInput = [FiltersInput<boolean>];
 
+export type SubjectsFiltersInput = [
+    FiltersInput<FiltersInputNumberRange>,
+    FiltersInput<boolean>
+];
+
 @Injectable({
     providedIn: 'root',
 })
@@ -94,6 +99,29 @@ export class FiltersService {
 
     getSectionListFilters(): SectionsFitlersInput {
         return [
+            {
+                type: FiltersType.SELECT,
+                label: 'Active',
+                name: 'isActive',
+                resetValue: null,
+                required: false,
+                options: [
+                    { label: 'Active', value: true },
+                    { label: 'Inactive', value: false },
+                ],
+            },
+        ];
+    }
+
+    getSubjectListFilters(): SubjectsFiltersInput {
+        return [
+            {
+                type: FiltersType.DATE_RANGE,
+                label: 'Period',
+                name: 'periodDateRange',
+                resetValue: { from: null, to: null },
+                required: false,
+            },
             {
                 type: FiltersType.SELECT,
                 label: 'Active',

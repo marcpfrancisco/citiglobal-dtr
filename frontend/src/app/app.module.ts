@@ -23,6 +23,7 @@ import {
     RouterService,
     SectionsService,
     SnackbarService,
+    SubjectsService,
     TimeLogService,
     UsersService,
 } from '@services';
@@ -81,11 +82,12 @@ const { apiUrl } = environment;
         FiltersService,
         PermissionsService,
         RouterService,
+        SectionsService,
         SnackbarMultilineService,
         SnackbarService,
+        SubjectsService,
         TimeLogService,
         UsersService,
-        SectionsService,
     ],
     bootstrap: [AppComponent],
 })
