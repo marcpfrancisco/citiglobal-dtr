@@ -190,7 +190,7 @@ export class ApiService {
             return params;
         }
 
-        const { limit, page, nopage, search } = options;
+        const { limit, page, search } = options;
 
         params = this.createGetRecordParameter(options, params);
 
@@ -205,11 +205,6 @@ export class ApiService {
             pagingOptions.sortables,
             params
         );
-
-        // disables paging and requests for all records
-        if (nopage === 'true') {
-            return params.set('nopage', 'true');
-        }
 
         // apply the needed paging request
         const finalizedLimit =
