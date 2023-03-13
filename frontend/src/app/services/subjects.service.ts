@@ -28,21 +28,27 @@ export class SubjectsService {
         });
     }
 
-    getSubjectById(subjectId: string): Observable<SubjectModel> {
+    getSubjectById(subjectId: number): Observable<SubjectModel> {
         return this.apiService.get(
             `${this.SUBJECT_URL}/getSubjectById/${subjectId}`
         );
     }
 
     create(payload: CreateSubjectDto): Observable<SubjectModel> {
-        return this.apiService.post(`${this.SUBJECT_URL}`, payload);
+        return this.apiService.post(
+            `${this.SUBJECT_URL}/createSubject`,
+            payload
+        );
     }
 
     update(
-        subjectId: string,
+        subjectId: number,
         payload: EditSubjectDto
     ): Observable<SubjectModel> {
-        return this.apiService.put(`${this.SUBJECT_URL}/${subjectId}`, payload);
+        return this.apiService.put(
+            `${this.SUBJECT_URL}/updateSubject/${subjectId}`,
+            payload
+        );
     }
 
     createListOptions(options: FindAllSubjectsDto): HttpParams {

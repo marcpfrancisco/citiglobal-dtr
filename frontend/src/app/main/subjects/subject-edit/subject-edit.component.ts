@@ -66,6 +66,7 @@ export class SubjectEditComponent implements OnInit, OnDestroy {
 
     form: FormGroup;
     tabIndex: number;
+    subjectId: number;
 
     subjectRecord: SubjectModel | null;
     dayOfWeekOptions: Array<EnumView> = [];
@@ -160,10 +161,7 @@ export class SubjectEditComponent implements OnInit, OnDestroy {
             .pipe(
                 switchMap((payload) =>
                     (this.editMode
-                        ? this.subjectService.update(
-                              this.subjectRecord.id,
-                              payload
-                          )
+                        ? this.subjectService.update(this.subjectId, payload)
                         : this.subjectService.create(
                               payload as CreateSubjectDto
                           )
@@ -182,6 +180,10 @@ export class SubjectEditComponent implements OnInit, OnDestroy {
                         ? param.get('subjectId')
                         : null;
 
+                    this.subjectId = isNumericInteger(subjectId)
+                        ? +subjectId
+                        : null;
+
                     if (!subjectId) {
                         this.editMode = false;
                         return of(null);
@@ -190,7 +192,7 @@ export class SubjectEditComponent implements OnInit, OnDestroy {
                     this.editMode = true;
 
                     return this.subjectService
-                        .getSubjectById(subjectId)
+                        .getSubjectById(this.subjectId)
                         .pipe(catchError(() => of(null)));
                 })
             )

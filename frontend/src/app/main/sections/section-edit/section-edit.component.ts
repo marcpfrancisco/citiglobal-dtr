@@ -11,7 +11,7 @@ import { RootState } from '@stores/index';
 import { of, Subject, Subscription } from 'rxjs';
 import { CreateSectionDto } from 'src/app/shared/interfaces/section/create-section-dto.interface';
 import { EditSectionDto } from 'src/app/shared/interfaces/section/edit-section-dto.interface';
-import { NgValidators } from '@utils';
+import { isNumericInteger, NgValidators } from '@utils';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { isBoolean, isString } from 'lodash';
 
@@ -35,6 +35,7 @@ export class SectionEditComponent implements OnInit, OnDestroy {
     tabIndex: number;
 
     sectionRecord: Section | null;
+    sectionId: number;
 
     get isEditMode(): boolean {
         return this.editMode === true;
@@ -105,10 +106,7 @@ export class SectionEditComponent implements OnInit, OnDestroy {
             .pipe(
                 switchMap((payload) =>
                     (this.editMode
-                        ? this.sectionService.update(
-                              this.sectionRecord.id,
-                              payload
-                          )
+                        ? this.sectionService.update(this.sectionId, payload)
                         : this.sectionService.create(
                               payload as CreateSectionDto
                           )
@@ -127,6 +125,10 @@ export class SectionEditComponent implements OnInit, OnDestroy {
                         ? param.get('sectionId')
                         : null;
 
+                    this.sectionId = isNumericInteger(sectionId)
+                        ? +sectionId
+                        : null;
+
                     if (!sectionId) {
                         this.editMode = false;
                         return of(null);
@@ -135,7 +137,7 @@ export class SectionEditComponent implements OnInit, OnDestroy {
                     this.editMode = true;
 
                     return this.sectionService
-                        .getSectionById(sectionId)
+                        .getSectionById(this.sectionId)
                         .pipe(catchError(() => of(null)));
                 })
             )

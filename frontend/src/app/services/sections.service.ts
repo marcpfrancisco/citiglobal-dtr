@@ -22,7 +22,7 @@ export class SectionsService {
         });
     }
 
-    getSectionById(sectionId: string): Observable<Section> {
+    getSectionById(sectionId: number): Observable<Section> {
         return this.apiService.get(
             `${this.SECTION_URL}/getSectionById/${sectionId}`
         );
@@ -32,7 +32,7 @@ export class SectionsService {
         return this.apiService.post(`${this.SECTION_URL}`, payload);
     }
 
-    update(sectionId: string, payload: EditSectionDto): Observable<Section> {
+    update(sectionId: number, payload: EditSectionDto): Observable<Section> {
         return this.apiService.put(`${this.SECTION_URL}/${sectionId}`, payload);
     }
 
