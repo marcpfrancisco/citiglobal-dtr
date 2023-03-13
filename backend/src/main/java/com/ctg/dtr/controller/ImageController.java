@@ -65,7 +65,7 @@ public class ImageController {
         }
     }
 
-    @Operation(summary = "Get user image")
+    @Operation(summary = "Get user image by student number")
     @SecurityRequirement(name = "Bearer Authentication")
 	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN') or hasRole('USER')")
     @GetMapping("/{studentNo}")
