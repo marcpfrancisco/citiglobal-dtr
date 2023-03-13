@@ -30,7 +30,13 @@ import { DecimalPipe, CurrencyPipe } from '@angular/common';
 import moment from 'moment';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { isArray, isBoolean, isNumber, isString } from 'lodash';
-import { momentize } from '@utils';
+import { isNumericInteger, momentize, NgValidators } from '@utils';
+import { DayOfWeek } from '@enums';
+
+interface EnumView {
+    value?: string;
+    index?: number;
+}
 
 @Component({
     selector: 'citiglobal-subject-edit',
@@ -62,6 +68,7 @@ export class SubjectEditComponent implements OnInit, OnDestroy {
     tabIndex: number;
 
     subjectRecord: SubjectModel | null;
+    dayOfWeekOptions: Array<EnumView> = [];
 
     get isEditMode(): boolean {
         return this.editMode === true;
@@ -139,6 +146,13 @@ export class SubjectEditComponent implements OnInit, OnDestroy {
         this.tabIndex = 0;
         this.editMode = null;
 
+        this.dayOfWeekOptions = Object.keys(DayOfWeek)
+            .filter((key) => !isNaN(+key))
+            .map((index) => ({
+                value: DayOfWeek[index],
+                index: +index,
+            }));
+
         this.buildSubjectForm();
 
         this.formSubmit$ = new Subject();
@@ -183,24 +197,24 @@ export class SubjectEditComponent implements OnInit, OnDestroy {
             .subscribe((subject: SubjectModel | null) => {
                 this.subjectRecord = subject;
 
-                const {
-                    subjectCode,
-                    description,
-                    day,
-                    startTime,
-                    endTime,
-                    gracePeriod,
-                    units,
-                    isActive,
-                } = subject[0];
-
                 if (subject) {
+                    const {
+                        subjectCode,
+                        description,
+                        day,
+                        startTime,
+                        endTime,
+                        gracePeriod,
+                        units,
+                        isActive,
+                    } = subject[0];
+
                     this.form.patchValue({
                         subjectCode,
                         description,
                         day,
-                        startTime: momentize(startTime),
-                        endTime: momentize(endTime),
+                        startTime,
+                        endTime: endTime ? endTime : null,
                         gracePeriod,
                         units,
                         isActive,
@@ -209,7 +223,7 @@ export class SubjectEditComponent implements OnInit, OnDestroy {
                     this.form.patchValue({
                         subjectCode: '',
                         description: '',
-                        day: '',
+                        day: [],
                         startTime: null,
                         endTime: null,
                         gracePeriod: '',
@@ -224,11 +238,14 @@ export class SubjectEditComponent implements OnInit, OnDestroy {
         this.form = new FormGroup({
             subjectCode: new FormControl('', [Validators.required]),
             description: new FormControl('', [Validators.required]),
-            day: new FormControl('', [Validators.required]),
+            day: new FormControl([], [Validators.required]),
             startTime: new FormControl(null, [Validators.required]),
             endTime: new FormControl(null, [Validators.required]),
-            gracePeriod: new FormControl(null, [Validators.required]),
-            units: new FormControl('', [Validators.required]),
+            gracePeriod: new FormControl(null),
+            units: new FormControl('', [
+                Validators.required,
+                NgValidators.isNumericInteger,
+            ]),
             isActive: new FormControl('', [Validators.required]),
         });
     }
@@ -274,12 +291,12 @@ export class SubjectEditComponent implements OnInit, OnDestroy {
             payload.units = units;
         }
 
-        if (moment.isMoment(startTime)) {
-            payload.startTime = startTime.format(MOMENT_SQL_TIME_FORMAT);
+        if (startTime) {
+            payload.startTime = startTime;
         }
 
-        if (moment.isMoment(endTime)) {
-            payload.endTime = endTime.format(MOMENT_SQL_TIME_FORMAT);
+        if (endTime) {
+            payload.endTime = endTime;
         }
 
         if (isBoolean(isActive)) {
@@ -298,6 +315,6 @@ export class SubjectEditComponent implements OnInit, OnDestroy {
     }
 
     navigateBack() {
-        this.routerService.back(['subject']);
+        this.routerService.back(['subjects']);
     }
 }

@@ -7,5 +7,6 @@ export * from './user/user-sortables.enum';
 
 export * from './sections/section-sortables.enum';
 export * from './students/student-sortables.enum';
+export * from './subjects/day-of-week.enum';
 export * from './subjects/subject-sortables.enum';
 export * from './logs/time-logs-sortables.enum';
