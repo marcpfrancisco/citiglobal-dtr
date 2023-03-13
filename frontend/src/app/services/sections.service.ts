@@ -3,6 +3,8 @@ import { Injectable } from '@angular/core';
 import { isBoolean, isString } from 'lodash';
 import { Observable } from 'rxjs';
 import { PaginationResult, Section, SectionSortables } from '../shared';
+import { CreateSectionDto } from '../shared/interfaces/section/create-section-dto.interface';
+import { EditSectionDto } from '../shared/interfaces/section/edit-section-dto.interface';
 import { FindAllSectionsDto } from '../shared/interfaces/section/find-all-sections-dto.interface';
 import { ApiService } from './api.service';
 
@@ -18,6 +20,20 @@ export class SectionsService {
         return this.apiService.get(`${this.SECTION_URL}/getAllSection`, {
             params: this.createListOptions(options),
         });
+    }
+
+    getSectionById(sectionId: string): Observable<Section> {
+        return this.apiService.get(
+            `${this.SECTION_URL}/getSectionById/${sectionId}`
+        );
+    }
+
+    create(payload: CreateSectionDto): Observable<Section> {
+        return this.apiService.post(`${this.SECTION_URL}`, payload);
+    }
+
+    update(sectionId: string, payload: EditSectionDto): Observable<Section> {
+        return this.apiService.put(`${this.SECTION_URL}/${sectionId}`, payload);
     }
 
     createListOptions(options: FindAllSectionsDto): HttpParams {

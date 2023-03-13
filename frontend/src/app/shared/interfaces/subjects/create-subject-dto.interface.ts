@@ -10,5 +10,5 @@ export interface CreateSubjectDto {
     gracePeriod: string | Date;
     units: number;
     sectionId?: Section['id'];
-    section: Section;
+    section?: Section;
 }

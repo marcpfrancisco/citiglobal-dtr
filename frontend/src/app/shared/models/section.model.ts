@@ -1,7 +1,7 @@
 import { Course } from './course.model';
 
 export interface Section {
-    id: number;
+    id: string;
 
     createdAt: string | Date;
     updatedAt: string | Date;
