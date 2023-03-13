@@ -3,6 +3,7 @@ package com.ctg.dtr.security.jwt.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -69,10 +70,13 @@ public class WebSecurityConfig {
         "/swagger-ui/**").permitAll()
         .and()
         .authorizeHttpRequests()
-        .requestMatchers("/api/authentication",
+        .requestMatchers(HttpMethod.POST, "/api/authentication", 
         "/api/users",
-        "/api/users/{id}",
         "/api/timesheets/daily-time-record**")
+        .permitAll()
+        .and()
+        .authorizeHttpRequests()
+        .requestMatchers(HttpMethod.GET, "/api/users/**")
         .permitAll()
         .anyRequest().authenticated();
     
