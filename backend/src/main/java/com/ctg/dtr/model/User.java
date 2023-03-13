@@ -38,7 +38,7 @@ public class User {
     @UpdateTimestamp 
     private Date updatedAt;
 
-    private String publishedAt;
+    private Date publishedAt;
 
     @Column(nullable = false)
     private Boolean isActive;

@@ -21,6 +21,7 @@ import com.ctg.dtr.service.SectionService;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 
@@ -33,20 +34,23 @@ public class SectionServiceImpl implements SectionService {
 	@Autowired
     private CourseRepository courseRepository;
 
-	public static Specification<Section> byColumnNameAndValueSection(String columnName, String value) {
+	public static Specification<Section> byColumnNameAndValueSection(String value) {
         return new Specification<Section>() {
             @Override
-            public Predicate toPredicate(Root<Section> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
+            public Predicate toPredicate(Root<Section> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
 
-				// if (exact) {
-                //     return builder.equal(root.<String>get(columnName), value);
-                // } else {
-                //     return builder.like(root.<String>get(columnName), "%" + value + "%");
-                // }
+				Join<Course, Section> subqueryCourse = root.join("course");
 
-                // return builder.equal(root.<String>get(columnName), value);
+				Predicate predicateForData = criteriaBuilder.or(
+					criteriaBuilder.like(root.get("id").as(String.class), "%" +  value + "%"),
+					criteriaBuilder.like(root.get("createdAt").as(String.class), "%" + value + "%"),
+					criteriaBuilder.like(root.get("updatedAt").as(String.class), "%" + value + "%"),
+					criteriaBuilder.like(root.get("publishedAt").as(String.class), "%" + value + "%"),
+					criteriaBuilder.like(root.get("isActive").as(String.class), "%" + value + "%"),
+					criteriaBuilder.like(root.get("name"), "%" + value + "%"),
+					criteriaBuilder.like(subqueryCourse.get("name"), "%" + value + "%"));
 
-				return builder.like(root.<String>get(columnName), "%" + value + "%");
+				return criteriaBuilder.and(predicateForData);
             }
         };
     }
@@ -129,8 +133,8 @@ public class SectionServiceImpl implements SectionService {
 			paging =  PageRequest.of(pageNo, pageSize);
 		}
 
-		if (columnName != null && value != null) {
-			pagedResult = sectionRepository.findAll(byColumnNameAndValueSection(columnName, value), paging);
+		if (value != null) {
+			pagedResult = sectionRepository.findAll(byColumnNameAndValueSection(value), paging);
 		} else {
 			pagedResult = sectionRepository.findAll(paging);
 		}

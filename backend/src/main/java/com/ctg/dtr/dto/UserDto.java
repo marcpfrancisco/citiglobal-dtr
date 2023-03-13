@@ -13,7 +13,7 @@ public class UserDto {
     
     private Date updatedAt;
 
-    private String publishedAt;
+    private Date publishedAt;
 
     private Boolean isActive;
 

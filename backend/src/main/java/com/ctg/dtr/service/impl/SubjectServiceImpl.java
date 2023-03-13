@@ -21,6 +21,7 @@ import com.ctg.dtr.service.SubjectService;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 
@@ -33,20 +34,29 @@ public class SubjectServiceImpl implements SubjectService {
 	@Autowired
     private SectionRepository sectionRepository;
 
-	public static Specification<Subject> byColumnNameAndValueSubject(String columnName, String value) {
+	public static Specification<Subject> byColumnNameAndValueSubject(String value) {
         return new Specification<Subject>() {
             @Override
-            public Predicate toPredicate(Root<Subject> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
+            public Predicate toPredicate(Root<Subject> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
 
-				// if (exact) {
-                //     return builder.equal(root.<String>get(columnName), value);
-                // } else {
-                //     return builder.like(root.<String>get(columnName), "%" + value + "%");
-                // }
+				Join<Section, Subject> subquerySection = root.join("section");
 
-                // return builder.equal(root.<String>get(columnName), value);
+				Predicate predicateForData = criteriaBuilder.or(
+					criteriaBuilder.like(root.get("id").as(String.class), "%" +  value + "%"),
+					criteriaBuilder.like(root.get("createdAt").as(String.class), "%" + value + "%"),
+					criteriaBuilder.like(root.get("updatedAt").as(String.class), "%" + value + "%"),
+					criteriaBuilder.like(root.get("publishedAt").as(String.class), "%" + value + "%"),
+					criteriaBuilder.like(root.get("isActive").as(String.class), "%" + value + "%"),
+					criteriaBuilder.like(root.get("subjectCode"), "%" + value + "%"),
+					criteriaBuilder.like(root.get("description"), "%" + value + "%"),
+					criteriaBuilder.like(root.get("day"), "%" + value + "%"),
+					criteriaBuilder.like(root.get("startTime"), "%" + value + "%"),
+					criteriaBuilder.like(root.get("endTime"), "%" + value + "%"),
+					criteriaBuilder.like(root.get("gracePeriod"), "%" + value + "%"),
+					criteriaBuilder.like(root.get("units").as(String.class), "%" + value + "%"),
+					criteriaBuilder.like(subquerySection.get("name"), "%" + value + "%"));
 
-                return builder.like(root.<String>get(columnName), "%" + value + "%");
+				return criteriaBuilder.and(predicateForData);
             }
         };
     }
@@ -179,8 +189,8 @@ public class SubjectServiceImpl implements SubjectService {
 			paging =  PageRequest.of(pageNo, pageSize);
 		}
 
-		if (columnName != null && value != null) {
-			pagedResult = subjectRepository.findAll(byColumnNameAndValueSubject(columnName, value), paging);
+		if (value != null) {
+			pagedResult = subjectRepository.findAll(byColumnNameAndValueSubject(value), paging);
 		} else {
 			pagedResult = subjectRepository.findAll(paging);
 		}

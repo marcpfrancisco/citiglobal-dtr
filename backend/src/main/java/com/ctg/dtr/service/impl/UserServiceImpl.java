@@ -24,6 +24,7 @@ import com.ctg.dtr.service.UserService;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 
@@ -42,20 +43,32 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
-	public static Specification<User> byColumnNameAndValueUser(String columnName, String value) {
+	public static Specification<User> byColumnNameAndValueUser(String value) {
         return new Specification<User>() {
             @Override
-            public Predicate toPredicate(Root<User> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
+            public Predicate toPredicate(Root<User> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
 
-				// if (exact) {
-                //     return builder.equal(root.<String>get(columnName), value);
-                // } else {
-                //     return builder.like(root.<String>get(columnName), "%" + value + "%");
-                // }
+				Join<Section, User> subquerySection = root.join("section");
+				Join<Role, User> subqueryRole = root.join("role");
 
-                // return builder.equal(root.<String>get(columnName), value);
+				Predicate predicateForData = criteriaBuilder.or(
+					criteriaBuilder.like(root.get("id").as(String.class), "%" +  value + "%"),
+					criteriaBuilder.like(root.get("createdAt").as(String.class), "%" + value + "%"),
+					criteriaBuilder.like(root.get("updatedAt").as(String.class), "%" + value + "%"),
+					criteriaBuilder.like(root.get("publishedAt").as(String.class), "%" + value + "%"),
+					criteriaBuilder.like(root.get("isActive").as(String.class), "%" + value + "%"),
+					criteriaBuilder.like(root.get("firstName"), "%" + value + "%"),
+					criteriaBuilder.like(root.get("middleName"), "%" + value + "%"),
+					criteriaBuilder.like(root.get("lastName"), "%" + value + "%"),
+					criteriaBuilder.like(root.get("mobileNo"), "%" + value + "%"),
+					criteriaBuilder.like(root.get("studentNo"), "%" + value + "%"),
+					criteriaBuilder.like(root.get("rfidNo"), "%" + value + "%"),
+					criteriaBuilder.like(root.get("username"), "%" + value + "%"),
+					criteriaBuilder.like(root.get("password"), "%" + value + "%"),
+					criteriaBuilder.like(subquerySection.get("name"), "%" + value + "%"),
+					criteriaBuilder.like(subqueryRole.get("name"), "%" + value + "%"));
 
-				return builder.like(root.<String>get(columnName), "%" + value + "%");
+				return criteriaBuilder.and(predicateForData);
             }
         };
     }
@@ -208,8 +221,8 @@ public class UserServiceImpl implements UserService {
 			paging =  PageRequest.of(pageNo, pageSize);
 		}
 
-		if (columnName != null && value != null) {
-			pagedResult = userRepository.findAll(byColumnNameAndValueUser(columnName, value), paging);
+		if (value != null) {
+			pagedResult = userRepository.findAll(byColumnNameAndValueUser(value), paging);
 		} else {
 			pagedResult = userRepository.findAll(paging);
 		}

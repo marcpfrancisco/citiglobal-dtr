@@ -28,20 +28,20 @@ public class RoleServiceImpl implements RoleService {
 	@Autowired
     private RoleRepository roleRepository;
 
-	public static Specification<Role> byColumnNameAndValueRole(String columnName, String value) {
+	public static Specification<Role> byColumnNameAndValueRole(String value) {
         return new Specification<Role>() {
             @Override
-            public Predicate toPredicate(Root<Role> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
+            public Predicate toPredicate(Root<Role> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
 
-				// if (exact) {
-                //     return builder.equal(root.<String>get(columnName), value);
-                // } else {
-                //     return builder.like(root.<String>get(columnName), "%" + value + "%");
-                // }
+				Predicate predicateForData = criteriaBuilder.or(
+					criteriaBuilder.like(root.get("id").as(String.class), "%" +  value + "%"),
+					criteriaBuilder.like(root.get("createdAt").as(String.class), "%" + value + "%"),
+					criteriaBuilder.like(root.get("updatedAt").as(String.class), "%" + value + "%"),
+					criteriaBuilder.like(root.get("publishedAt").as(String.class), "%" + value + "%"),
+					criteriaBuilder.like(root.get("isActive").as(String.class), "%" + value + "%"),
+					criteriaBuilder.like(root.get("name"), "%" + value + "%"));
 
-                // return builder.equal(root.<String>get(columnName), value);
-
-				return builder.like(root.<String>get(columnName), "%" + value + "%");
+				return criteriaBuilder.and(predicateForData);
             }
         };
     }
@@ -118,8 +118,8 @@ public class RoleServiceImpl implements RoleService {
 			paging =  PageRequest.of(pageNo, pageSize);
 		}
 
-		if (columnName != null && value != null) {
-			pagedResult = roleRepository.findAll(byColumnNameAndValueRole(columnName, value), paging);
+		if (value != null) {
+			pagedResult = roleRepository.findAll(byColumnNameAndValueRole(value), paging);
 		} else {
 			pagedResult = roleRepository.findAll(paging);
 		}
