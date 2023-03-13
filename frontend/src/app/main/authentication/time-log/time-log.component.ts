@@ -29,15 +29,8 @@ import {
     animations: fuseAnimations,
 })
 export class TimeLogComponent implements OnInit {
-    private rfidNoSubject = new Subject<string>();
-    private subscription: Subscription;
-    private finalizedTimeLogInterval = 200;
-
-    timeLogInterval = this.finalizedTimeLogInterval;
-
     currentTime: number | null;
 
-    unsubscribe$: Subject<any>;
     search$: Observable<string>;
 
     /**
@@ -78,20 +71,13 @@ export class TimeLogComponent implements OnInit {
             .subscribe((date) => {
                 this.currentTime = getCurrentTimeStamp();
             });
-
-        this.subscription = this.rfidNoSubject.subscribe((rfidNo) => {
-            this.store.dispatch(TimeLogActions.onSearchRFID({ rfidNo }));
-        });
     }
 
-    ngOnDestroy(): void {
-        this.rfidNoSubject.complete();
-        this.subscription.unsubscribe();
-    }
+    ngOnDestroy(): void {}
 
     handleSearch(rfidNo: string): void {
         if (rfidNo) {
-            this.rfidNoSubject.next(rfidNo ? rfidNo : '');
+            this.store.dispatch(TimeLogActions.onSearchRFID({ rfidNo }));
         }
     }
 }

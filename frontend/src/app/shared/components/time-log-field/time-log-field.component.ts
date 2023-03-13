@@ -38,18 +38,16 @@ export class TimeLogFieldComponent implements OnInit {
     @Output()
     timeLog = new EventEmitter<string>();
 
-    @ViewChild('rfidNoField') input: ElementRef<HTMLInputElement>;
+    rfidValue: string = '';
 
     constructor() {}
 
     ngOnInit(): void {
         this.subscription = this.timeLogSubject
-            .pipe(
-                debounceTime(this.finalizedTimeLogInterval),
-                distinctUntilChanged()
-            )
+            .pipe(debounceTime(this.finalizedTimeLogInterval))
             .subscribe((value) => {
                 this.timeLog.emit(value);
+                this.rfidValue = null;
             });
     }
 
@@ -64,5 +62,6 @@ export class TimeLogFieldComponent implements OnInit {
     handleSearch(event: Event): void {
         const value = (event?.target as HTMLInputElement)?.value || '';
         this.timeLogSubject.next(value ? value : '');
+        this.rfidValue = value;
     }
 }

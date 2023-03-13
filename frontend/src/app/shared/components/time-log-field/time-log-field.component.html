@@ -10,7 +10,7 @@
             class="cdk-visually-hidden"
             placeholder="Tap your RFID here"
             (input)="handleSearch($event)"
-            #rfidNoField
+            [(ngModel)]="rfidValue"
             id="rfidNoField"
         />
     </div>
