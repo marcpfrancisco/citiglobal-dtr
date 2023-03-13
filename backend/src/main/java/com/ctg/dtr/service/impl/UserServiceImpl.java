@@ -25,6 +25,7 @@ import com.ctg.dtr.service.UserService;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 
@@ -48,8 +49,8 @@ public class UserServiceImpl implements UserService {
             @Override
             public Predicate toPredicate(Root<User> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
 
-				Join<Section, User> subquerySection = root.join("section");
-				Join<Role, User> subqueryRole = root.join("role");
+				Join<Section, User> subquerySection = root.join("section", JoinType.LEFT);
+				Join<Role, User> subqueryRole = root.join("role", JoinType.INNER);
 
 				Predicate predicateForData = criteriaBuilder.or(
 					criteriaBuilder.like(root.get("id").as(String.class), "%" +  value + "%"),
