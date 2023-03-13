@@ -26,21 +26,23 @@ import com.ctg.dtr.dto.SectionDto;
 import com.ctg.dtr.model.Section;
 import com.ctg.dtr.service.SectionService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
 @CrossOrigin
-@RequestMapping(value = "/api/section")
+@RequestMapping(value = "/api/sections")
 public class SectionController {
 
     @Autowired
     private SectionService sectionService;
 
+	@Operation(summary = "Add section")
 	@SecurityRequirement(name = "Bearer Authentication")
 	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
-	@PostMapping("/createSection")
+	@PostMapping
 	public ResponseEntity<Section> createSection(@RequestBody SectionDto sectionDto) {
 
         Section section = sectionService.createSection(sectionDto);
@@ -48,9 +50,10 @@ public class SectionController {
 		return new ResponseEntity<Section>(section, HttpStatus.CREATED);
 	}
 
+	@Operation(summary = "Update section")
 	@SecurityRequirement(name = "Bearer Authentication")
 	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
-	@PutMapping("/updateSection/{id}")
+	@PutMapping("/{id}")
 	public ResponseEntity<?> updateSection(@PathVariable Long id, @RequestBody SectionDto sectionDto, HttpServletRequest request, HttpServletResponse response) {
 
 		Optional<Section> section = sectionService.getById(id);
@@ -74,9 +77,10 @@ public class SectionController {
 		}
 	}
 
+	@Operation(summary = "Delete section")
 	@SecurityRequirement(name = "Bearer Authentication")
 	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
-	@DeleteMapping("/deleteSection/{id}")
+	@DeleteMapping("/{id}")
 	public ResponseEntity<?> deleteSection(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
 
 		Optional<Section> section = sectionService.getById(id);
@@ -103,9 +107,10 @@ public class SectionController {
 		}
 	}
 
+	@Operation(summary = "Get section by id")
 	@SecurityRequirement(name = "Bearer Authentication")
 	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
-	@GetMapping("/getSectionById/{id}")
+	@GetMapping("/{id}")
 	public ResponseEntity<?> getSectionById(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
 
 		Optional<Section> section = sectionService.getById(id);
@@ -129,9 +134,10 @@ public class SectionController {
 		}
 	}
 
+	@Operation(summary = "Get all section")
 	@SecurityRequirement(name = "Bearer Authentication")
 	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
-	@GetMapping("/getAllSection")
+	@GetMapping("/all")
 	public ResponseEntity<?> getAllSection(@RequestParam(value =  "page") int pageNo, @RequestParam(value =  "limit") int pageSize,
 	@RequestParam(value =  "sort", required = false) String columnName, 
 	@RequestParam(value =  "search", required = false) String keyword, 

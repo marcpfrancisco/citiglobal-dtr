@@ -69,10 +69,10 @@ public class WebSecurityConfig {
         "/swagger-ui/**").permitAll()
         .and()
         .authorizeHttpRequests()
-        .requestMatchers("/api/authentication/authenticate",
-        "/api/user/createUser",
-        "/api/user/getUserById/**",
-        "/api/timesheet/dailyTimeRecord**")
+        .requestMatchers("/api/authentication",
+        "/api/users",
+        "/api/users/{id}",
+        "/api/timesheets/daily-time-record**")
         .permitAll()
         .anyRequest().authenticated();
     

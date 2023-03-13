@@ -21,20 +21,22 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ctg.dtr.service.ReportService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 @RestController
 @CrossOrigin
-@RequestMapping(value = "/api/report")
+@RequestMapping(value = "/api/reports")
 public class ReportController {
 
     @Autowired
     private ReportService reportService;
 
+    @Operation(summary = "Get user timesheet report by student number")
     @SecurityRequirement(name = "Bearer Authentication")
 	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN') or hasRole('USER')")
-    @GetMapping("/generate/user/timesheet/{studentNo}")
+    @GetMapping("/{studentNo}")
     public ResponseEntity<Resource> genereateUserTimesheetReport(@PathVariable String studentNo, 
          @Parameter(description = "Date format: <i>MM-DD-YYYY</i>") @RequestParam String startDate, 
          @Parameter(description = "Date format: <i>MM-DD-YYYY</i>") @RequestParam String endDate) {
@@ -56,9 +58,10 @@ public class ReportController {
           .body(file);
     }
 
+    @Operation(summary = "Get all user timesheet report")
     @SecurityRequirement(name = "Bearer Authentication")
 	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
-    @GetMapping("/generate/all/timesheet")
+    @GetMapping("/all")
     public ResponseEntity<Resource> genereateAllTimesheetReport() {
 
       InputStreamResource file = new InputStreamResource(reportService.generateAllTimesheetReport());

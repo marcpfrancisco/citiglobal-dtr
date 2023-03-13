@@ -131,42 +131,6 @@ public class SubjectServiceImpl implements SubjectService {
 		return lSubjectDto;
 	}
 
-    @Override
-	public List<SubjectDto> getSubjectByStudent(Long userId) {
-
-		List<Subject> lSubjects = subjectRepository.findSubjectByStudent(userId);
-
-		List<SubjectDto> lSubjectDto = new ArrayList<SubjectDto>();
-
-		for (Subject subject : lSubjects) {
-
-			SubjectDto tmpSubject = new SubjectDto();
-
-			buildSubjectDto(subject, tmpSubject);
-
-			lSubjectDto.add(tmpSubject);
-		}
-		return lSubjectDto;
-	}
-
-    @Override
-	public List<SubjectDto> getSubjectByTeacher(Long userId) {
-
-		List<Subject> lSubjects = subjectRepository.findSubjectByTeacher(userId);
-
-		List<SubjectDto> lSubjectDto = new ArrayList<SubjectDto>();
-
-		for (Subject subject : lSubjects) {
-
-			SubjectDto tmpSubject = new SubjectDto();
-
-			buildSubjectDto(subject, tmpSubject);
-
-			lSubjectDto.add(tmpSubject);
-		}
-		return lSubjectDto;
-	}
-
 	@Override
 	public List<SubjectDto> getPaginatedSubjectSort(int pageNo, int pageSize, String columnName, String value, String sortDirection) {
 
@@ -196,24 +160,6 @@ public class SubjectServiceImpl implements SubjectService {
 		}
 
 		List<Subject> lSubjects = pagedResult.getContent();
-
-		List<SubjectDto> lSubjectDto = new ArrayList<SubjectDto>();
-
-		for (Subject subject : lSubjects) {
-
-			SubjectDto tmpSubject = new SubjectDto();
-
-			buildSubjectDto(subject, tmpSubject);
-
-			lSubjectDto.add(tmpSubject);
-		}
-		return lSubjectDto;
-	}
-
-    @Override
-	public List<SubjectDto> getSubjectBySectionId(Long sectionId) {
-
-		List<Subject> lSubjects = subjectRepository.findBySectionId(sectionId);
 
 		List<SubjectDto> lSubjectDto = new ArrayList<SubjectDto>();
 

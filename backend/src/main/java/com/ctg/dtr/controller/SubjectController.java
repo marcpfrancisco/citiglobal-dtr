@@ -26,21 +26,23 @@ import com.ctg.dtr.dto.SubjectDto;
 import com.ctg.dtr.model.Subject;
 import com.ctg.dtr.service.SubjectService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
 @CrossOrigin
-@RequestMapping(value = "/api/subject")
+@RequestMapping(value = "/api/subjects")
 public class SubjectController {
 
     @Autowired
     private SubjectService subjectService;
 
+	@Operation(summary = "Add subject")
 	@SecurityRequirement(name = "Bearer Authentication")
 	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
-	@PostMapping("/createSubject")
+	@PostMapping
 	public ResponseEntity<Subject> createSubject(@RequestBody SubjectDto subjectDto) {
 
         Subject subject = subjectService.createSubject(subjectDto);
@@ -48,9 +50,10 @@ public class SubjectController {
 		return new ResponseEntity<Subject>(subject, HttpStatus.CREATED);
 	}
 
+	@Operation(summary = "Update subject")
 	@SecurityRequirement(name = "Bearer Authentication")
 	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
-	@PutMapping("/updateSubject/{id}")
+	@PutMapping("/{id}")
 	public ResponseEntity<?> updateSubject(@PathVariable Long id, @RequestBody SubjectDto subjectDto, HttpServletRequest request, HttpServletResponse response) {
 
 		Optional<Subject> subject = subjectService.getById(id);
@@ -74,9 +77,10 @@ public class SubjectController {
 		}
 	}
 
+	@Operation(summary = "Delete subject")
 	@SecurityRequirement(name = "Bearer Authentication")
 	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
-	@DeleteMapping("/deleteSubject/{id}")
+	@DeleteMapping("/{id}")
 	public ResponseEntity<?> deleteSubject(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
 
 		Optional<Subject> subject = subjectService.getById(id);
@@ -104,9 +108,10 @@ public class SubjectController {
 		}
 	}
 
+	@Operation(summary = "Get subject by id")
 	@SecurityRequirement(name = "Bearer Authentication")
 	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
-	@GetMapping("/getSubjectById/{id}")
+	@GetMapping("/{id}")
 	public ResponseEntity<?> getSubjectById(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
 
 		Optional<Subject> subject = subjectService.getById(id);
@@ -130,51 +135,10 @@ public class SubjectController {
 		}
 	}
 
+	@Operation(summary = "Get all subject")
 	@SecurityRequirement(name = "Bearer Authentication")
 	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
-	@GetMapping("/getSubjectByStudent/{userId}")
-	public ResponseEntity<?> getSubjectByStudent(@PathVariable Long userId) {
-
-		List<SubjectDto> subjectInfo = subjectService.getSubjectByStudent(userId);
-
-		if (subjectInfo == null) {
-			return new ResponseEntity<List<SubjectDto>>(subjectInfo, HttpStatus.NO_CONTENT);
-		} else {
-			return new ResponseEntity<List<SubjectDto>>(subjectInfo, HttpStatus.OK);
-		}
-	}
-
-	@SecurityRequirement(name = "Bearer Authentication")
-	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
-	@GetMapping("/getSubjectByTeacher/{userId}")
-	public ResponseEntity<?> getSubjectByTeacher(@PathVariable Long userId) {
-
-		List<SubjectDto> subjectInfo = subjectService.getSubjectByTeacher(userId);
-
-		if (subjectInfo == null) {
-			return new ResponseEntity<List<SubjectDto>>(subjectInfo, HttpStatus.NO_CONTENT);
-		} else {
-			return new ResponseEntity<List<SubjectDto>>(subjectInfo, HttpStatus.OK);
-		}
-	}
-
-	@SecurityRequirement(name = "Bearer Authentication")
-	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
-	@GetMapping("/getSubjectBySectionId/{sectionId}")
-	public ResponseEntity<?> getSubjectBySectionId(@PathVariable Long sectionId) {
-
-		List<SubjectDto> subjectInfo = subjectService.getSubjectBySectionId(sectionId);
-
-		if (subjectInfo == null) {
-			return new ResponseEntity<List<SubjectDto>>(subjectInfo, HttpStatus.NO_CONTENT);
-		} else {
-			return new ResponseEntity<List<SubjectDto>>(subjectInfo, HttpStatus.OK);
-		}
-	}
-
-	@SecurityRequirement(name = "Bearer Authentication")
-	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
-	@GetMapping("/getAllSubject")
+	@GetMapping("/all")
 	public ResponseEntity<?> getAllSubject(@RequestParam(value =  "page") int pageNo, @RequestParam(value =  "limit") int pageSize,
 	@RequestParam(value =  "sort", required = false) String columnName, 
 	@RequestParam(value =  "search", required = false) String keyword, 

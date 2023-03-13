@@ -26,6 +26,7 @@ import com.ctg.dtr.dto.UserDto;
 import com.ctg.dtr.model.User;
 import com.ctg.dtr.service.UserService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -33,13 +34,14 @@ import jakarta.validation.Valid;
 
 @RestController
 @CrossOrigin
-@RequestMapping(value = "/api/user")
+@RequestMapping(value = "/api/users")
 public class UserController {
 
     @Autowired
     private UserService userService;
 
-	@PostMapping("/createUser")
+	@Operation(summary = "Add user")
+	@PostMapping
 	public ResponseEntity<?> createUser(@Valid @RequestBody UserDto userDto, HttpServletRequest request, HttpServletResponse response) {
 
 		Boolean checkUsername = userService.checkUsernameExists(userDto.getUsername());
@@ -62,9 +64,10 @@ public class UserController {
 		return new ResponseEntity<User>(user, HttpStatus.CREATED);
 	}
 
+	@Operation(summary = "Update user")
 	@SecurityRequirement(name = "Bearer Authentication")
 	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
-	@PutMapping("/updateUser/{id}")
+	@PutMapping("/{id}")
 	public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody UserDto userDto, HttpServletRequest request, HttpServletResponse response) {
 
 		Optional<User> user = userService.getById(id);
@@ -88,9 +91,10 @@ public class UserController {
 		}
 	}
 
+	@Operation(summary = "Delete user")
 	@SecurityRequirement(name = "Bearer Authentication")
 	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
-	@DeleteMapping("/deleteUser/{id}")
+	@DeleteMapping("/{id}")
 	public ResponseEntity<?> deleteUser(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
 
 		Optional<User> user = userService.getById(id);
@@ -118,7 +122,8 @@ public class UserController {
 		}
 	}
 
-	@GetMapping("/getUserById/{id}")
+	@Operation(summary = "Get user by id")
+	@GetMapping("/{id}")
 	public ResponseEntity<?> getUserById(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
 
 		Optional<User> user = userService.getById(id);
@@ -143,9 +148,10 @@ public class UserController {
 		}
 	}
 
+	@Operation(summary = "Get user by student number")
 	@SecurityRequirement(name = "Bearer Authentication")
 	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN') or hasRole('USER')")
-	@GetMapping("/getUserByStudentNo")
+	@GetMapping
 	public ResponseEntity<?> getUserByStudentNo(@RequestParam String studentNo) {
 
 		List<UserDto> userInfo = userService.getUserByStudentNo(studentNo);
@@ -157,9 +163,10 @@ public class UserController {
 		}
 	}
 
+	@Operation(summary = "Get all user")
 	@SecurityRequirement(name = "Bearer Authentication")
 	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
-	@GetMapping("/getAllUser")
+	@GetMapping("/all")
 	public ResponseEntity<?> getAllUser(@RequestParam(value =  "page") int pageNo, @RequestParam(value =  "limit") int pageSize,
 	@RequestParam(value =  "sort", required = false) String columnName, 
 	@RequestParam(value =  "search", required = false) String keyword, 

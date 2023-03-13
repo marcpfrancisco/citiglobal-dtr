@@ -26,21 +26,23 @@ import com.ctg.dtr.dto.RoleDto;
 import com.ctg.dtr.model.Role;
 import com.ctg.dtr.service.RoleService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
 @CrossOrigin
-@RequestMapping(value = "/api/role")
+@RequestMapping(value = "/api/roles")
 public class RoleController {
 
     @Autowired
     private RoleService roleService;
 
+    @Operation(summary = "Add role")
 	@SecurityRequirement(name = "Bearer Authentication")
 	@PreAuthorize("hasRole('SUPER_ADMIN')")
-	@PostMapping("/createRole")
+	@PostMapping
 	public ResponseEntity<Role> createRole(@RequestBody RoleDto roleDto) {
 
         Role role = roleService.createRole(roleDto);
@@ -48,9 +50,10 @@ public class RoleController {
 		return new ResponseEntity<Role>(role, HttpStatus.CREATED);
 	}
 
+    @Operation(summary = "Update role")
 	@SecurityRequirement(name = "Bearer Authentication")
 	@PreAuthorize("hasRole('SUPER_ADMIN')")
-	@PutMapping("/updateRole/{id}")
+	@PutMapping("/{id}")
 	public ResponseEntity<?> updateRole(@PathVariable Long id, @RequestBody RoleDto roleDto, HttpServletRequest request, HttpServletResponse response) {
 
 		Optional<Role> role = roleService.getById(id);
@@ -74,9 +77,10 @@ public class RoleController {
 		}
 	}
 
+    @Operation(summary = "Delete role")
 	@SecurityRequirement(name = "Bearer Authentication")
 	@PreAuthorize("hasRole('SUPER_ADMIN')")
-	@DeleteMapping("/deleteRole/{id}")
+	@DeleteMapping("/{id}")
 	public ResponseEntity<?> deleteRole(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
 
 		Optional<Role> role = roleService.getById(id);
@@ -104,9 +108,10 @@ public class RoleController {
 		}
 	}
 
+    @Operation(summary = "Get role by id")
 	@SecurityRequirement(name = "Bearer Authentication")
 	@PreAuthorize("hasRole('SUPER_ADMIN')")
-	@GetMapping("/getRoleById/{id}")
+	@GetMapping("/{id}")
 	public ResponseEntity<?> getRoleById(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
 
 		Optional<Role> role = roleService.getById(id);
@@ -130,9 +135,10 @@ public class RoleController {
 		}
 	}
 
+    @Operation(summary = "Get all role")
 	@SecurityRequirement(name = "Bearer Authentication")
 	@PreAuthorize("hasRole('SUPER_ADMIN')")
-	@GetMapping("/getAllRole")
+	@GetMapping("/all")
 	public ResponseEntity<?> getAllRole(@RequestParam(value =  "page") int pageNo, @RequestParam(value =  "limit") int pageSize,
 	@RequestParam(value =  "sort", required = false) String columnName, 
 	@RequestParam(value =  "search", required = false) String keyword, 

@@ -20,6 +20,7 @@ import com.ctg.dtr.security.jwt.payload.response.JwtResponse;
 import com.ctg.dtr.security.jwt.service.impl.UserDetailsImpl;
 import com.ctg.dtr.security.jwt.utils.JwtUtil;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 
 @RestController
@@ -33,7 +34,8 @@ public class AuthenticationController {
 	@Autowired
 	private AuthenticationManager authenticationManager;
 
-	@PostMapping(value = "/authenticate")
+	@Operation(summary = "Create authentication token")
+	@PostMapping
 	public ResponseEntity<?> createAuthenticationToken(@Valid @RequestBody JwtRequest authenticationRequest) {
 
 		Authentication authentication = authenticationManager.authenticate(
