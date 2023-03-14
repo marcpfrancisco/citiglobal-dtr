@@ -9,20 +9,20 @@ import { ApiService } from './api.service';
 
 @Injectable({ providedIn: 'root' })
 export class TimeLogService {
-    private readonly TIMELOG_URL = 'timesheet';
+    private readonly TIMELOG_URL = 'timesheets';
 
     constructor(private apiService: ApiService) {}
 
     getTimeSheet(
         options: FindAllTimeLogDto
     ): Observable<PaginationResult<TimeLog>> {
-        return this.apiService.get(`${this.TIMELOG_URL}/getAllTimesheet`, {
+        return this.apiService.get(`${this.TIMELOG_URL}/all`, {
             params: this.createListOptions(options),
         });
     }
 
     postTimeRecord(rfidNo: string | number): Observable<TimeLog> {
-        return this.apiService.post(`${this.TIMELOG_URL}/dailyTimeRecord`, {
+        return this.apiService.post(`${this.TIMELOG_URL}/daily-time-record`, {
             rfidNo,
         });
     }

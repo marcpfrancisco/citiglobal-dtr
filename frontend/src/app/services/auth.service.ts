@@ -7,14 +7,14 @@ import { ApiService } from './api.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-    private readonly USERS_URL = 'user';
+    private readonly USERS_URL = 'users';
     private readonly AUTH_URL = 'authentication';
 
     constructor(private apiService: ApiService) {}
 
     login(username: string, password: string): Observable<AuthUser> {
         return this.apiService
-            .post(`${this.AUTH_URL}/authenticate`, { username, password })
+            .post(`${this.AUTH_URL}`, { username, password })
             .pipe(
                 tap((response: any) => this.getCurrentSignInUser(response)),
                 switchMap((response: any) => {
@@ -33,7 +33,7 @@ export class AuthService {
     }
 
     loginByUserId(userId: string | number): Observable<any> {
-        return this.apiService.get(`${this.USERS_URL}/getUserById/${userId}`);
+        return this.apiService.get(`${this.USERS_URL}/${userId}`);
     }
 
     getCurrentSignInUser(response: any) {
