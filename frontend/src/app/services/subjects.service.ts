@@ -16,39 +16,31 @@ import { ApiService } from './api.service';
 
 @Injectable({ providedIn: 'root' })
 export class SubjectsService {
-    private readonly SUBJECT_URL = 'subject';
+    private readonly SUBJECT_URL = 'subjects';
 
     constructor(private apiService: ApiService) {}
 
     getSubjects(
         options: FindAllSubjectsDto
     ): Observable<PaginationResult<SubjectModel>> {
-        return this.apiService.get(`${this.SUBJECT_URL}/getAllSubject`, {
+        return this.apiService.get(`${this.SUBJECT_URL}/all`, {
             params: this.createListOptions(options),
         });
     }
 
     getSubjectById(subjectId: number): Observable<SubjectModel> {
-        return this.apiService.get(
-            `${this.SUBJECT_URL}/getSubjectById/${subjectId}`
-        );
+        return this.apiService.get(`${this.SUBJECT_URL}/${subjectId}`);
     }
 
     create(payload: CreateSubjectDto): Observable<SubjectModel> {
-        return this.apiService.post(
-            `${this.SUBJECT_URL}/createSubject`,
-            payload
-        );
+        return this.apiService.post(`${this.SUBJECT_URL}`, payload);
     }
 
     update(
         subjectId: number,
         payload: EditSubjectDto
     ): Observable<SubjectModel> {
-        return this.apiService.put(
-            `${this.SUBJECT_URL}/updateSubject/${subjectId}`,
-            payload
-        );
+        return this.apiService.put(`${this.SUBJECT_URL}/${subjectId}`, payload);
     }
 
     createListOptions(options: FindAllSubjectsDto): HttpParams {

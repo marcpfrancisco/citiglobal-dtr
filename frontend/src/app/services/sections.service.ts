@@ -10,22 +10,20 @@ import { ApiService } from './api.service';
 
 @Injectable({ providedIn: 'root' })
 export class SectionsService {
-    private readonly SECTION_URL = 'section';
+    private readonly SECTION_URL = 'sections';
 
     constructor(private apiService: ApiService) {}
 
     getSections(
         options: FindAllSectionsDto
     ): Observable<PaginationResult<Section>> {
-        return this.apiService.get(`${this.SECTION_URL}/getAllSection`, {
+        return this.apiService.get(`${this.SECTION_URL}/all`, {
             params: this.createListOptions(options),
         });
     }
 
     getSectionById(sectionId: number): Observable<Section> {
-        return this.apiService.get(
-            `${this.SECTION_URL}/getSectionById/${sectionId}`
-        );
+        return this.apiService.get(`${this.SECTION_URL}/${sectionId}`);
     }
 
     create(payload: CreateSectionDto): Observable<Section> {

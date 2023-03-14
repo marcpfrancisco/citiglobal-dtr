@@ -15,12 +15,12 @@ import { ApiService } from './api.service';
 
 @Injectable({ providedIn: 'root' })
 export class UsersService {
-    private readonly USERS_URL = 'user';
+    private readonly USERS_URL = 'users';
 
     constructor(private apiService: ApiService) {}
 
     getUsers(options: FindAllUsersDto): Observable<PaginationResult<User>> {
-        return this.apiService.get(`${this.USERS_URL}/getAllUser`, {
+        return this.apiService.get(`${this.USERS_URL}/all`, {
             params: this.createListOptions(options),
         });
     }
@@ -50,21 +50,15 @@ export class UsersService {
     }
 
     getUserById(id: string | number): Observable<User> {
-        return this.apiService.get(`${this.USERS_URL}/getUserById/${id}`);
+        return this.apiService.get(`${this.USERS_URL}/${id}`);
     }
 
     createUser(partialUser: CreateUserDto): Observable<User> {
-        return this.apiService.post(
-            `${this.USERS_URL}/createUser`,
-            partialUser
-        );
+        return this.apiService.post(`${this.USERS_URL}`, partialUser);
     }
 
     editUser(partialUser: EditUserDto, id: string | number): Observable<User> {
-        return this.apiService.put(
-            `${this.USERS_URL}/updateUser/${id}`,
-            partialUser
-        );
+        return this.apiService.put(`${this.USERS_URL}/${id}`, partialUser);
     }
 
     deleteUser(id: string): Observable<User> {
