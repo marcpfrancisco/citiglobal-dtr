@@ -51,7 +51,7 @@ public class UserController {
 
 			response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 			response.setStatus(HttpServletResponse.SC_CONFLICT);
-		
+
 			tempMap.put("status", HttpServletResponse.SC_CONFLICT);
 			tempMap.put("error",  HttpStatus.CONFLICT);
 			tempMap.put("message", "Username already exists.");
@@ -168,8 +168,8 @@ public class UserController {
 	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
 	@GetMapping("/all")
 	public ResponseEntity<?> getAllUser(@RequestParam(value =  "page") int pageNo, @RequestParam(value =  "limit") int pageSize,
-	@RequestParam(value =  "sort", required = false) String columnName, 
-	@RequestParam(value =  "search", required = false) String keyword, 
+	@RequestParam(value =  "sort", required = false) String columnName,
+	@RequestParam(value =  "search", required = false) String keyword,
 	@RequestParam(required = false) String sortDirection) {
 
 		List<UserDto> userInfo = userService.getPaginatedUserSort(pageNo, pageSize, columnName, keyword, sortDirection);
@@ -198,6 +198,5 @@ public class UserController {
 		} else {
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).body(userInfo);
 		}
-		
 	}
 }

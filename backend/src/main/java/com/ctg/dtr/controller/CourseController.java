@@ -139,8 +139,8 @@ public class CourseController {
 	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
 	@GetMapping("/all")
 	public ResponseEntity<?> getAllCourse(@RequestParam(value =  "page") int pageNo, @RequestParam(value =  "limit") int pageSize,
-	@RequestParam(value =  "sort", required = false) String columnName, 
-	@RequestParam(value =  "search", required = false) String keyword, 
+	@RequestParam(value =  "sort", required = false) String columnName,
+	@RequestParam(value =  "search", required = false) String keyword,
 	@RequestParam(required = false) String sortDirection) {
 
 		List<CourseDto> courseInfo = courseService.getPaginatedCourseSort(pageNo, pageSize, columnName, keyword, sortDirection);
@@ -169,6 +169,5 @@ public class CourseController {
 		} else {
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).body(courseInfo);
 		}
-		
 	}
 }

@@ -37,8 +37,8 @@ public class ReportController {
     @SecurityRequirement(name = "Bearer Authentication")
 	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN') or hasRole('USER')")
     @GetMapping("/{studentNo}")
-    public ResponseEntity<Resource> genereateUserTimesheetReport(@PathVariable String studentNo, 
-         @Parameter(description = "Date format: <i>MM-DD-YYYY</i>") @RequestParam String startDate, 
+    public ResponseEntity<Resource> genereateUserTimesheetReport(@PathVariable String studentNo,
+         @Parameter(description = "Date format: <i>MM-DD-YYYY</i>") @RequestParam String startDate,
          @Parameter(description = "Date format: <i>MM-DD-YYYY</i>") @RequestParam String endDate) {
 
         Date sd = new Date();

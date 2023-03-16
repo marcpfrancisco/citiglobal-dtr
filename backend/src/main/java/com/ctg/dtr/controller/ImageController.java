@@ -72,7 +72,7 @@ public class ImageController {
 	public void getUserImage(@PathVariable String studentNo, HttpServletResponse response) {
 
         Image image = imageService.getUserByStudentNo(studentNo);
-        
+
         String extension = FilenameUtils.getExtension(image.getName());
 
         switch (extension) {

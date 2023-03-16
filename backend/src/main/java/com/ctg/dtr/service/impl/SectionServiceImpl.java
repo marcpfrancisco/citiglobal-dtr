@@ -138,7 +138,7 @@ public class SectionServiceImpl implements SectionService {
 		} else {
 			pagedResult = sectionRepository.findAll(paging);
 		}
-		
+
 		List<Section> lSections = pagedResult.getContent();
 
 		List<SectionDto> lSectionDto = new ArrayList<SectionDto>();
@@ -163,6 +163,6 @@ public class SectionServiceImpl implements SectionService {
         sectionDto.setIsActive(section.getIsActive());
         sectionDto.setName(section.getName());
 		sectionDto.setCourseId(section.getCourse() != null ? section.getCourse().getId() : 0);
-		sectionDto.setCourse(section.getCourse() != null ? section.getCourse(): null);
+		sectionDto.setCourse(section.getCourse() != null ? section.getCourse() : null);
 	}
 }

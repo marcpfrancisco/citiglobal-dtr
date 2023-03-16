@@ -140,8 +140,8 @@ public class SubjectController {
 	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
 	@GetMapping("/all")
 	public ResponseEntity<?> getAllSubject(@RequestParam(value =  "page") int pageNo, @RequestParam(value =  "limit") int pageSize,
-	@RequestParam(value =  "sort", required = false) String columnName, 
-	@RequestParam(value =  "search", required = false) String keyword, 
+	@RequestParam(value =  "sort", required = false) String columnName,
+	@RequestParam(value =  "search", required = false) String keyword,
 	@RequestParam(required = false) String sortDirection) {
 
 		List<SubjectDto> subjectInfo = subjectService.getPaginatedSubjectSort(pageNo, pageSize, columnName, keyword, sortDirection);
@@ -170,6 +170,5 @@ public class SubjectController {
 		} else {
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).body(subjectInfo);
 		}
-		
 	}
 }

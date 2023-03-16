@@ -140,8 +140,8 @@ public class RoleController {
 	@PreAuthorize("hasRole('SUPER_ADMIN')")
 	@GetMapping("/all")
 	public ResponseEntity<?> getAllRole(@RequestParam(value =  "page") int pageNo, @RequestParam(value =  "limit") int pageSize,
-	@RequestParam(value =  "sort", required = false) String columnName, 
-	@RequestParam(value =  "search", required = false) String keyword, 
+	@RequestParam(value =  "sort", required = false) String columnName,
+	@RequestParam(value =  "search", required = false) String keyword,
 	@RequestParam(required = false) String sortDirection) {
 
 		List<RoleDto> roleInfo = roleService.getPaginatedRoleSort(pageNo, pageSize, columnName, keyword, sortDirection);
@@ -170,6 +170,5 @@ public class RoleController {
 		} else {
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).body(roleInfo);
 		}
-		
 	}
 }

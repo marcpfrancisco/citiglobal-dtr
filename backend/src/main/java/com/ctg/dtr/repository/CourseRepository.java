@@ -12,6 +12,6 @@ import com.ctg.dtr.model.Course;
 @Repository
 public interface CourseRepository extends JpaRepository<Course, Long>, JpaSpecificationExecutor<Course> {
 
-    @Query(value = "SELECT * FROM course WHERE id = ?1", nativeQuery = true) 
+    @Query(value = "SELECT * FROM course WHERE id = ?1", nativeQuery = true)
     List<Course> findCourseById(Long id);
 }

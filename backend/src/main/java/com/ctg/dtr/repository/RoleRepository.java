@@ -15,9 +15,9 @@ public interface RoleRepository extends JpaRepository<Role, Long>, JpaSpecificat
 
     Role findByName(String name);
 
-    @Query(value = "SELECT * FROM role WHERE name = ?1", nativeQuery = true) 
+    @Query(value = "SELECT * FROM role WHERE name = ?1", nativeQuery = true)
     Optional<Role> findRoleByName(String name);
 
-    @Query(value = "SELECT * FROM role WHERE id = ?1", nativeQuery = true) 
+    @Query(value = "SELECT * FROM role WHERE id = ?1", nativeQuery = true)
     List<Role> findRoleById(Long id);
 }

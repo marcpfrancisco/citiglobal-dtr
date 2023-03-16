@@ -125,7 +125,7 @@ public class CourseServiceImpl implements CourseService {
 		} else {
 			pagedResult = courseRepository.findAll(paging);
 		}
-		
+
 		List<Course> lCourses = pagedResult.getContent();
 
 		List<CourseDto> lCourseDto = new ArrayList<CourseDto>();

@@ -67,7 +67,7 @@ public class TimesheetController {
 			tempMap.put("error",  HttpStatus.NOT_FOUND);
 			tempMap.put("message", "No Student found.");
 			tempMap.put("path", request.getServletPath());
-			
+
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(tempMap);
 
 		} else {
@@ -165,8 +165,8 @@ public class TimesheetController {
 	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
 	@GetMapping("/all")
 	public ResponseEntity<?> getAllTimesheet(@RequestParam(value =  "page") int pageNo, @RequestParam(value =  "limit") int pageSize,
-	@RequestParam(value =  "sort", required = false) String columnName, 
-	@RequestParam(value =  "search", required = false) String keyword, 
+	@RequestParam(value =  "sort", required = false) String columnName,
+	@RequestParam(value =  "search", required = false) String keyword,
 	@RequestParam(required = false) String sortDirection) {
 
 		List<TimesheetDto> timesheetInfo = timesheetService.getPaginatedTimesheetSort(pageNo, pageSize, columnName, keyword, sortDirection);
@@ -195,6 +195,5 @@ public class TimesheetController {
 		} else {
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).body(timesheetInfo);
 		}
-		
 	}
 }

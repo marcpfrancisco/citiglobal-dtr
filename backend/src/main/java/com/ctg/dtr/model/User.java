@@ -34,8 +34,8 @@ public class User {
 
     @CreationTimestamp
     private Date createdAt;
-    
-    @UpdateTimestamp 
+
+    @UpdateTimestamp
     private Date updatedAt;
 
     private Date publishedAt;

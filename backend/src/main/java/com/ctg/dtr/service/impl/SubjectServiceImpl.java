@@ -96,9 +96,9 @@ public class SubjectServiceImpl implements SubjectService {
         currentSubject.setPublishedAt(subjectDto.getPublishedAt() == null ? currentSubject.getPublishedAt() : subjectDto.getPublishedAt());
         currentSubject.setIsActive(subjectDto.getIsActive() == null ? currentSubject.getIsActive() : subjectDto.getIsActive());
         currentSubject.setSubjectCode(subjectDto.getSubjectCode() == null ? currentSubject.getSubjectCode() : subjectDto.getSubjectCode());
-        currentSubject.setDescription(subjectDto.getDescription() == null ? currentSubject.getDescription() : subjectDto.getDescription() );
-        currentSubject.setDay(subjectDto.getDay() == null ? currentSubject.getDay() : subjectDto.getDay() );
-        currentSubject.setStartTime(subjectDto.getStartTime() == null ? currentSubject.getStartTime() : subjectDto.getStartTime() );
+        currentSubject.setDescription(subjectDto.getDescription() == null ? currentSubject.getDescription() : subjectDto.getDescription());
+        currentSubject.setDay(subjectDto.getDay() == null ? currentSubject.getDay() : subjectDto.getDay());
+        currentSubject.setStartTime(subjectDto.getStartTime() == null ? currentSubject.getStartTime() : subjectDto.getStartTime());
         currentSubject.setEndTime(subjectDto.getEndTime() == null ? currentSubject.getEndTime() : subjectDto.getEndTime());
         currentSubject.setGracePeriod(subjectDto.getGracePeriod() == null ? currentSubject.getGracePeriod() : subjectDto.getGracePeriod());
         currentSubject.setUnits(subjectDto.getUnits() == null ? currentSubject.getUnits() : subjectDto.getUnits());

@@ -39,9 +39,9 @@ public class ImageServiceImpl implements ImageService {
 
         String fileName;
 
-        if(user.isPresent()) {
-            fileName = user.get().getLastName() + "_" 
-            + user.get().getStudentNo() + "." 
+        if (user.isPresent()) {
+            fileName = user.get().getLastName() + "_"
+            + user.get().getStudentNo() + "."
             + FilenameUtils.getExtension(multipartFile.getOriginalFilename());
         } else {
             fileName = multipartFile.getOriginalFilename();
@@ -66,9 +66,7 @@ public class ImageServiceImpl implements ImageService {
 
             inputStream.close();
 			outputStream.close();
-		}
-
-		catch (IOException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
@@ -78,7 +76,7 @@ public class ImageServiceImpl implements ImageService {
         image.setType(multipartFile.getContentType());
 		image.setPath(String.valueOf(newFile.getAbsolutePath()));
         image.setUser(user.isPresent() ? user.get() : null);
-        
+
 		return imageRepository.save(image);
 	}
 

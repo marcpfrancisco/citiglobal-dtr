@@ -123,7 +123,7 @@ public class RoleServiceImpl implements RoleService {
 		} else {
 			pagedResult = roleRepository.findAll(paging);
 		}
-		
+
 		List<Role> lRoles = pagedResult.getContent();
 
 		List<RoleDto> lRoleDto = new ArrayList<RoleDto>();

@@ -96,7 +96,7 @@ public class TimesheetServiceImpl implements TimesheetService {
 		Optional<User> user = userRepository.findById(timesheetDto.getUserId());
 
         currentTimesheet.setDate(timesheetDto.getDate() == null ? currentTimesheet.getDate() : timesheetDto.getDate());
-        currentTimesheet.setTimeIn(timesheetDto.getTimeIn() == null ? currentTimesheet.getTimeIn() :timesheetDto.getTimeIn());
+        currentTimesheet.setTimeIn(timesheetDto.getTimeIn() == null ? currentTimesheet.getTimeIn() : timesheetDto.getTimeIn());
         currentTimesheet.setTimeOut(timesheetDto.getTimeOut() == null ? currentTimesheet.getTimeOut() : timesheetDto.getTimeOut());
         currentTimesheet.setTimeRendered(timesheetDto.getTimeRendered() == null ? currentTimesheet.getTimeRendered() : timesheetDto.getTimeRendered());
         currentTimesheet.setStatus(timesheetDto.getStatus() == null ? currentTimesheet.getStatus() : timesheetDto.getStatus());
@@ -155,7 +155,7 @@ public class TimesheetServiceImpl implements TimesheetService {
 		} else {
 			pagedResult = timesheetRepository.findAll(paging);
 		}
-        
+
 		List<Timesheet> lTimesheets = pagedResult.getContent();
 
 		List<TimesheetDto> lTimesheetDto = new ArrayList<TimesheetDto>();
@@ -181,140 +181,137 @@ public class TimesheetServiceImpl implements TimesheetService {
         }
 
         Timesheet currentTimesheet = timesheetRepository.findTimesheetByUserId(checkStudentNo.getId());
-        
+
         if (checkStudentNo.getSection() == null) {
 
             if (currentTimesheet != null) {
 
                 Timesheet timesheet = setTimeOutRecord(rfidNo);
-    
+
                 return timesheetRepository.save(timesheet);
-                
+
             } else {
 
                 Timesheet timesheet = setTimeInRecord(rfidNo);
                 timesheet.setStatus("LABORATORY");
-        
+
                 return timesheetRepository.save(timesheet);
             }
         }
 
         SimpleDateFormat formatter = new SimpleDateFormat("EEEE");
         String checkDay = formatter.format(new Date());
-        
+
         Subject nextSubject = subjectRepository.findSubjectByDayAndSectionId(checkDay.toUpperCase(), checkStudentNo.getSection().getId());
 
-        if (nextSubject != null) { 
+        if (nextSubject != null) {
 
             if (nextSubject.getDay().equals(checkDay.toUpperCase())) {
 
                 if (currentTimesheet != null) {
-    
+
                     Date startTime = new Date();
-                    Date endTime = new Date(); 
-        
+                    Date endTime = new Date();
+
                     SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-        
+
                     try {
                         startTime = sdf.parse(nextSubject.getStartTime());
                         endTime = sdf.parse(nextSubject.getEndTime());
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
-    
+
                     long timeSchedDifference = endTime.getTime() - startTime.getTime();
                     long timeDifference = (new Date()).getTime() - currentTimesheet.getTimeIn().getTime();
-    
+
                     if (timeDifference > timeSchedDifference) {
-                        
+
                         Timesheet timesheet = setTimeOutRecord(rfidNo);
-    
+
                         return timesheetRepository.save(timesheet);
-    
+
                     } else {
 
                         Timesheet timesheet = setTimeOutRecord(rfidNo);
                         timesheet.setStatus("INCOMPLETE");
-    
+
                         return timesheetRepository.save(timesheet);
                     }
-    
                 } else {
-                
+
                     String endMinute = nextSubject.getGracePeriod();
-        
-                    Date endTime = new Date(); 
-                    Date currentTime = new Date(); 
-        
+
+                    Date endTime = new Date();
+                    Date currentTime = new Date();
+
                     SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-        
+
                     try {
                         endTime = sdf.parse(endMinute);
                         currentTime = sdf.parse(sdf.format(new Date()));
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
-        
+
                     Calendar endCalendar = Calendar.getInstance();
                     endCalendar.setTime(endTime);
                     endCalendar.add(Calendar.DATE, 1);
-                
+
                     Calendar currentCalendar = Calendar.getInstance();
                     currentCalendar.setTime(currentTime);
                     currentCalendar.add(Calendar.DATE, 1);
                     currentCalendar.add(Calendar.MINUTE, -1);
-                
+
                     Date currentDate = currentCalendar.getTime();
-        
+
                     if (currentDate.before(endCalendar.getTime())) {
 
                         Timesheet timesheet = setTimeInRecord(rfidNo);
                         timesheet.setStatus("PRESENT");
-                
+
                         return timesheetRepository.save(timesheet);
-        
+
                     } else {
 
                         Timesheet timesheet = setTimeInRecord(rfidNo);
                         timesheet.setStatus("LATE");
-                
+
                         return timesheetRepository.save(timesheet);
                     }
                 }
-    
             } else {
-    
+
                 if (currentTimesheet != null) {
-    
+
                     Timesheet timesheet = setTimeOutRecord(rfidNo);
-    
+
                     return timesheetRepository.save(timesheet);
-                    
+
                 } else {
-    
+
                     Timesheet timesheet = setTimeInRecord(rfidNo);
                     timesheet.setStatus("LABORATORY");
-            
+
                     return timesheetRepository.save(timesheet);
                 }
-            }       
+            }
         } else {
-                
+
             if (currentTimesheet != null) {
 
                 Timesheet timesheet = setTimeOutRecord(rfidNo);
-    
+
                 return timesheetRepository.save(timesheet);
-                
+
             } else {
 
                 Timesheet timesheet = setTimeInRecord(rfidNo);
                 timesheet.setStatus("LABORATORY");
-        
+
                 return timesheetRepository.save(timesheet);
             }
         }
-
 	}
 
     public Timesheet setTimeInRecord(String rfidNo) {
@@ -326,7 +323,7 @@ public class TimesheetServiceImpl implements TimesheetService {
         if (checkStudentNo == null) {
             return null;
         } else {
-    
+
             timesheet.setDate(new Date());
             timesheet.setTimeIn(new Date());
             timesheet.setTimeOut(null);
@@ -348,10 +345,10 @@ public class TimesheetServiceImpl implements TimesheetService {
         Timesheet currentTimesheet = timesheetRepository.findTimesheetByUserId(checkStudentNo.getId());
 
         long timeDifference = (new Date()).getTime() - currentTimesheet.getTimeIn().getTime();
-        long secondsDifference = timeDifference / 1000 % 60;  
-        long minutesDifference = timeDifference / (60 * 1000) % 60; 
+        long secondsDifference = timeDifference / 1000 % 60;
+        long minutesDifference = timeDifference / (60 * 1000) % 60;
         long hoursDifference = timeDifference / (60 * 60 * 1000);
-            
+
         currentTimesheet.setTimeOut(new Date());
         currentTimesheet.setTimeRendered(String.format("%02d", hoursDifference)
         + ":" + String.format("%02d", minutesDifference)
@@ -371,6 +368,6 @@ public class TimesheetServiceImpl implements TimesheetService {
         timesheetDto.setTimeRendered(timesheet.getTimeRendered());
         timesheetDto.setStatus(timesheet.getStatus());
         timesheetDto.setUserId(timesheet.getUser() != null ? timesheet.getUser().getId() : 0);
-		timesheetDto.setUser(timesheet.getUser() != null ? timesheet.getUser(): null);
+		timesheetDto.setUser(timesheet.getUser() != null ? timesheet.getUser() : null);
 	}
 }

@@ -48,11 +48,11 @@ public class UserDetailsImpl implements UserDetails {
     // }
 
     return new UserDetailsImpl(
-        user.getId(), 
-        user.getCreatedAt(), 
-        user.getUpdatedAt(), 
-        user.getUsername(), 
-        user.getPassword(), 
+        user.getId(),
+        user.getCreatedAt(),
+        user.getUpdatedAt(),
+        user.getUsername(),
+        user.getPassword(),
         user.getRole() != null ? Arrays.asList(new SimpleGrantedAuthority(user.getRole().getName())) : new ArrayList<>());
   }
 

@@ -24,7 +24,7 @@ import com.ctg.dtr.security.jwt.service.impl.UserDetailsServiceImpl;
 @EnableWebSecurity
 @EnableMethodSecurity
 public class WebSecurityConfig {
-  
+
   @Autowired
   private UserDetailsServiceImpl userDetailsServiceImpl;
 
@@ -35,14 +35,15 @@ public class WebSecurityConfig {
   public JwtAuthTokenFilter authenticationJwtTokenFilter() {
     return new JwtAuthTokenFilter();
   }
-  
+
   @Bean
   public DaoAuthenticationProvider authenticationProvider() {
+
       DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-       
+
       authProvider.setUserDetailsService(userDetailsServiceImpl);
       authProvider.setPasswordEncoder(passwordEncoder());
-   
+
       return authProvider;
   }
 
@@ -55,7 +56,7 @@ public class WebSecurityConfig {
   public PasswordEncoder passwordEncoder() {
     return new BCryptPasswordEncoder();
   }
-  
+
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http.cors().and().csrf().disable()
@@ -70,7 +71,7 @@ public class WebSecurityConfig {
         "/swagger-ui/**").permitAll()
         .and()
         .authorizeHttpRequests()
-        .requestMatchers(HttpMethod.POST, "/api/authentication", 
+        .requestMatchers(HttpMethod.POST, "/api/authentication",
         "/api/users",
         "/api/timesheets/daily-time-record**")
         .permitAll()
@@ -79,11 +80,11 @@ public class WebSecurityConfig {
         .requestMatchers(HttpMethod.GET, "/api/users/**")
         .permitAll()
         .anyRequest().authenticated();
-    
+
     http.authenticationProvider(authenticationProvider());
 
     http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
-    
+
     return http.build();
   }
 }
