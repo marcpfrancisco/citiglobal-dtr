@@ -104,7 +104,6 @@ public class SubjectController {
 			tempMap.put("message", "Successfully deleted Subject ID: " + id);
 
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).body(tempMap);
-
 		}
 	}
 

@@ -118,7 +118,6 @@ public class UserController {
 			tempMap.put("message", "Successfully deleted User ID: " + id);
 
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).body(tempMap);
-
 		}
 	}
 

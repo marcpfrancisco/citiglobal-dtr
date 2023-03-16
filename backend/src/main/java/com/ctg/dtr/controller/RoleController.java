@@ -104,7 +104,6 @@ public class RoleController {
 			tempMap.put("message", "Successfully deleted Role ID: " + id);
 
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).body(tempMap);
-
 		}
 	}
 

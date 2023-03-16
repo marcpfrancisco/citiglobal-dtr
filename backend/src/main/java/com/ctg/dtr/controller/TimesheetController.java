@@ -129,7 +129,6 @@ public class TimesheetController {
 			tempMap.put("message", "Successfully deleted Timesheet ID: " + id);
 
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).body(tempMap);
-
 		}
 	}
 
