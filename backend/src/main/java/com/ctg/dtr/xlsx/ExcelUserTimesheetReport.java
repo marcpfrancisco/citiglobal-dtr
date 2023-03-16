@@ -78,8 +78,8 @@ public class ExcelUserTimesheetReport {
                 if (timesheet.getUser() != null) {
 
                     Cell cellCompany = companyRow.createCell(1);
-                    cellCompany.setCellValue((timesheet.getUser().getLastName() + ", "
-                    + timesheet.getUser().getFirstName() + (timesheet.getUser().getMiddleName() == null ? "" : " " + timesheet.getUser().getMiddleName())));
+                    cellCompany.setCellValue(timesheet.getUser().getLastName() + ", "
+                    + timesheet.getUser().getFirstName() + ((timesheet.getUser().getMiddleName() == null ? "" : " " + timesheet.getUser().getMiddleName())));
 
                     Cell cellEmployee = employeeRow.createCell(1);
                     cellEmployee.setCellValue(timesheet.getUser().getStudentNo());

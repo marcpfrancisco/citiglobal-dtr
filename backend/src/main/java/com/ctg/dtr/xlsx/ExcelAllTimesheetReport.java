@@ -90,8 +90,8 @@ public class ExcelAllTimesheetReport {
                 }
                 if (timesheet.getUser() != null) {
 
-                    row.createCell(5).setCellValue((timesheet.getUser().getLastName() + ", " + timesheet.getUser().getFirstName()
-                    + (timesheet.getUser().getMiddleName() == null ? "" : " " + timesheet.getUser().getMiddleName())));
+                    row.createCell(5).setCellValue(timesheet.getUser().getLastName() + ", " + timesheet.getUser().getFirstName()
+                    + ((timesheet.getUser().getMiddleName() == null ? "" : " " + timesheet.getUser().getMiddleName())));
                     row.getCell(5).setCellStyle(horizontalRowLeft);
 
                     row.createCell(6).setCellValue(timesheet.getUser().getStudentNo());

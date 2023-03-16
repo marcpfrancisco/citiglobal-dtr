@@ -5,6 +5,8 @@
 
 <module name="Checker">
 
+    <property name="localeLanguage" value="en"/>
+
     <!-- Checks that a package-info.java file exists for each package.     -->
     <!-- See http://checkstyle.sf.net/config_javadoc.html#JavadocPackage -->
     <!-- <module name="JavadocPackage"/> -->
@@ -53,8 +55,10 @@
 
         <!-- Checks for Javadoc comments.                     -->
         <!-- See http://checkstyle.sf.net/config_javadoc.html -->
-        <!-- <module name="JavadocMethod"/> -->
-        <!-- <module name="JavadocType"/> -->
+        <module name="JavadocMethod">
+            <property name="validateThrows" value="false"/>
+        </module>
+        <module name="JavadocType"/>
         <!-- <module name="JavadocVariable"/> -->
         <module name="JavadocStyle"/>
 
@@ -132,10 +136,16 @@
         <module name="EmptyStatement"/>
         <module name="EqualsHashCode"/>
         <module name="CovariantEquals"/>
-        <module name="HiddenField"/>
-        <module name="IllegalInstantiation"/>
+        <module name="HiddenField">
+            <property name="ignoreConstructorParameter" value="true"/>
+            <property name="ignoreSetter" value="true"/>
+        </module>
+        <module name="IllegalInstantiation">
+          <property name="classes" value="java.lang.Boolean, java.lang.String"/>
+        </module>
         <module name="InnerAssignment"/>
         <!-- <module name="MagicNumber"/> -->
+        <module name="FallThrough"/>
         <module name="MissingSwitchDefault"/>
         <!-- <module name="RedundantThrows"/> -->
         <module name="SimplifyBooleanExpression"/>
@@ -148,7 +158,9 @@
         <module name="FinalClass"/>
         <module name="HideUtilityClassConstructor"/>
         <module name="InterfaceIsType"/>
-        <module name="VisibilityModifier"/>
+        <module name="VisibilityModifier">
+            <property name="protectedAllowed" value="true"/>
+        </module>
 
         <!-- Miscellaneous other checks.                   -->
         <!-- See http://checkstyle.sf.net/config_misc.html -->
@@ -159,5 +171,30 @@
 
         <!-- Make the @SuppressWarnings annotations available to Checkstyle -->
         <module name="SuppressWarningsHolder"/>
+
+        <!-- Authors should be in pom.xml file -->
+        <module name="Regexp">
+            <property name="format" value="@author"/>
+            <property name="illegalPattern" value="true"/>
+            <property name="message" value="Developers names should be in POM file."/>
+        </module>
+
+        <!-- no sysouts -->
+        <module name="Regexp">
+            <property name="format" value="System\.out\.println"/>
+            <property name="illegalPattern" value="true"/>
+        </module>
+
+        <!-- Use a consistent way to put declarations -->
+        <module name="DeclarationOrder"/>
+
+        <!-- Don't add up parentheses when they are not required -->
+        <module name="UnnecessaryParentheses"/>
+
+        <!-- Don't use = or != for string comparisons -->
+        <module name="StringLiteralEquality"/>
+
+        <!-- Don't declare multiple variables in the same statement -->
+        <module name="MultipleVariableDeclarations"/>
     </module>
 </module>
