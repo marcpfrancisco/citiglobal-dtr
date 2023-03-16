@@ -20,7 +20,7 @@ import java.util.List;
 @Component
 public class ExcelAllTimesheetReport {
 
-    static String[] columnHeader = {"Date", "Day", "Time In", "Time Out", "Time Rendered", "Name", "Student ID"};
+    private static String[] columnHeader = {"Date", "Day", "Time In", "Time Out", "Time Rendered", "Name", "Student ID"};
 
     public ByteArrayInputStream generateAllTimesheetReport(List<Timesheet> timesheets) {
 
