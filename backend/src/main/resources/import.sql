@@ -10,6 +10,9 @@ INSERT INTO course (id, created_at, updated_at, published_at, is_active, name) V
 
 -- SECTION
 INSERT INTO section (id, created_at, updated_at, published_at, is_active, name, course_id) VALUES (1, NOW(), NOW(), NOW(), 1, 'BT101A', 1);
+INSERT INTO section (id, created_at, updated_at, published_at, is_active, name, course_id) VALUES (2, NOW(), NOW(), NOW(), 1, 'BT102A', 1);
+INSERT INTO section (id, created_at, updated_at, published_at, is_active, name, course_id) VALUES (3, NOW(), NOW(), NOW(), 1, 'BT103A', 2);
+INSERT INTO section (id, created_at, updated_at, published_at, is_active, name, course_id) VALUES (4, NOW(), NOW(), NOW(), 1, 'BT104A', 3);
 
 -- SUBJECT
 INSERT INTO subject (id, created_at, updated_at, published_at, is_active, subject_code, description, day, start_time, end_time, grace_period, units, section_id) VALUES (1, NOW(), NOW(), NOW(), 1, 'RTXG', 'SEEDER', 'MONDAY', '08:00', '10:00', '08:15', 3, 1);

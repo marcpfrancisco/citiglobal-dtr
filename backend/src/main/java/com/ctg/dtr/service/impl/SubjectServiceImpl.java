@@ -21,6 +21,7 @@ import com.ctg.dtr.service.SubjectService;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 
@@ -33,18 +34,29 @@ public class SubjectServiceImpl implements SubjectService {
 	@Autowired
     private SectionRepository sectionRepository;
 
-	public static Specification<Subject> byColumnNameAndValueSubject(String columnName, String value) {
+	public static Specification<Subject> byColumnNameAndValueSubject(String value) {
         return new Specification<Subject>() {
             @Override
-            public Predicate toPredicate(Root<Subject> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
+            public Predicate toPredicate(Root<Subject> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
 
-				// if (exact) {
-                //     return builder.equal(root.<String>get(columnName), value);
-                // } else {
-                //     return builder.like(root.<String>get(columnName), "%" + value + "%");
-                // }
+				Join<Section, Subject> subquerySection = root.join("section");
 
-                return builder.equal(root.<String>get(columnName), value);
+				Predicate predicateForData = criteriaBuilder.or(
+					criteriaBuilder.like(root.get("id").as(String.class), "%" +  value + "%"),
+					criteriaBuilder.like(root.get("createdAt").as(String.class), "%" + value + "%"),
+					criteriaBuilder.like(root.get("updatedAt").as(String.class), "%" + value + "%"),
+					criteriaBuilder.like(root.get("publishedAt").as(String.class), "%" + value + "%"),
+					criteriaBuilder.like(root.get("isActive").as(String.class), "%" + value + "%"),
+					criteriaBuilder.like(root.get("subjectCode"), "%" + value + "%"),
+					criteriaBuilder.like(root.get("description"), "%" + value + "%"),
+					criteriaBuilder.like(root.get("day"), "%" + value + "%"),
+					criteriaBuilder.like(root.get("startTime"), "%" + value + "%"),
+					criteriaBuilder.like(root.get("endTime"), "%" + value + "%"),
+					criteriaBuilder.like(root.get("gracePeriod"), "%" + value + "%"),
+					criteriaBuilder.like(root.get("units").as(String.class), "%" + value + "%"),
+					criteriaBuilder.like(subquerySection.get("name"), "%" + value + "%"));
+
+				return criteriaBuilder.and(predicateForData);
             }
         };
     }
@@ -84,9 +96,9 @@ public class SubjectServiceImpl implements SubjectService {
         currentSubject.setPublishedAt(subjectDto.getPublishedAt() == null ? currentSubject.getPublishedAt() : subjectDto.getPublishedAt());
         currentSubject.setIsActive(subjectDto.getIsActive() == null ? currentSubject.getIsActive() : subjectDto.getIsActive());
         currentSubject.setSubjectCode(subjectDto.getSubjectCode() == null ? currentSubject.getSubjectCode() : subjectDto.getSubjectCode());
-        currentSubject.setDescription(subjectDto.getDescription() == null ? currentSubject.getDescription() : subjectDto.getDescription() );
-        currentSubject.setDay(subjectDto.getDay() == null ? currentSubject.getDay() : subjectDto.getDay() );
-        currentSubject.setStartTime(subjectDto.getStartTime() == null ? currentSubject.getStartTime() : subjectDto.getStartTime() );
+        currentSubject.setDescription(subjectDto.getDescription() == null ? currentSubject.getDescription() : subjectDto.getDescription());
+        currentSubject.setDay(subjectDto.getDay() == null ? currentSubject.getDay() : subjectDto.getDay());
+        currentSubject.setStartTime(subjectDto.getStartTime() == null ? currentSubject.getStartTime() : subjectDto.getStartTime());
         currentSubject.setEndTime(subjectDto.getEndTime() == null ? currentSubject.getEndTime() : subjectDto.getEndTime());
         currentSubject.setGracePeriod(subjectDto.getGracePeriod() == null ? currentSubject.getGracePeriod() : subjectDto.getGracePeriod());
         currentSubject.setUnits(subjectDto.getUnits() == null ? currentSubject.getUnits() : subjectDto.getUnits());
@@ -119,42 +131,6 @@ public class SubjectServiceImpl implements SubjectService {
 		return lSubjectDto;
 	}
 
-    @Override
-	public List<SubjectDto> getSubjectByStudent(Long userId) {
-
-		List<Subject> lSubjects = subjectRepository.findSubjectByStudent(userId);
-
-		List<SubjectDto> lSubjectDto = new ArrayList<SubjectDto>();
-
-		for (Subject subject : lSubjects) {
-
-			SubjectDto tmpSubject = new SubjectDto();
-
-			buildSubjectDto(subject, tmpSubject);
-
-			lSubjectDto.add(tmpSubject);
-		}
-		return lSubjectDto;
-	}
-
-    @Override
-	public List<SubjectDto> getSubjectByTeacher(Long userId) {
-
-		List<Subject> lSubjects = subjectRepository.findSubjectByTeacher(userId);
-
-		List<SubjectDto> lSubjectDto = new ArrayList<SubjectDto>();
-
-		for (Subject subject : lSubjects) {
-
-			SubjectDto tmpSubject = new SubjectDto();
-
-			buildSubjectDto(subject, tmpSubject);
-
-			lSubjectDto.add(tmpSubject);
-		}
-		return lSubjectDto;
-	}
-
 	@Override
 	public List<SubjectDto> getPaginatedSubjectSort(int pageNo, int pageSize, String columnName, String value, String sortDirection) {
 
@@ -168,42 +144,22 @@ public class SubjectServiceImpl implements SubjectService {
 				} else if (sortDirection.toLowerCase().equals("desc")) {
 					paging =  PageRequest.of(pageNo, pageSize, Sort.by(columnName).descending());
 				} else {
-					paging =  PageRequest.of(pageNo, pageSize);
+					paging =  PageRequest.of(pageNo, pageSize, Sort.by(columnName));
 				}
 			} else {
-				paging =  PageRequest.of(pageNo, pageSize);
+				paging =  PageRequest.of(pageNo, pageSize, Sort.by(columnName));
 			}
 		} else {
 			paging =  PageRequest.of(pageNo, pageSize);
 		}
 
-		if (columnName != null && value != null) {
-			pagedResult = subjectRepository.findAll(byColumnNameAndValueSubject(columnName, value), paging);
-		} else if (columnName != null && value == null) {
-			pagedResult = subjectRepository.findAll(paging);
+		if (value != null) {
+			pagedResult = subjectRepository.findAll(byColumnNameAndValueSubject(value), paging);
 		} else {
 			pagedResult = subjectRepository.findAll(paging);
 		}
 
 		List<Subject> lSubjects = pagedResult.getContent();
-
-		List<SubjectDto> lSubjectDto = new ArrayList<SubjectDto>();
-
-		for (Subject subject : lSubjects) {
-
-			SubjectDto tmpSubject = new SubjectDto();
-
-			buildSubjectDto(subject, tmpSubject);
-
-			lSubjectDto.add(tmpSubject);
-		}
-		return lSubjectDto;
-	}
-
-    @Override
-	public List<SubjectDto> getSubjectBySectionId(Long sectionId) {
-
-		List<Subject> lSubjects = subjectRepository.findBySectionId(sectionId);
 
 		List<SubjectDto> lSubjectDto = new ArrayList<SubjectDto>();
 

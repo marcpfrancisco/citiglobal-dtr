@@ -10,10 +10,10 @@ public class UserDto {
     private Long id;
 
     private Date createdAt;
-    
+
     private Date updatedAt;
 
-    private String publishedAt;
+    private Date publishedAt;
 
     private Boolean isActive;
 

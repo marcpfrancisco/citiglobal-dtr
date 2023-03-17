@@ -12,6 +12,7 @@ import { Store } from '@ngrx/store';
 import { RootState, TimeLogReducer } from '@stores/index';
 import { TimeLogActions } from '@stores/time-log';
 import { getCurrentTimeStamp, isNumericInteger } from '@utils';
+import { isString } from 'lodash';
 import { interval, Observable, Subject, Subscription } from 'rxjs';
 import {
     debounceTime,
@@ -28,15 +29,8 @@ import {
     animations: fuseAnimations,
 })
 export class TimeLogComponent implements OnInit {
-    private rfidNoSubject = new Subject<string>();
-    private subscription: Subscription;
-    private finalizedTimeLogInterval = 200;
-
-    timeLogInterval = this.finalizedTimeLogInterval;
-
     currentTime: number | null;
 
-    unsubscribe$: Subject<any>;
     search$: Observable<string>;
 
     /**
@@ -70,40 +64,18 @@ export class TimeLogComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.search$ = this.store.select(TimeLogReducer.selectRFIDNo);
-
         interval(1000)
             .pipe(map(() => new Date()))
             .subscribe((date) => {
                 this.currentTime = getCurrentTimeStamp();
             });
-
-        this.subscription = this.rfidNoSubject
-            .pipe(
-                debounceTime(this.finalizedTimeLogInterval),
-                distinctUntilChanged()
-            )
-            .subscribe((rfidNo) => {
-                this.store.dispatch(TimeLogActions.onSearchRFID({ rfidNo }));
-            });
     }
 
-    ngOnDestroy(): void {
-        this.rfidNoSubject.complete();
-        this.subscription.unsubscribe();
-    }
-
-    ngOnChanges(changes: SimpleChanges): void {
-        const debounceInterval = changes?.timeLogInterval?.currentValue;
-
-        if (isNumericInteger(debounceInterval) && debounceInterval > 10) {
-            this.finalizedTimeLogInterval = debounceInterval;
-        }
-    }
+    ngOnDestroy(): void {}
 
     handleSearch(rfidNo: string): void {
         if (rfidNo) {
-            this.rfidNoSubject.next(rfidNo ? rfidNo : '');
+            this.store.dispatch(TimeLogActions.onSearchRFID({ rfidNo }));
         }
     }
 }

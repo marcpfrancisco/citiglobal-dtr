@@ -27,21 +27,23 @@ import com.ctg.dtr.model.Timesheet;
 import com.ctg.dtr.payload.request.RfidRequest;
 import com.ctg.dtr.service.TimesheetService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
 @CrossOrigin
-@RequestMapping(value = "/api/timesheet")
+@RequestMapping(value = "/api/timesheets")
 public class TimesheetController {
 
     @Autowired
     private TimesheetService timesheetService;
 
+	@Operation(summary = "Add timesheet")
 	@SecurityRequirement(name = "Bearer Authentication")
 	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
-	@PostMapping("/createTimesheet")
+	@PostMapping
 	public ResponseEntity<Timesheet> createTimesheet(@RequestBody TimesheetDto timesheetDto) {
 
         Timesheet timesheet = timesheetService.createTimesheet(timesheetDto);
@@ -49,7 +51,8 @@ public class TimesheetController {
 		return new ResponseEntity<Timesheet>(timesheet, HttpStatus.CREATED);
 	}
 
-	@PostMapping("/dailyTimeRecord")
+	@Operation(summary = "User's daily time record")
+	@PostMapping("/daily-time-record")
 	public ResponseEntity<?> dailyTimeRecord(@RequestBody RfidRequest rfidRequest, HttpServletRequest request, HttpServletResponse response) {
 
         Timesheet timesheet = timesheetService.dailyTimeRecord(rfidRequest.getRfidNo());
@@ -64,7 +67,7 @@ public class TimesheetController {
 			tempMap.put("error",  HttpStatus.NOT_FOUND);
 			tempMap.put("message", "No Student found.");
 			tempMap.put("path", request.getServletPath());
-			
+
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(tempMap);
 
 		} else {
@@ -72,9 +75,10 @@ public class TimesheetController {
 		}
 	}
 
+	@Operation(summary = "Update timesheet")
 	@SecurityRequirement(name = "Bearer Authentication")
 	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
-	@PutMapping("/updateTimesheet/{id}")
+	@PutMapping("/{id}")
 	public ResponseEntity<?> updateTimesheet(@PathVariable Long id, @RequestBody TimesheetDto timesheetDto,  HttpServletRequest request, HttpServletResponse response) {
 
 		Optional<Timesheet> timesheet = timesheetService.getById(id);
@@ -98,9 +102,10 @@ public class TimesheetController {
 		}
 	}
 
+	@Operation(summary = "Delete timesheet")
 	@SecurityRequirement(name = "Bearer Authentication")
 	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
-	@DeleteMapping("/deleteTimesheet/{id}")
+	@DeleteMapping("/{id}")
 	public ResponseEntity<?> deleteTimesheet(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
 
 		Optional<Timesheet> timesheet = timesheetService.getById(id);
@@ -124,13 +129,13 @@ public class TimesheetController {
 			tempMap.put("message", "Successfully deleted Timesheet ID: " + id);
 
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).body(tempMap);
-
 		}
 	}
 
+	@Operation(summary = "Get timesheet by id")
 	@SecurityRequirement(name = "Bearer Authentication")
 	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
-	@GetMapping("/getTimesheetById/{id}")
+	@GetMapping("/{id}")
 	public ResponseEntity<?> getTimesheetById(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
 
 		Optional<Timesheet> timesheet = timesheetService.getById(id);
@@ -154,12 +159,13 @@ public class TimesheetController {
 		}
 	}
 
+	@Operation(summary = "Get all timesheet")
 	@SecurityRequirement(name = "Bearer Authentication")
 	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
-	@GetMapping("/getAllTimesheet")
+	@GetMapping("/all")
 	public ResponseEntity<?> getAllTimesheet(@RequestParam(value =  "page") int pageNo, @RequestParam(value =  "limit") int pageSize,
-	@RequestParam(value =  "sort", required = false) String columnName, 
-	@RequestParam(value =  "search", required = false) String keyword, 
+	@RequestParam(value =  "sort", required = false) String columnName,
+	@RequestParam(value =  "search", required = false) String keyword,
 	@RequestParam(required = false) String sortDirection) {
 
 		List<TimesheetDto> timesheetInfo = timesheetService.getPaginatedTimesheetSort(pageNo, pageSize, columnName, keyword, sortDirection);
@@ -182,10 +188,11 @@ public class TimesheetController {
 				tempMap.put("sortDirection", sortDirection);
 			}
 
+			tempMap.put("total", timesheetInfo.size());
+
 			return ResponseEntity.status(HttpStatus.OK).body(tempMap);
 		} else {
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).body(timesheetInfo);
 		}
-		
 	}
 }

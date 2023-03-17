@@ -37,10 +37,9 @@ export class TimeLogEffects {
                 return this.timeLogService
                     .postTimeRecord(listState.rfidNo)
                     .pipe(
-                        map((result) =>
-                            TimeLogActions.onTimeLogSuccess({ result })
+                        map((timeLog) =>
+                            TimeLogActions.onTimeLogSuccess({ timeLog })
                         ),
-                        tap(() => TimeLogActions.onClearTimeLogField),
                         catchError((error) =>
                             of(TimeLogActions.onTimeLogFailure({ error }))
                         )

@@ -31,8 +31,18 @@ spring:
     database-platform: org.hibernate.dialect.MySQL8Dialect
     show-sql: true
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
 jwt:
   secret: ctglobalSecretKey
   expirationMs: 86400000
 
+# OpenAPI Swagger link
 # http://localhost:5000/swagger-ui/index.html#/
+
+# Spring Boot Actuator - https://springframework.guru/actuator-in-spring-boot/
+# http://localhost:5000/actuator

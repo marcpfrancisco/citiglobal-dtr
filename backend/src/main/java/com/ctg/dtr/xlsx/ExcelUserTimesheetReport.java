@@ -20,7 +20,7 @@ import java.util.List;
 @Component
 public class ExcelUserTimesheetReport {
 
-    static String[] columnHeader = {"Date", "Day", "Time In", "Time Out", "Time Rendered"};
+    private static String[] columnHeader = {"Date", "Day", "Time In", "Time Out", "Time Rendered"};
 
     public ByteArrayInputStream generateUserTimesheetReport(List<Timesheet> timesheets) {
 
@@ -56,7 +56,7 @@ public class ExcelUserTimesheetReport {
             // ROWS ALIGNMENT
             CellStyle horizontalRowLeft = workbook.createCellStyle();
             horizontalRowLeft.setAlignment(HorizontalAlignment.LEFT);
-    
+
             SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM dd, yyyy");
             SimpleDateFormat timestampFormat = new SimpleDateFormat("HH:mm:ss aa");
             SimpleDateFormat dayFormat = new SimpleDateFormat("EEEEE");
@@ -78,16 +78,16 @@ public class ExcelUserTimesheetReport {
                 if (timesheet.getUser() != null) {
 
                     Cell cellCompany = companyRow.createCell(1);
-                    cellCompany.setCellValue((timesheet.getUser().getLastName() + ", " + 
-                    timesheet.getUser().getFirstName() + (timesheet.getUser().getMiddleName() == null ? "" : " " + timesheet.getUser().getMiddleName())));
-    
+                    cellCompany.setCellValue(timesheet.getUser().getLastName() + ", "
+                    + timesheet.getUser().getFirstName() + ((timesheet.getUser().getMiddleName() == null ? "" : " " + timesheet.getUser().getMiddleName())));
+
                     Cell cellEmployee = employeeRow.createCell(1);
                     cellEmployee.setCellValue(timesheet.getUser().getStudentNo());
                 }
 
                 Row row = sheet.createRow(rowCount++);
 
-                if (timesheet.getDate() != null) {                
+                if (timesheet.getDate() != null) {
                     row.createCell(0).setCellValue(String.valueOf(dateFormat.format(timesheet.getDate())));
                     row.getCell(0).setCellStyle(horizontalRowLeft);
 
@@ -96,15 +96,15 @@ public class ExcelUserTimesheetReport {
                 }
                 if (timesheet.getTimeIn() != null) {
                     row.createCell(2).setCellValue(String.valueOf(timestampFormat.format(timesheet.getTimeIn())));
-                    row.getCell(2).setCellStyle(horizontalRowLeft);             
+                    row.getCell(2).setCellStyle(horizontalRowLeft);
                 }
                 if (timesheet.getTimeOut() != null) {
                     row.createCell(3).setCellValue(String.valueOf(timestampFormat.format(timesheet.getTimeOut())));
-                    row.getCell(3).setCellStyle(horizontalRowLeft);             
+                    row.getCell(3).setCellStyle(horizontalRowLeft);
                 }
                 if (timesheet.getTimeRendered() != null) {
                     row.createCell(4).setCellValue(timesheet.getTimeRendered());
-                    row.getCell(4).setCellStyle(horizontalRowLeft);             
+                    row.getCell(4).setCellStyle(horizontalRowLeft);
                 }
             }
 

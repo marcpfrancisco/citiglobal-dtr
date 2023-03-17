@@ -18,8 +18,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import com.ctg.dtr.security.jwt.payload.request.JwtRequest;
 import com.ctg.dtr.security.jwt.payload.response.JwtResponse;
 import com.ctg.dtr.security.jwt.service.impl.UserDetailsImpl;
-import com.ctg.dtr.security.jwt.utils.JwtUtil;
+import com.ctg.dtr.security.jwt.utils.JwtUtils;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 
 @RestController
@@ -28,28 +29,29 @@ import jakarta.validation.Valid;
 public class AuthenticationController {
 
     @Autowired
-	private JwtUtil jwtUtil;
+	private JwtUtils jwtUtils;
 
 	@Autowired
 	private AuthenticationManager authenticationManager;
 
-	@PostMapping(value = "/authenticate")
+	@Operation(summary = "Create authentication token")
+	@PostMapping
 	public ResponseEntity<?> createAuthenticationToken(@Valid @RequestBody JwtRequest authenticationRequest) {
 
 		Authentication authentication = authenticationManager.authenticate(
 			new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword()));
 	
 		SecurityContextHolder.getContext().setAuthentication(authentication);
-		String jwt = jwtUtil.generateJwtToken(authentication);
-		
+		String jwt = jwtUtils.generateJwtToken(authentication);
+
 		UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-   
+
 		List<String> role = userDetails.getAuthorities().stream()
 			.map(item -> item.getAuthority())
 			.collect(Collectors.toList());
 	
-		return ResponseEntity.ok(new JwtResponse(userDetails.getId(), 
-							 userDetails.getUsername(), 
+		return ResponseEntity.ok(new JwtResponse(userDetails.getId(),
+							 userDetails.getUsername(),
 							 String.valueOf(role == null || role.isEmpty() ? "" : role.get(0)),
 							 jwt));
 	}

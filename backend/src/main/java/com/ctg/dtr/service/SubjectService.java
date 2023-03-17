@@ -20,10 +20,4 @@ public interface SubjectService {
 
     List<SubjectDto> getPaginatedSubjectSort(int pageNo, int pageSize, String columnName, String value, String asc);
 
-	List<SubjectDto> getSubjectByStudent(Long userId);
-
-	List<SubjectDto> getSubjectByTeacher(Long userId);
-
-	List<SubjectDto> getSubjectBySectionId(Long sectionId);
-
 }

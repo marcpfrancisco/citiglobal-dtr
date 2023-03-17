@@ -18,17 +18,17 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.ctg.dtr.security.jwt.service.impl.UserDetailsServiceImpl;
-import com.ctg.dtr.security.jwt.utils.JwtUtil;
+import com.ctg.dtr.security.jwt.utils.JwtUtils;
 
 public class JwtAuthTokenFilter extends OncePerRequestFilter {
 
+  private static final Logger logger = LoggerFactory.getLogger(JwtAuthTokenFilter.class);
+
   @Autowired
-  private JwtUtil jwtUtil;
+  private JwtUtils jwtUtils;
 
   @Autowired
   private UserDetailsServiceImpl userDetailsServiceImpl;
-
-  private static final Logger logger = LoggerFactory.getLogger(JwtAuthTokenFilter.class);
 
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -36,8 +36,8 @@ public class JwtAuthTokenFilter extends OncePerRequestFilter {
 
     try {
       String jwt = parseJwt(request);
-      if (jwt != null && jwtUtil.validateJwtToken(jwt)) {
-        String username = jwtUtil.getUserNameFromJwtToken(jwt);
+      if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
+        String username = jwtUtils.getUserNameFromJwtToken(jwt);
 
         UserDetails userDetails = userDetailsServiceImpl.loadUserByUsername(username);
         UsernamePasswordAuthenticationToken authentication =

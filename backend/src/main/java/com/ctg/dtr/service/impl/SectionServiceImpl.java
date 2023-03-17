@@ -21,6 +21,7 @@ import com.ctg.dtr.service.SectionService;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 
@@ -33,18 +34,23 @@ public class SectionServiceImpl implements SectionService {
 	@Autowired
     private CourseRepository courseRepository;
 
-	public static Specification<Section> byColumnNameAndValueSection(String columnName, String value) {
+	public static Specification<Section> byColumnNameAndValueSection(String value) {
         return new Specification<Section>() {
             @Override
-            public Predicate toPredicate(Root<Section> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
+            public Predicate toPredicate(Root<Section> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
 
-				// if (exact) {
-                //     return builder.equal(root.<String>get(columnName), value);
-                // } else {
-                //     return builder.like(root.<String>get(columnName), "%" + value + "%");
-                // }
+				Join<Course, Section> subqueryCourse = root.join("course");
 
-                return builder.equal(root.<String>get(columnName), value);
+				Predicate predicateForData = criteriaBuilder.or(
+					criteriaBuilder.like(root.get("id").as(String.class), "%" +  value + "%"),
+					criteriaBuilder.like(root.get("createdAt").as(String.class), "%" + value + "%"),
+					criteriaBuilder.like(root.get("updatedAt").as(String.class), "%" + value + "%"),
+					criteriaBuilder.like(root.get("publishedAt").as(String.class), "%" + value + "%"),
+					criteriaBuilder.like(root.get("isActive").as(String.class), "%" + value + "%"),
+					criteriaBuilder.like(root.get("name"), "%" + value + "%"),
+					criteriaBuilder.like(subqueryCourse.get("name"), "%" + value + "%"));
+
+				return criteriaBuilder.and(predicateForData);
             }
         };
     }
@@ -118,23 +124,21 @@ public class SectionServiceImpl implements SectionService {
 				} else if (sortDirection.toLowerCase().equals("desc")) {
 					paging =  PageRequest.of(pageNo, pageSize, Sort.by(columnName).descending());
 				} else {
-					paging =  PageRequest.of(pageNo, pageSize);
+					paging =  PageRequest.of(pageNo, pageSize, Sort.by(columnName));
 				}
 			} else {
-				paging =  PageRequest.of(pageNo, pageSize);
+				paging =  PageRequest.of(pageNo, pageSize, Sort.by(columnName));
 			}
 		} else {
 			paging =  PageRequest.of(pageNo, pageSize);
 		}
 
-		if (columnName != null && value != null) {
-			pagedResult = sectionRepository.findAll(byColumnNameAndValueSection(columnName, value), paging);
-		} else if (columnName != null && value == null) {
-			pagedResult = sectionRepository.findAll(paging);
+		if (value != null) {
+			pagedResult = sectionRepository.findAll(byColumnNameAndValueSection(value), paging);
 		} else {
 			pagedResult = sectionRepository.findAll(paging);
 		}
-		
+
 		List<Section> lSections = pagedResult.getContent();
 
 		List<SectionDto> lSectionDto = new ArrayList<SectionDto>();
@@ -159,6 +163,6 @@ public class SectionServiceImpl implements SectionService {
         sectionDto.setIsActive(section.getIsActive());
         sectionDto.setName(section.getName());
 		sectionDto.setCourseId(section.getCourse() != null ? section.getCourse().getId() : 0);
-		sectionDto.setCourse(section.getCourse() != null ? section.getCourse(): null);
+		sectionDto.setCourse(section.getCourse() != null ? section.getCourse() : null);
 	}
 }

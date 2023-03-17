@@ -28,10 +28,10 @@ public class Role {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-    @CreationTimestamp 
+    @CreationTimestamp
     private Date createdAt;
-    
-    @UpdateTimestamp 
+
+    @UpdateTimestamp
     private Date updatedAt;
 
     private Date publishedAt;

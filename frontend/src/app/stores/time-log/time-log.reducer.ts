@@ -7,7 +7,7 @@ import {
     createSelector,
     on,
 } from '@ngrx/store';
-import { getInitialListState } from '@utils';
+import { getCurrentTimeStamp, getInitialListState } from '@utils';
 import { TimeLogActions } from '.';
 import { RootState } from '..';
 
@@ -16,10 +16,17 @@ export const featureKey = 'time-log';
 export interface State
     extends ListState<TimeLogSortables>,
         EntityState<TimeLog> {
+    // Add extra properties here...
+    updatedAtTimestamp: number;
     rfidNo: string;
-    timeIn: string | Date;
-    timeOut: string | Date;
-    timeRendered: string | Date;
+    prevRfidValue: string;
+    filters: {
+        periodDateRange: {
+            from: Date;
+            to: Date;
+        };
+    };
+    hasFilters: boolean;
 }
 
 export const adapter = createEntityAdapter<TimeLog>();
@@ -27,10 +34,16 @@ export const adapter = createEntityAdapter<TimeLog>();
 export const initialState = adapter.getInitialState({
     // Add extra properties here...
     ...getInitialListState<TimeLogSortables>(),
-    rfidNo: null,
-    timeIn: null,
-    timeOut: null,
-    timeRendered: null,
+    updatedAtTimestamp: getCurrentTimeStamp(),
+    rfidNo: '',
+    prevRfidValue: '',
+    filters: {
+        periodDateRange: {
+            from: null,
+            to: null,
+        },
+    },
+    hasFilters: false,
 });
 
 export const reducer = createReducer(
@@ -38,26 +51,21 @@ export const reducer = createReducer(
 
     // SEARCH RFID
     on(TimeLogActions.onSearchRFID, (state, { rfidNo }) => {
-        return { ...state, rfidNo }; // reset page when searching
+        return { ...state, rfidNo };
     }),
 
     // TIME LOG SUCCESS
-    on(TimeLogActions.onTimeLogSuccess, (state, { result }) => {
-        const { user, timeIn, timeOut, timeRendered } = result;
+    on(TimeLogActions.onTimeLogSuccess, (state, { timeLog }) => {
+        const { user, timeIn, timeOut, timeRendered } = timeLog;
 
         return {
             ...state,
-            rfidNo: user?.rfidNo,
+            currentRfidValue: user?.rfidNo,
             timeIn,
             timeOut,
             timeRendered,
         };
-    }),
-
-    on(TimeLogActions.onClearTimeLogField, (state) => ({
-        ...state,
-        rfidNo: null,
-    }))
+    })
 );
 
 // Selectors
@@ -66,12 +74,7 @@ export const selectState = createFeatureSelector<RootState, State>(featureKey);
 export const { selectIds, selectEntities, selectAll, selectTotal } =
     adapter.getSelectors(selectState);
 
-export const selectRFIDNo = createSelector(
+export const selectCurrentRfidValue = createSelector(
     selectState,
     (state) => state.rfidNo
 );
-
-export const clearRFIDNo = createSelector(selectState, (state) => {
-    const rfidNo = state.rfidNo;
-    return rfidNo ? null : rfidNo;
-});

@@ -28,18 +28,22 @@ public class CourseServiceImpl implements CourseService {
 	@Autowired
     private CourseRepository courseRepository;
 
-	public static Specification<Course> byColumnNameAndValueCourse(String columnName, String value) {
+	public static Specification<Course> byColumnNameAndValueCourse(String value) {
         return new Specification<Course>() {
             @Override
-            public Predicate toPredicate(Root<Course> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
+            public Predicate toPredicate(Root<Course> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
 
-				// if (exact) {
-                //     return builder.equal(root.<String>get(columnName), value);
-                // } else {
-                //     return builder.like(root.<String>get(columnName), "%" + value + "%");
-                // }
+                // return builder.equal(root.<String>get(columnName), value);
 
-                return builder.equal(root.<String>get(columnName), value);
+				Predicate predicateForData = criteriaBuilder.or(
+					criteriaBuilder.like(root.get("id").as(String.class), "%" +  value + "%"),
+					criteriaBuilder.like(root.get("createdAt").as(String.class), "%" + value + "%"),
+					criteriaBuilder.like(root.get("updatedAt").as(String.class), "%" + value + "%"),
+					criteriaBuilder.like(root.get("publishedAt").as(String.class), "%" + value + "%"),
+					criteriaBuilder.like(root.get("isActive").as(String.class), "%" + value + "%"),
+					criteriaBuilder.like(root.get("name"), "%" + value + "%"));
+
+				return criteriaBuilder.and(predicateForData);
             }
         };
     }
@@ -107,23 +111,21 @@ public class CourseServiceImpl implements CourseService {
 				} else if (sortDirection.toLowerCase().equals("desc")) {
 					paging =  PageRequest.of(pageNo, pageSize, Sort.by(columnName).descending());
 				} else {
-					paging =  PageRequest.of(pageNo, pageSize);
+					paging =  PageRequest.of(pageNo, pageSize, Sort.by(columnName));
 				}
 			} else {
-				paging =  PageRequest.of(pageNo, pageSize);
+				paging =  PageRequest.of(pageNo, pageSize, Sort.by(columnName));
 			}
 		} else {
 			paging =  PageRequest.of(pageNo, pageSize);
 		}
 
-		if (columnName != null && value != null) {
-			pagedResult = courseRepository.findAll(byColumnNameAndValueCourse(columnName, value), paging);
-		} else if (columnName != null && value == null) {
-			pagedResult = courseRepository.findAll(paging);
+		if (value != null) {
+			pagedResult = courseRepository.findAll(byColumnNameAndValueCourse(value), paging);
 		} else {
 			pagedResult = courseRepository.findAll(paging);
 		}
-		
+
 		List<Course> lCourses = pagedResult.getContent();
 
 		List<CourseDto> lCourseDto = new ArrayList<CourseDto>();

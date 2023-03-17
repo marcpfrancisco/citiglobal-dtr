@@ -11,3 +11,8 @@ export * from './pagination/pagination-result.interface';
 
 export * from './time-log/find-all-time-log-dto.interface';
 export * from './time-log/find-time-log-dto.interface';
+
+// subjects
+export * from './subjects/create-subject-dto.interface';
+export * from './subjects/find-all-subjects-dto.interface';
+export * from './subjects/edit-subject-dto.interface';

@@ -27,10 +27,10 @@ public class Course {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-    @CreationTimestamp 
+    @CreationTimestamp
     private Date createdAt;
-    
-    @UpdateTimestamp 
+
+    @UpdateTimestamp
     private Date updatedAt;
 
     private Date publishedAt;

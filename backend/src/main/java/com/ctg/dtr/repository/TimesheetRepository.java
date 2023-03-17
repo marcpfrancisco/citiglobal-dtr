@@ -15,15 +15,15 @@ public interface TimesheetRepository extends JpaRepository<Timesheet, Long>, Jpa
 
     Timesheet findByUserId(Long userId);
 
-    @Query(value = "SELECT * FROM timesheet WHERE id = ?1", nativeQuery = true) 
+    @Query(value = "SELECT * FROM timesheet WHERE id = ?1", nativeQuery = true)
     List<Timesheet> findTimesheetById(Long id);
 
-    @Query(value = "SELECT * FROM timesheet WHERE user_id = ?1 AND DATE(date) = CURDATE()", nativeQuery = true) 
+    @Query(value = "SELECT * FROM timesheet WHERE user_id = ?1 AND DATE(date) = CURDATE()", nativeQuery = true)
     Timesheet findTimesheetByUserId(Long userId);
 
-    @Query(value = "SELECT * FROM timesheet WHERE user_id = ?1 AND DATE(date) BETWEEN ?2 AND ?3", nativeQuery = true) 
+    @Query(value = "SELECT * FROM timesheet WHERE user_id = ?1 AND DATE(date) BETWEEN ?2 AND ?3", nativeQuery = true)
     List<Timesheet> getUserDatetimeRecord(Long userId, Date dateFrom, Date dateTo);
 
-    // @Query(value = "SELECT * FROM timesheet", nativeQuery = true) 
+    // @Query(value = "SELECT * FROM timesheet", nativeQuery = true)
     // List<Timesheet> getAllDatetimeRecord();
 }

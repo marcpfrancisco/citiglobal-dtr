@@ -12,6 +12,6 @@ import com.ctg.dtr.model.Section;
 @Repository
 public interface SectionRepository extends JpaRepository<Section, Long>, JpaSpecificationExecutor<Section> {
 
-    @Query(value = "SELECT * FROM section WHERE id = ?1", nativeQuery = true) 
+    @Query(value = "SELECT * FROM section WHERE id = ?1", nativeQuery = true)
     List<Section> findSectionById(Long id);
 }

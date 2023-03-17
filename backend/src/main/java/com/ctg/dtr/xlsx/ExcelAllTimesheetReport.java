@@ -20,7 +20,7 @@ import java.util.List;
 @Component
 public class ExcelAllTimesheetReport {
 
-    static String[] columnHeader = {"Date", "Day", "Time In", "Time Out", "Time Rendered", "Name", "Student ID"};
+    private static String[] columnHeader = {"Date", "Day", "Time In", "Time Out", "Time Rendered", "Name", "Student ID"};
 
     public ByteArrayInputStream generateAllTimesheetReport(List<Timesheet> timesheets) {
 
@@ -58,7 +58,7 @@ public class ExcelAllTimesheetReport {
             // ROWS ALIGNMENT
             CellStyle horizontalRowLeft = workbook.createCellStyle();
             horizontalRowLeft.setAlignment(HorizontalAlignment.LEFT);
-    
+
             SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM dd, yyyy");
             SimpleDateFormat timestampFormat = new SimpleDateFormat("HH:mm:ss aa");
             SimpleDateFormat dayFormat = new SimpleDateFormat("EEEEE");
@@ -69,7 +69,7 @@ public class ExcelAllTimesheetReport {
 
                 Row row = sheet.createRow(rowCount++);
 
-                if (timesheet.getDate() != null) {                
+                if (timesheet.getDate() != null) {
                     row.createCell(0).setCellValue(String.valueOf(dateFormat.format(timesheet.getDate())));
                     row.getCell(0).setCellStyle(horizontalRowLeft);
 
@@ -78,24 +78,24 @@ public class ExcelAllTimesheetReport {
                 }
                 if (timesheet.getTimeIn() != null) {
                     row.createCell(2).setCellValue(String.valueOf(timestampFormat.format(timesheet.getTimeIn())));
-                    row.getCell(2).setCellStyle(horizontalRowLeft);             
+                    row.getCell(2).setCellStyle(horizontalRowLeft);
                 }
                 if (timesheet.getTimeOut() != null) {
                     row.createCell(3).setCellValue(String.valueOf(timestampFormat.format(timesheet.getTimeOut())));
-                    row.getCell(3).setCellStyle(horizontalRowLeft);             
+                    row.getCell(3).setCellStyle(horizontalRowLeft);
                 }
                 if (timesheet.getTimeRendered() != null) {
                     row.createCell(4).setCellValue(timesheet.getTimeRendered());
-                    row.getCell(4).setCellStyle(horizontalRowLeft);      
+                    row.getCell(4).setCellStyle(horizontalRowLeft);
                 }
                 if (timesheet.getUser() != null) {
 
-                    row.createCell(5).setCellValue((timesheet.getUser().getLastName() + ", " + timesheet.getUser().getFirstName() 
-                    + (timesheet.getUser().getMiddleName() == null ? "" : " " + timesheet.getUser().getMiddleName())));
-                    row.getCell(5).setCellStyle(horizontalRowLeft);    
-    
+                    row.createCell(5).setCellValue(timesheet.getUser().getLastName() + ", " + timesheet.getUser().getFirstName()
+                    + ((timesheet.getUser().getMiddleName() == null ? "" : " " + timesheet.getUser().getMiddleName())));
+                    row.getCell(5).setCellStyle(horizontalRowLeft);
+
                     row.createCell(6).setCellValue(timesheet.getUser().getStudentNo());
-                    row.getCell(6).setCellStyle(horizontalRowLeft);            
+                    row.getCell(6).setCellStyle(horizontalRowLeft);
                 }
             }
 

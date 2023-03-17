@@ -24,6 +24,8 @@ import com.ctg.dtr.service.UserService;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 
@@ -42,18 +44,32 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
-	public static Specification<User> byColumnNameAndValueUser(String columnName, String value) {
+	public static Specification<User> byColumnNameAndValueUser(String value) {
         return new Specification<User>() {
             @Override
-            public Predicate toPredicate(Root<User> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
+            public Predicate toPredicate(Root<User> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
 
-				// if (exact) {
-                //     return builder.equal(root.<String>get(columnName), value);
-                // } else {
-                //     return builder.like(root.<String>get(columnName), "%" + value + "%");
-                // }
+				Join<Section, User> subquerySection = root.join("section", JoinType.LEFT);
+				Join<Role, User> subqueryRole = root.join("role", JoinType.INNER);
 
-                return builder.equal(root.<String>get(columnName), value);
+				Predicate predicateForData = criteriaBuilder.or(
+					criteriaBuilder.like(root.get("id").as(String.class), "%" +  value + "%"),
+					criteriaBuilder.like(root.get("createdAt").as(String.class), "%" + value + "%"),
+					criteriaBuilder.like(root.get("updatedAt").as(String.class), "%" + value + "%"),
+					criteriaBuilder.like(root.get("publishedAt").as(String.class), "%" + value + "%"),
+					criteriaBuilder.like(root.get("isActive").as(String.class), "%" + value + "%"),
+					criteriaBuilder.like(root.get("firstName"), "%" + value + "%"),
+					criteriaBuilder.like(root.get("middleName"), "%" + value + "%"),
+					criteriaBuilder.like(root.get("lastName"), "%" + value + "%"),
+					criteriaBuilder.like(root.get("mobileNo"), "%" + value + "%"),
+					criteriaBuilder.like(root.get("studentNo"), "%" + value + "%"),
+					criteriaBuilder.like(root.get("rfidNo"), "%" + value + "%"),
+					criteriaBuilder.like(root.get("username"), "%" + value + "%"),
+					criteriaBuilder.like(root.get("password"), "%" + value + "%"),
+					criteriaBuilder.like(subquerySection.get("name"), "%" + value + "%"),
+					criteriaBuilder.like(subqueryRole.get("name"), "%" + value + "%"));
+
+				return criteriaBuilder.and(predicateForData);
             }
         };
     }
@@ -197,19 +213,17 @@ public class UserServiceImpl implements UserService {
 				} else if (sortDirection.toLowerCase().equals("desc")) {
 					paging =  PageRequest.of(pageNo, pageSize, Sort.by(columnName).descending());
 				} else {
-					paging =  PageRequest.of(pageNo, pageSize);
+					paging =  PageRequest.of(pageNo, pageSize, Sort.by(columnName));
 				}
 			} else {
-				paging =  PageRequest.of(pageNo, pageSize);
+				paging =  PageRequest.of(pageNo, pageSize, Sort.by(columnName));
 			}
 		} else {
 			paging =  PageRequest.of(pageNo, pageSize);
 		}
 
-		if (columnName != null && value != null) {
-			pagedResult = userRepository.findAll(byColumnNameAndValueUser(columnName, value), paging);
-		} else if (columnName != null && value == null) {
-			pagedResult = userRepository.findAll(paging);
+		if (value != null) {
+			pagedResult = userRepository.findAll(byColumnNameAndValueUser(value), paging);
 		} else {
 			pagedResult = userRepository.findAll(paging);
 		}
@@ -253,7 +267,7 @@ public class UserServiceImpl implements UserService {
 		userDto.setPassword(user.getPassword());
 
 		userDto.setSectionId(user.getSection() != null ? user.getSection().getId() : 0);
-		userDto.setSection(user.getSection() != null ? user.getSection(): null);
+		userDto.setSection(user.getSection() != null ? user.getSection() : null);
 		// userDto.setRoles(user.getRoles().stream().map(Role::getName).collect(Collectors.toSet()));
 		// userDto.setRoleId(user.getRole() != null ? user.getRole().getId() : 0);
 		userDto.setRole(user.getRole() != null ? user.getRole().getName() : "");

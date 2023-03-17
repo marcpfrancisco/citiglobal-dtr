@@ -34,11 +34,11 @@ public class User {
 
     @CreationTimestamp
     private Date createdAt;
-    
-    @UpdateTimestamp 
+
+    @UpdateTimestamp
     private Date updatedAt;
 
-    private String publishedAt;
+    private Date publishedAt;
 
     @Column(nullable = false)
     private Boolean isActive;

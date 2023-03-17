@@ -25,21 +25,23 @@ import org.springframework.web.multipart.MultipartFile;
 import com.ctg.dtr.model.Image;
 import com.ctg.dtr.service.ImageService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
 @CrossOrigin
-@RequestMapping(value = "/api/image")
+@RequestMapping(value = "/api/images")
 public class ImageController {
 
     @Autowired
     private ImageService imageService;
 
+    @Operation(summary = "Upload image")
     @SecurityRequirement(name = "Bearer Authentication")
 	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN') or hasRole('USER')")
-    @PostMapping(value = "/upload/{userId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/{userId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> uploadImage(@RequestPart MultipartFile file, @PathVariable Long userId, HttpServletRequest request, HttpServletResponse response) {
 
         if ((file.getContentType()).startsWith("image/")) {
@@ -63,13 +65,14 @@ public class ImageController {
         }
     }
 
+    @Operation(summary = "Get user image by student number")
     @SecurityRequirement(name = "Bearer Authentication")
 	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN') or hasRole('USER')")
-    @GetMapping("/user/info/{studentNo}")
-	public void getUserImageDetails(@PathVariable String studentNo, HttpServletResponse response) {
+    @GetMapping("/{studentNo}")
+	public void getUserImage(@PathVariable String studentNo, HttpServletResponse response) {
 
         Image image = imageService.getUserByStudentNo(studentNo);
-        
+
         String extension = FilenameUtils.getExtension(image.getName());
 
         switch (extension) {

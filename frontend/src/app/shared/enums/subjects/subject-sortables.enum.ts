@@ -4,5 +4,5 @@ export enum SubjectSortables {
     START_TIME = 'start-time',
     END_TIME = 'end-time',
     PUBLISHED_AT = 'publishedAt',
-    ACTIVE = 'active',
+    ACTIVE = 'isActive',
 }

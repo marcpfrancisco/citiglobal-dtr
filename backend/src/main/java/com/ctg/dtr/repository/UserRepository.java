@@ -20,9 +20,9 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
 
     User findByRfidNo(String rfidNo);
 
-    @Query(value = "SELECT * FROM user WHERE student_no = ?1", nativeQuery = true) 
+    @Query(value = "SELECT * FROM user WHERE student_no = ?1", nativeQuery = true)
     List<User> findUserByStudentNo(String studentNo);
 
-    @Query(value = "SELECT * FROM user WHERE id = ?1", nativeQuery = true) 
+    @Query(value = "SELECT * FROM user WHERE id = ?1", nativeQuery = true)
     List<User> findUserById(Long id);
 }
