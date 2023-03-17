@@ -150,7 +150,7 @@ public class UserController {
 	@Operation(summary = "Get user by student number")
 	@SecurityRequirement(name = "Bearer Authentication")
 	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN') or hasRole('USER')")
-	@GetMapping("/{studentNo}")
+	@GetMapping("/student-no/{studentNo}")
 	public ResponseEntity<?> getUserByStudentNo(@PathVariable String studentNo) {
 
 		List<UserDto> userInfo = userService.getUserByStudentNo(studentNo);
