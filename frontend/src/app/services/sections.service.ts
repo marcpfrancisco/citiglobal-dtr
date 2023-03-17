@@ -2,7 +2,13 @@ import { HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { isBoolean, isString } from 'lodash';
 import { Observable } from 'rxjs';
-import { PaginationResult, Section, SectionSortables } from '../shared';
+import {
+    Course,
+    CourseSortables,
+    PaginationResult,
+    Section,
+    SectionSortables,
+} from '../shared';
 import { CreateSectionDto } from '../shared/interfaces/section/create-section-dto.interface';
 import { EditSectionDto } from '../shared/interfaces/section/edit-section-dto.interface';
 import { FindAllSectionsDto } from '../shared/interfaces/section/find-all-sections-dto.interface';

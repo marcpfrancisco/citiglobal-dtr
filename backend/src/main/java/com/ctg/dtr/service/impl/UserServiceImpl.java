@@ -82,8 +82,8 @@ public class UserServiceImpl implements UserService {
     @Override
 	public User createUser(UserDto userDto) {
 
-		Optional<Section> section = sectionRepository.findById(userDto.getSectionId());
-		Optional<Role> role = roleRepository.findRoleByName(userDto.getRole());
+		Optional<Section> section = sectionRepository.findById(userDto.getSectionId() != null ? userDto.getSectionId() : 0);
+		Optional<Role> role = roleRepository.findRoleByName(userDto.getRole() != null ? userDto.getRole() : null);
 
         User user = new User();
 
@@ -121,13 +121,8 @@ public class UserServiceImpl implements UserService {
     @Override
 	public User updateUser(User currentUser, UserDto userDto) {
 
-		Optional<Section> section = null;
-
-		if (userDto.getSectionId() != null) {
-			section = sectionRepository.findById(userDto.getSectionId());
-		}
-
-		Optional<Role> role = roleRepository.findRoleByName(userDto.getRole());
+		Optional<Section> section = sectionRepository.findById(userDto.getSectionId() != null ? userDto.getSectionId() : currentUser.getSection().getId());
+		Optional<Role> role = roleRepository.findRoleByName(userDto.getRole() != null ? userDto.getRole() : currentUser.getRole().getName());
 
         currentUser.setPublishedAt(userDto.getPublishedAt() == null ? currentUser.getPublishedAt() : userDto.getPublishedAt());
         currentUser.setIsActive(userDto.getIsActive() == null ? currentUser.getIsActive() : userDto.getIsActive());

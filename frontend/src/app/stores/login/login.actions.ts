@@ -16,7 +16,7 @@ export const onTimeLogLoginInit = createAction(
 
 export const onTimeLogLogin = createAction(
     '[Admin Login Component] Login by User Id',
-    props<{ id: string | number }>()
+    props<{ studentNo: number }>()
 );
 
 // API Actions

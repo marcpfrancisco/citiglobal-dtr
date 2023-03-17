@@ -1,37 +1,35 @@
+import { CurrencyPipe, DecimalPipe } from '@angular/common';
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
-import { AblePipe } from '@pipes';
 import {
-    ACTION_CREATE,
-    ACTION_UPDATE,
-    DEFAULT_MOMENT_DATE_FORMATS,
-    mode,
-    MOMENT_SQL_TIME_FORMAT,
-    SUBJECT_SUBJECTS,
-} from '@constants';
-import { fuseAnimations } from '@fuse/animations';
-import { CreateSubjectDto, EditSubjectDto } from '@interfaces';
-import { SubjectModel } from '@models';
-import { Store } from '@ngrx/store';
-import { PermissionsService, RouterService, SubjectsService } from '@services';
-import { RootState, SubjectListReducer } from '@stores/index';
-import { combineLatest, of, Subject, Subscription } from 'rxjs';
-import {
-    MomentDateAdapter,
     MAT_MOMENT_DATE_ADAPTER_OPTIONS,
+    MomentDateAdapter,
 } from '@angular/material-moment-adapter';
 import {
     DateAdapter,
     MAT_DATE_FORMATS,
     MAT_DATE_LOCALE,
 } from '@angular/material/core';
-import { DecimalPipe, CurrencyPipe } from '@angular/common';
-import moment from 'moment';
-import { catchError, map, switchMap } from 'rxjs/operators';
-import { isArray, isBoolean, isNumber, isString } from 'lodash';
-import { isNumericInteger, momentize, NgValidators } from '@utils';
+import { ActivatedRoute } from '@angular/router';
+import {
+    ACTION_CREATE,
+    ACTION_UPDATE,
+    DEFAULT_MOMENT_DATE_FORMATS,
+    SUBJECT_SUBJECTS,
+} from '@constants';
 import { DayOfWeek } from '@enums';
+import { fuseAnimations } from '@fuse/animations';
+import { CreateSubjectDto, EditSubjectDto } from '@interfaces';
+import { SubjectModel } from '@models';
+import { Store } from '@ngrx/store';
+import { AblePipe } from '@pipes';
+import { PermissionsService, RouterService, SubjectsService } from '@services';
+import { RootState } from '@stores/index';
+import { isNumericInteger, NgValidators } from '@utils';
+import { isArray, isBoolean, isInteger, isNumber, isString } from 'lodash';
+import moment from 'moment';
+import { of, Subject, Subscription } from 'rxjs';
+import { catchError, map, switchMap } from 'rxjs/operators';
 
 interface EnumView {
     value?: string;
@@ -134,6 +132,16 @@ export class SubjectEditComponent implements OnInit, OnDestroy {
         return payload as CreateSubjectDto;
     }
 
+    get startTime() {
+        const startTime = this.form?.get('startTime')?.value;
+
+        if (!startTime) {
+            return null;
+        }
+
+        return startTime;
+    }
+
     constructor(
         private route: ActivatedRoute,
         private routerService: RouterService,
@@ -225,7 +233,7 @@ export class SubjectEditComponent implements OnInit, OnDestroy {
                     this.form.patchValue({
                         subjectCode: '',
                         description: '',
-                        day: [],
+                        day: '',
                         startTime: null,
                         endTime: null,
                         gracePeriod: '',
@@ -240,7 +248,7 @@ export class SubjectEditComponent implements OnInit, OnDestroy {
         this.form = new FormGroup({
             subjectCode: new FormControl('', [Validators.required]),
             description: new FormControl('', [Validators.required]),
-            day: new FormControl([], [Validators.required]),
+            day: new FormControl('', [Validators.required]),
             startTime: new FormControl(null, [Validators.required]),
             endTime: new FormControl(null, [Validators.required]),
             gracePeriod: new FormControl(null),
@@ -281,24 +289,24 @@ export class SubjectEditComponent implements OnInit, OnDestroy {
             payload.description = description;
         }
 
-        if (isArray(day)) {
+        if (isString(day)) {
             payload.day = day;
         }
 
-        if (isString(gracePeriod)) {
-            payload.gracePeriod = gracePeriod;
-        }
-
-        if (isNumber(units)) {
+        if (isNumericInteger(units)) {
             payload.units = units;
         }
 
-        if (startTime) {
-            payload.startTime = startTime;
+        if (isString(startTime)) {
+            payload.startTime = this.formatTime(startTime);
         }
 
-        if (endTime) {
-            payload.endTime = endTime;
+        if (isString(endTime)) {
+            payload.endTime = this.formatTime(endTime);
+        }
+
+        if (isString(gracePeriod)) {
+            payload.gracePeriod = this.formatTime(gracePeriod);
         }
 
         if (isBoolean(isActive)) {
@@ -306,6 +314,27 @@ export class SubjectEditComponent implements OnInit, OnDestroy {
         }
 
         return payload;
+    }
+
+    private formatTime(timeInput: string): string {
+        let trimmedInput: string = '';
+
+        if (!isString(timeInput)) {
+            return;
+        }
+
+        if (timeInput === null) {
+            return;
+        }
+
+        // check if the string ends with "AM" or "PM"
+        if (/AM|PM/i.test(timeInput)) {
+            // extract the time portion without "AM" or "PM"
+            return (trimmedInput = timeInput.substring(0, 5)).trim();
+        } else {
+            // extract the time portion in military time format
+            return (trimmedInput = timeInput.substring(0, 5)).trim();
+        }
     }
 
     submit(): void {

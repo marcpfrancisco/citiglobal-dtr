@@ -18,6 +18,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import {
     ApiService,
     AuthService,
+    CourseService,
     FiltersService,
     PermissionsService,
     RouterService,
@@ -79,6 +80,7 @@ const { apiUrl } = environment;
 
         ApiService,
         AuthService,
+        CourseService,
         FiltersService,
         PermissionsService,
         RouterService,

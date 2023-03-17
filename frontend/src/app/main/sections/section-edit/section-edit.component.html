@@ -55,6 +55,27 @@
                                     <mat-error>Name is required!</mat-error>
                                 </mat-form-field>
 
+                                <!-- Course  -->
+                                <mat-form-field
+                                    appearance="outline"
+                                    floatLabel="always"
+                                    class="w-100-p"
+                                >
+                                    <mat-label>Course</mat-label>
+                                    <mat-select
+                                        formControlName="course"
+                                        required
+                                        (selectionChange)="handleChange($event)"
+                                    >
+                                        <mat-option
+                                            *ngFor="let option of courseOptions"
+                                            [value]="option"
+                                            >{{ option.name }}</mat-option
+                                        >
+                                    </mat-select>
+                                    <mat-error>Course is required!</mat-error>
+                                </mat-form-field>
+
                                 <!-- Status  -->
                                 <mat-form-field
                                     *ngIf="isEditMode"

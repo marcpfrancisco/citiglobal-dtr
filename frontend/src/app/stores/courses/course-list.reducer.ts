@@ -1,22 +1,20 @@
-import { UserSortables, UserRoles, SectionSortables } from '@enums';
-import { ListState, Section, User } from '@models';
+import { CourseSortables } from '@enums';
+import { Course, ListState } from '@models';
 import { createEntityAdapter, EntityState } from '@ngrx/entity';
 import {
-    createReducer,
-    on,
     createFeatureSelector,
+    createReducer,
     createSelector,
+    on,
 } from '@ngrx/store';
-import { getCurrentTimeStamp, getInitialListState } from '@utils';
-import { SectionListActions } from '.';
+import { getInitialListState, getCurrentTimeStamp } from '@utils';
+import { CourseListActions } from '.';
 import { RootState } from '..';
 
-export const featureKey = 'section-list';
+export const featureKey = 'course-list';
 
-export interface State
-    extends ListState<SectionSortables>,
-        EntityState<Section> {
-    // Add extra properties here...
+export interface State extends ListState<CourseSortables>, EntityState<Course> {
+    // add additional properties here
     updatedAtTimestamp: number;
     search: string;
     filters: {
@@ -26,11 +24,11 @@ export interface State
     hasFilters: boolean;
 }
 
-export const adapter = createEntityAdapter<Section>();
+export const adapter = createEntityAdapter<Course>();
 
 export const initialState = adapter.getInitialState({
     // Add extra properties here...
-    ...getInitialListState<SectionSortables>(),
+    ...getInitialListState<CourseSortables>(),
     updatedAtTimestamp: getCurrentTimeStamp(),
     search: '',
     filters: {
@@ -43,33 +41,19 @@ export const initialState = adapter.getInitialState({
 export const reducer = createReducer(
     initialState,
 
-    on(SectionListActions.onLoadSections, (state, { limit, page }) => ({
+    on(CourseListActions.onLoadCourses, (state, { limit, page }) => ({
         ...state,
         page,
         limit,
     })),
 
-    // SEARCH
-    on(SectionListActions.onSearch, (state, { search }) => ({
-        ...state,
-        search,
-        page: 0,
-    })),
-
-    // FILTER
-    on(SectionListActions.onApplyFilters, (state, { filters }) => ({
-        ...state,
-        filters,
-        page: 0,
-    })),
-
     // UPDATE
-    on(SectionListActions.onLoadSectionsSuccess, (state, { result }) => {
+    on(CourseListActions.onLoadCoursesSuccess, (state, { result }) => {
         // Replace current collection with provided collection.
         return adapter.setAll(result.data, state);
     }),
 
-    on(SectionListActions.onLoadSectionsSuccess, (state, { result }) => {
+    on(CourseListActions.onLoadCoursesSuccess, (state, { result }) => {
         // update `sortIds` based on API response
         const ids = result.data.map((item) => item.id);
         return {
@@ -78,22 +62,6 @@ export const reducer = createReducer(
             total: result.total,
             limit: result.limit,
             sortIds: ids,
-        };
-    }),
-
-    // SORT
-    on(SectionListActions.onToggleSort, (state, action) => {
-        return {
-            ...state,
-            sort: action.sort,
-            sortDirection: action.sortDirection,
-        };
-    }),
-
-    on(SectionListActions.onHasFilters, (state, { hasFilters }) => {
-        return {
-            ...state,
-            hasFilters,
         };
     })
 );
@@ -109,7 +77,7 @@ export const selectList = createSelector(
     selectEntities,
     (state, entities) => {
         // use `sortIds` as basis for the sort order of items
-        return state.sortIds.reduce<Section[]>((accumulator, id) => {
+        return state.sortIds.reduce<Course[]>((accumulator, id) => {
             if (entities[id]) {
                 accumulator.push(entities[id]);
             }

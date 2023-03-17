@@ -1,5 +1,6 @@
 export * from './api.service';
 export * from './auth.service';
+export * from './courses.service';
 export * from './filters.service';
 export * from './permissions.service';
 export * from './router.service';
