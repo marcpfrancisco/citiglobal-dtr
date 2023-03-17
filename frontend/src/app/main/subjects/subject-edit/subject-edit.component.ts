@@ -26,7 +26,7 @@ import { AblePipe } from '@pipes';
 import { PermissionsService, RouterService, SubjectsService } from '@services';
 import { RootState } from '@stores/index';
 import { isNumericInteger, NgValidators } from '@utils';
-import { isArray, isBoolean, isNumber, isString } from 'lodash';
+import { isArray, isBoolean, isInteger, isNumber, isString } from 'lodash';
 import moment from 'moment';
 import { of, Subject, Subscription } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
@@ -233,7 +233,7 @@ export class SubjectEditComponent implements OnInit, OnDestroy {
                     this.form.patchValue({
                         subjectCode: '',
                         description: '',
-                        day: [],
+                        day: '',
                         startTime: null,
                         endTime: null,
                         gracePeriod: '',
@@ -248,7 +248,7 @@ export class SubjectEditComponent implements OnInit, OnDestroy {
         this.form = new FormGroup({
             subjectCode: new FormControl('', [Validators.required]),
             description: new FormControl('', [Validators.required]),
-            day: new FormControl([], [Validators.required]),
+            day: new FormControl('', [Validators.required]),
             startTime: new FormControl(null, [Validators.required]),
             endTime: new FormControl(null, [Validators.required]),
             gracePeriod: new FormControl(null),
@@ -289,24 +289,24 @@ export class SubjectEditComponent implements OnInit, OnDestroy {
             payload.description = description;
         }
 
-        if (isArray(day)) {
+        if (isString(day)) {
             payload.day = day;
         }
 
-        if (isString(gracePeriod)) {
-            payload.gracePeriod = gracePeriod;
-        }
-
-        if (isNumber(units)) {
+        if (isNumericInteger(units)) {
             payload.units = units;
         }
 
-        if (startTime) {
-            payload.startTime = startTime;
+        if (isString(startTime)) {
+            payload.startTime = this.formatTime(startTime);
         }
 
-        if (endTime) {
-            payload.endTime = endTime;
+        if (isString(endTime)) {
+            payload.endTime = this.formatTime(endTime);
+        }
+
+        if (isString(gracePeriod)) {
+            payload.gracePeriod = this.formatTime(gracePeriod);
         }
 
         if (isBoolean(isActive)) {
@@ -314,6 +314,27 @@ export class SubjectEditComponent implements OnInit, OnDestroy {
         }
 
         return payload;
+    }
+
+    private formatTime(timeInput: string): string {
+        let trimmedInput: string = '';
+
+        if (!isString(timeInput)) {
+            return;
+        }
+
+        if (timeInput === null) {
+            return;
+        }
+
+        // check if the string ends with "AM" or "PM"
+        if (/AM|PM/i.test(timeInput)) {
+            // extract the time portion without "AM" or "PM"
+            return (trimmedInput = timeInput.substring(0, 5)).trim();
+        } else {
+            // extract the time portion in military time format
+            return (trimmedInput = timeInput.substring(0, 5)).trim();
+        }
     }
 
     submit(): void {

@@ -4,7 +4,7 @@ export interface EditSubjectDto {
     isActive?: boolean;
     subjectCode?: string;
     description?: string;
-    day?: Array<string>;
+    day?: string;
     startTime?: string | Date;
     endTime?: string | Date;
     gracePeriod?: string | Date;
