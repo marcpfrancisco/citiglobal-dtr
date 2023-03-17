@@ -64,8 +64,6 @@ export class TimeLogComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.search$ = this.store.select(TimeLogReducer.selectRFIDNo);
-
         interval(1000)
             .pipe(map(() => new Date()))
             .subscribe((date) => {

@@ -1,10 +1,7 @@
 import { Injectable } from '@angular/core';
-import { FindAllTimeLogDto } from '@interfaces';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { TimeLogService } from '@services';
-import { getParamFromListState } from '@utils';
-import { isObjectLike } from 'lodash';
 import { of } from 'rxjs';
 import {
     catchError,
@@ -40,8 +37,8 @@ export class TimeLogEffects {
                 return this.timeLogService
                     .postTimeRecord(listState.rfidNo)
                     .pipe(
-                        map((result) =>
-                            TimeLogActions.onTimeLogSuccess({ result })
+                        map((timeLog) =>
+                            TimeLogActions.onTimeLogSuccess({ timeLog })
                         ),
                         catchError((error) =>
                             of(TimeLogActions.onTimeLogFailure({ error }))

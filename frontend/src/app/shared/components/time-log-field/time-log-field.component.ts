@@ -1,24 +1,19 @@
 import {
     Component,
-    ElementRef,
     EventEmitter,
-    HostListener,
     Input,
     OnDestroy,
     OnInit,
     Output,
     SimpleChanges,
-    ViewChild,
     ViewEncapsulation,
 } from '@angular/core';
-import { isString } from 'lodash';
+import { Store } from '@ngrx/store';
+import { RootState, TimeLogReducer } from '@stores/index';
+import { TimeLogActions } from '@stores/time-log';
 import { Subject, Subscription } from 'rxjs';
-import {
-    debounceTime,
-    distinctUntilChanged,
-    mapTo,
-    switchMap,
-} from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+
 import { isNumericInteger } from '../../utils/number';
 
 @Component({
@@ -38,16 +33,21 @@ export class TimeLogFieldComponent implements OnInit {
     @Output()
     timeLog = new EventEmitter<string>();
 
-    rfidValue: string = '';
+    rfidValue: string;
 
-    constructor() {}
+    constructor(private store: Store<RootState>) {
+        this.store
+            .select(TimeLogReducer.selectCurrentRfidValue)
+            .subscribe((value) => (this.rfidValue = value));
+    }
 
     ngOnInit(): void {
         this.subscription = this.timeLogSubject
             .pipe(debounceTime(this.finalizedTimeLogInterval))
             .subscribe((value) => {
                 this.timeLog.emit(value);
-                this.rfidValue = null;
+
+                this.rfidValue = '';
             });
     }
 
@@ -60,8 +60,7 @@ export class TimeLogFieldComponent implements OnInit {
     }
 
     handleSearch(event: Event): void {
-        const value = (event?.target as HTMLInputElement)?.value || '';
-        this.timeLogSubject.next(value ? value : '');
-        this.rfidValue = value;
+        const value = (event?.target as HTMLInputElement)?.value;
+        this.timeLogSubject.next(value);
     }
 }
