@@ -32,8 +32,8 @@ export class AuthService {
             );
     }
 
-    loginByUserId(userId: string | number): Observable<any> {
-        return this.apiService.get(`${this.USERS_URL}/${userId}`);
+    loginByStudentNumber(studentNo: number): Observable<any> {
+        return this.apiService.get(`${this.USERS_URL}/student-no/${studentNo}`);
     }
 
     getCurrentSignInUser(response: any) {

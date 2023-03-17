@@ -1,19 +1,37 @@
-import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import {
+    Component,
+    OnDestroy,
+    OnInit,
+    ViewChild,
+    ViewEncapsulation,
+} from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatSelectChange } from '@angular/material/select';
 import { ActivatedRoute } from '@angular/router';
-import { AblePipe } from '@pipes';
-import { ACTION_CREATE, ACTION_UPDATE, SUBJECT_SECTIONS } from '@constants';
+import {
+    ACTION_CREATE,
+    ACTION_UPDATE,
+    pagination,
+    SUBJECT_SECTIONS,
+} from '@constants';
 import { fuseAnimations } from '@fuse/animations';
-import { Section } from '@models';
+import { FusePerfectScrollbarDirective } from '@fuse/directives/fuse-perfect-scrollbar/fuse-perfect-scrollbar.directive';
+import { Course, Section } from '@models';
 import { Store } from '@ngrx/store';
-import { PermissionsService, RouterService, SectionsService } from '@services';
+import { AblePipe } from '@pipes';
+import {
+    CourseService,
+    PermissionsService,
+    RouterService,
+    SectionsService,
+} from '@services';
 import { RootState } from '@stores/index';
+import { isNumericInteger } from '@utils';
+import { isBoolean, isString } from 'lodash';
 import { of, Subject, Subscription } from 'rxjs';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import { CreateSectionDto } from 'src/app/shared/interfaces/section/create-section-dto.interface';
 import { EditSectionDto } from 'src/app/shared/interfaces/section/edit-section-dto.interface';
-import { isNumericInteger, NgValidators } from '@utils';
-import { catchError, map, switchMap } from 'rxjs/operators';
-import { isBoolean, isString } from 'lodash';
 
 @Component({
     selector: 'citiglobal-section-edit',
@@ -36,6 +54,12 @@ export class SectionEditComponent implements OnInit, OnDestroy {
 
     sectionRecord: Section | null;
     sectionId: number;
+
+    courseOptions: Course[];
+    courseId: number;
+
+    @ViewChild(FusePerfectScrollbarDirective)
+    directiveScroll: FusePerfectScrollbarDirective;
 
     get isEditMode(): boolean {
         return this.editMode === true;
@@ -90,6 +114,7 @@ export class SectionEditComponent implements OnInit, OnDestroy {
         private route: ActivatedRoute,
         private routerService: RouterService,
         private sectionService: SectionsService,
+        private courseService: CourseService,
         private permissionService: PermissionsService,
         private store: Store<RootState>,
         private ablePipe: AblePipe
@@ -98,6 +123,15 @@ export class SectionEditComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.tabIndex = 0;
         this.editMode = null;
+
+        this.courseService
+            .getCourses({
+                page: pagination.CURRENT_PAGE,
+                limit: pagination.ITEMS_PER_PAGE,
+            })
+            .subscribe(
+                (paginated) => (this.courseOptions = paginated?.data || [])
+            );
 
         this.buildSubjectForm();
 
@@ -165,7 +199,7 @@ export class SectionEditComponent implements OnInit, OnDestroy {
     private buildSubjectForm(): void {
         this.form = new FormGroup({
             name: new FormControl('', [Validators.required]),
-            course: new FormControl('', [Validators.required]),
+            course: new FormControl(null, [Validators.required]),
             isActive: new FormControl('', [Validators.required]),
         });
     }
@@ -176,6 +210,10 @@ export class SectionEditComponent implements OnInit, OnDestroy {
         this.formSubmit$.complete();
     }
 
+    handleChange(change: MatSelectChange): void {
+        this.courseId = +change?.value.id || null;
+    }
+
     private transformFormDataToPayload<
         Result extends CreateSectionDto | EditSectionDto
     >(): Result {
@@ -184,6 +222,14 @@ export class SectionEditComponent implements OnInit, OnDestroy {
 
         if (isString(name)) {
             payload.name = name;
+        }
+
+        if (course) {
+            payload.course = course;
+        }
+
+        if (isNumericInteger(this.courseId)) {
+            payload.courseId = this.courseId;
         }
 
         if (isBoolean(isActive)) {
@@ -202,6 +248,6 @@ export class SectionEditComponent implements OnInit, OnDestroy {
     }
 
     navigateBack() {
-        this.routerService.back(['subjects']);
+        this.routerService.back(['sections']);
     }
 }

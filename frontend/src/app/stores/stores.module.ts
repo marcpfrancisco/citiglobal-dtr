@@ -6,6 +6,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { metaReducers, ROOT_REDUCERS } from '@stores/index';
 
 import { AuthenticationModule } from './authentication/authentication.module';
+import { CourseListModule } from './courses/course-list.module';
 import { LoginModule } from './login/login.module';
 import { LogsListModule } from './logs/logs-list.module';
 import { SectionListModule } from './sections/section-list.module';
@@ -21,13 +22,14 @@ import { UsersListModule } from './users/users-list.module';
         StoreDevtoolsModule.instrument(),
 
         AuthenticationModule,
+        CourseListModule,
         LoginModule,
         LoginModule,
         LogsListModule,
-        TimeLogModule,
-        UsersListModule,
         SectionListModule,
         SubjectListModule,
+        TimeLogModule,
+        UsersListModule,
     ],
 })
 export class StoresModule {}
