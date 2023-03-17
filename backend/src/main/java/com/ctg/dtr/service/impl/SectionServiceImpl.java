@@ -63,7 +63,7 @@ public class SectionServiceImpl implements SectionService {
     @Override
 	public Section createSection(SectionDto sectionDto) {
 
-		Optional<Course> course = courseRepository.findById(sectionDto.getCourseId());
+		Optional<Course> course = courseRepository.findById(sectionDto.getCourseId() != null ? sectionDto.getCourseId() : 0);
 
         Section section = new Section();
 
@@ -78,7 +78,7 @@ public class SectionServiceImpl implements SectionService {
     @Override
 	public Section updateSection(Section currentSection, SectionDto sectionDto) {
 
-		Optional<Course> course = courseRepository.findById(sectionDto.getCourseId());
+		Optional<Course> course = courseRepository.findById(sectionDto.getCourseId() != null ? sectionDto.getCourseId() : currentSection.getCourse().getId());
 
         currentSection.setPublishedAt(sectionDto.getPublishedAt() == null ? currentSection.getPublishedAt() : sectionDto.getPublishedAt());
         currentSection.setIsActive(sectionDto.getIsActive() == null ? currentSection.getIsActive() : sectionDto.getIsActive());

@@ -69,7 +69,7 @@ public class SubjectServiceImpl implements SubjectService {
     @Override
 	public Subject createSubject(SubjectDto subjectDto) {
 
-		Optional<Section> section = sectionRepository.findById(subjectDto.getSectionId());
+		Optional<Section> section = sectionRepository.findById(subjectDto.getSectionId() != null ? subjectDto.getSectionId() : 0);
 
         Subject subject = new Subject();
 
@@ -91,7 +91,7 @@ public class SubjectServiceImpl implements SubjectService {
     @Override
 	public Subject updateSubject(Subject currentSubject, SubjectDto subjectDto) {
 
-		Optional<Section> section = sectionRepository.findById(subjectDto.getSectionId());
+		Optional<Section> section = sectionRepository.findById(subjectDto.getSectionId() != null ? subjectDto.getSectionId() : currentSubject.getSection().getId());
 
         currentSubject.setPublishedAt(subjectDto.getPublishedAt() == null ? currentSubject.getPublishedAt() : subjectDto.getPublishedAt());
         currentSubject.setIsActive(subjectDto.getIsActive() == null ? currentSubject.getIsActive() : subjectDto.getIsActive());

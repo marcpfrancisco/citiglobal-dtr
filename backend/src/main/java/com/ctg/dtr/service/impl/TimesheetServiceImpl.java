@@ -76,7 +76,7 @@ public class TimesheetServiceImpl implements TimesheetService {
     @Override
 	public Timesheet createTimesheet(TimesheetDto timesheetDto) {
 
-		Optional<User> user = userRepository.findById(timesheetDto.getUserId());
+		Optional<User> user = userRepository.findById(timesheetDto.getUserId() != null ? timesheetDto.getUserId() : 0);
 
         Timesheet timesheet = new Timesheet();
 
@@ -93,7 +93,7 @@ public class TimesheetServiceImpl implements TimesheetService {
     @Override
 	public Timesheet updateTimesheet(Timesheet currentTimesheet, TimesheetDto timesheetDto) {
 
-		Optional<User> user = userRepository.findById(timesheetDto.getUserId());
+		Optional<User> user = userRepository.findById(timesheetDto.getUserId() != null ? timesheetDto.getUserId() : currentTimesheet.getUser().getId());
 
         currentTimesheet.setDate(timesheetDto.getDate() == null ? currentTimesheet.getDate() : timesheetDto.getDate());
         currentTimesheet.setTimeIn(timesheetDto.getTimeIn() == null ? currentTimesheet.getTimeIn() : timesheetDto.getTimeIn());
