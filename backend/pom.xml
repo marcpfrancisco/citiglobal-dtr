@@ -12,7 +12,7 @@
 	<artifactId>backend</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>backend</name>
-	<description>Citi Global project for DTR Monitoring</description>
+	<description>Citi Global Project for DTR Monitoring</description>
 	<properties>
 		<java.version>18</java.version>
 	</properties>

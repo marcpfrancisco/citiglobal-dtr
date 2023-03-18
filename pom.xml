@@ -7,7 +7,7 @@
     <packaging>pom</packaging>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>citiglobal-dtr</name>
-	<description>Demo project for Spring Boot</description>
+	<description>Citi Global Project for DTR Monitoring</description>
 
     <modules>
         <module>backend</module>
