@@ -102,6 +102,22 @@
                                     >
                                 </mat-form-field>
 
+                                <citiglobal-auto-complete
+                                    [hasLabel]="'Section'"
+                                    placeholder="Choose Section"
+                                    [options]="sectionList$ | async"
+                                    [displayOption]="displayFn"
+                                    (search)="handleSearchSection($event)"
+                                    (selected)="handleSelectedSection($event)"
+                                    [value]="currentSection"
+                                >
+                                    <ng-template let-option="option"
+                                        ><span>{{
+                                            option?.name
+                                        }}</span></ng-template
+                                    >
+                                </citiglobal-auto-complete>
+
                                 <mat-form-field
                                     appearance="outline"
                                     floatLabel="always"
@@ -205,209 +221,6 @@
                                 </div>
                             </form>
                         </div>
-                    </mat-tab>
-                    <!-- // Place here the assignment of Sections and Subjects -->
-                    <mat-tab label="Course & Section">
-                        <ng-template matTabContent>
-                            <div
-                                class="tab-content p-24 pb-0"
-                                fusePerfectScrollbar
-                            >
-                                <div
-                                    fxLayout="row"
-                                    fxLayoutAlign="space-between cnter"
-                                    class="pb-16"
-                                >
-                                    <div fxLayoutAlign="start center">
-                                        <mat-icon
-                                            class="m-0 mr-16 secondary-text"
-                                            >info</mat-icon
-                                        >
-                                        <div class="h2 secondary-text">
-                                            Assigned Course and Sections
-                                        </div>
-                                    </div>
-
-                                    <button
-                                        mat-raised-button
-                                        class="mat-accent"
-                                        type="button"
-                                        (click)="assignCourseAndSection()"
-                                    >
-                                        <span>Assign Course and Section</span>
-                                    </button>
-                                </div>
-
-                                <div class="section pb-48">
-                                    <!-- [dataSource]="courseSubjectDateSource$"
-                                    [matSortActive]="
-                                            (
-                                                listState$
-                                                | listStateMatSort
-                                                | async
-                                            ).active
-                                        "
-                                        [matSortDirection]="
-                                            (
-                                                listState$
-                                                | listStateMatSort
-                                                | async
-                                            ).direction
-                                        " -->
-                                    <mat-table
-                                        class="items-table"
-                                        matSort
-                                        [@animateStagger]="{ value: '50' }"
-                                        (matSortChange)="onToggleSort($event)"
-                                    >
-                                        <!-- Section Column -->
-                                        <ng-container
-                                            [matColumnDef]="
-                                                COURSE_SECTION_SORTABLES.SECTION
-                                            "
-                                        >
-                                            <mat-header-cell
-                                                *matHeaderCellDef
-                                                mat-sort-header
-                                                >Section</mat-header-cell
-                                            >
-                                            <mat-cell *matCellDef="let item">
-                                                <p class="text-truncate">
-                                                    {{ item.section }}
-                                                </p>
-                                            </mat-cell>
-                                        </ng-container>
-
-                                        <!-- Course Column -->
-                                        <ng-container
-                                            [matColumnDef]="
-                                                COURSE_SECTION_SORTABLES.COURSE
-                                            "
-                                        >
-                                            <mat-header-cell
-                                                *matHeaderCellDef
-                                                mat-sort-header
-                                                >Course</mat-header-cell
-                                            >
-                                            <mat-cell *matCellDef="let item">
-                                                <p class="text-truncate">
-                                                    {{ item.course }}
-                                                </p>
-                                            </mat-cell>
-                                        </ng-container>
-
-                                        <!-- Created At Column -->
-                                        <ng-container
-                                            [matColumnDef]="
-                                                COURSE_SECTION_SORTABLES.CREATED_AT
-                                            "
-                                        >
-                                            <mat-header-cell
-                                                *matHeaderCellDef
-                                                mat-sort-header
-                                                >Created At</mat-header-cell
-                                            >
-                                            <mat-cell *matCellDef="let item">
-                                                <p class="text-truncate">
-                                                    {{
-                                                        item.createdAt
-                                                            | dateFormat
-                                                    }}
-                                                </p>
-                                            </mat-cell>
-                                        </ng-container>
-
-                                        <!-- Status Column -->
-                                        <ng-container
-                                            [matColumnDef]="
-                                                COURSE_SECTION_SORTABLES.ACTIVE
-                                            "
-                                        >
-                                            <mat-header-cell
-                                                *matHeaderCellDef
-                                                mat-sort-header
-                                                >Active</mat-header-cell
-                                            >
-                                            <mat-cell *matCellDef="let item">
-                                                <p class="text-truncate">
-                                                    {{ item.isActive }}
-                                                </p>
-                                            </mat-cell>
-                                        </ng-container>
-
-                                        <!-- Options Column -->
-                                        <ng-container matColumnDef="options">
-                                            <mat-header-cell
-                                                *matHeaderCellDef
-                                            ></mat-header-cell>
-                                            <mat-cell *matCellDef="let item">
-                                                <button
-                                                    mat-button
-                                                    [matMenuTriggerFor]="menu"
-                                                    (click)="
-                                                        $event.stopPropagation();
-                                                        $event.preventDefault()
-                                                    "
-                                                >
-                                                    <mat-icon
-                                                        class="logo-icon s-32"
-                                                        [@animate]="{
-                                                            value: '*',
-                                                            params: {
-                                                                delay: '50ms',
-                                                                scale: '0.2'
-                                                            }
-                                                        }"
-                                                        >more_vert
-                                                    </mat-icon>
-                                                </button>
-                                                <mat-menu #menu="matMenu">
-                                                    <!-- && hasAssignedCourseSubject(item.id)
-                            (click)="unassignCourseSection(item.id)" -->
-                                                    <button
-                                                        mat-menu-item
-                                                        type="button"
-                                                        *ngIf="
-                                                            'update'
-                                                                | able : 'Users'
-                                                        "
-                                                    >
-                                                        Remove
-                                                    </button>
-                                                </mat-menu>
-                                            </mat-cell>
-                                        </ng-container>
-
-                                        <mat-header-row
-                                            *matHeaderRowDef="
-                                                courseSectionDisplayedColumns;
-                                                sticky: true
-                                            "
-                                        ></mat-header-row>
-                                        <mat-row
-                                            *matRowDef="
-                                                let item;
-                                                columns: courseSectionDisplayedColumns
-                                            "
-                                            class="item"
-                                            matRipple
-                                            (click)="$event.preventDefault()"
-                                        ></mat-row>
-                                    </mat-table>
-
-                                    <mat-paginator
-                                        [length]="total$ | async"
-                                        [pageIndex]="pageIndex$ | async"
-                                        [pageSize]="pageSize$ | async"
-                                        [pageSizeOptions]="
-                                            pageSizeOptions$ | async
-                                        "
-                                        (page)="onChangePage($event)"
-                                    >
-                                    </mat-paginator>
-                                </div>
-                            </div>
-                        </ng-template>
                     </mat-tab>
 
                     <mat-tab label="Subjects">

@@ -1,0 +1,34 @@
+<form class="full-width">
+    <mat-form-field appearance="outline" floatLabel="always" fxFlex>
+        <input
+            name="autocomplete"
+            type="text"
+            [placeholder]="placeholder"
+            aria-label="AutoComplete"
+            matInput
+            (input)="handleInput($event)"
+            [matAutocomplete]="auto"
+            [(ngModel)]="value"
+            [required]="isRequired"
+        />
+        <mat-label *ngIf="hasLabel">{{ hasLabel }}</mat-label>
+        <mat-autocomplete
+            autoActiveFirstOption
+            #auto="matAutocomplete"
+            (optionSelected)="optionSelected($event)"
+            [displayWith]="displayOption"
+        >
+            <mat-option *ngFor="let option of options" [value]="option">
+                <ng-template
+                    *ngTemplateOutlet="
+                        templateRef;
+                        context: {
+                            option: option
+                        }
+                    "
+                >
+                </ng-template>
+            </mat-option>
+        </mat-autocomplete>
+    </mat-form-field>
+</form>

@@ -46,6 +46,7 @@ export function createSearchPaginationLimitOptions(
         ...(paginationLimit !== false
             ? // mandate limit here and remove nopage if search character is less than 3
               {
+                  page: 0,
                   limit: paginationLimit,
               }
             : // reapply passed parameters

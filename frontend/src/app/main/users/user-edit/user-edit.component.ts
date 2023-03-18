@@ -10,7 +10,13 @@ import { MatDialogConfig } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
 import { Sort } from '@angular/material/sort';
 import { ActivatedRoute, Params } from '@angular/router';
-import { ACTION_UPDATE, mode, SUBJECT_SECTIONS } from '@constants';
+import {
+    ACTION_UPDATE,
+    DEFAULT_FILTER_PAGINATION_LIMIT,
+    mode,
+    pagination,
+    SUBJECT_SECTIONS,
+} from '@constants';
 import { SectionSortables, SubjectSortables, UserRoles } from '@enums';
 import { fuseAnimations } from '@fuse/animations';
 import { FusePerfectScrollbarDirective } from '@fuse/directives/fuse-perfect-scrollbar/fuse-perfect-scrollbar.directive';
@@ -18,16 +24,40 @@ import { CreateUserDto } from '@interfaces';
 import { Section, SubjectModel, User } from '@models';
 import { Store } from '@ngrx/store';
 import { AblePipe } from '@pipes';
-import { RouterService, UsersService } from '@services';
+import {
+    RouterService,
+    SectionsService,
+    SubjectsService,
+    UsersService,
+} from '@services';
 import {
     AuthenticationReducer,
     RootState,
     UsersListReducer,
 } from '@stores/index';
 import { UsersListActions } from '@stores/users';
-import { getSortData, isNumericInteger } from '@utils';
-import { combineLatest, Observable, of, Subject, Subscription } from 'rxjs';
-import { catchError, switchMap, take } from 'rxjs/operators';
+import {
+    createSearchPaginationLimitOptions,
+    getSortData,
+    isNumericInteger,
+} from '@utils';
+import {
+    BehaviorSubject,
+    combineLatest,
+    Observable,
+    of,
+    Subject,
+    Subscription,
+} from 'rxjs';
+import {
+    catchError,
+    debounceTime,
+    map,
+    startWith,
+    switchMap,
+    take,
+} from 'rxjs/operators';
+import { FindAllSectionsDto } from 'src/app/shared/interfaces/section/find-all-sections-dto.interface';
 
 @Component({
     selector: 'citiglobal-user-edit',
@@ -37,17 +67,11 @@ import { catchError, switchMap, take } from 'rxjs/operators';
     encapsulation: ViewEncapsulation.None,
 })
 export class UserEditComponent implements OnInit, OnDestroy {
+    private searchSubject = new BehaviorSubject<string>('');
+
     readonly USER_ROLES = UserRoles;
     readonly COURSE_SECTION_SORTABLES = SectionSortables;
     readonly SUBJECT_SORTABLES = SubjectSortables;
-
-    COURSE_SECTION_DISPLAYED_COLUMNS = [
-        SectionSortables.SECTION,
-        SectionSortables.COURSE,
-        SectionSortables.CREATED_AT,
-        SectionSortables.ACTIVE,
-        'options',
-    ];
 
     SUBJECT_DISPLAYED_COLUMNS = [
         SubjectSortables.SUBJECT_CODE,
@@ -74,6 +98,10 @@ export class UserEditComponent implements OnInit, OnDestroy {
     userIdChanges$: Subject<number>;
     loggedInUser: User | null;
 
+    sectionOptions: Section[];
+    sectionId: number;
+    course: string;
+
     /** Pagination */
     pageSizeOptions$: Observable<number[]>;
     pageSize$: Observable<number>;
@@ -81,21 +109,12 @@ export class UserEditComponent implements OnInit, OnDestroy {
     total$: Observable<number>;
 
     courseSubjectDateSource$: Observable<SubjectModel[]>;
-    studentDataSource$: Observable<Section[]>;
+    sectionList$: Observable<Section[]>;
 
     @ViewChild(FusePerfectScrollbarDirective)
     directiveScroll: FusePerfectScrollbarDirective;
 
     userRecord: User;
-
-    get courseSectionDisplayedColumns(): Array<string> {
-        if (!this.ablePipe.transform(ACTION_UPDATE, SUBJECT_SECTIONS)) {
-            return this.COURSE_SECTION_DISPLAYED_COLUMNS.filter(
-                (column) => column !== 'options'
-            );
-        }
-        return this.COURSE_SECTION_DISPLAYED_COLUMNS;
-    }
 
     get subjectDisplayedColumns(): Array<string> {
         if (!this.ablePipe.transform(ACTION_UPDATE, SUBJECT_SECTIONS)) {
@@ -181,10 +200,21 @@ export class UserEditComponent implements OnInit, OnDestroy {
         return true;
     }
 
+    get currentSection(): Section | null {
+        return this.userForm?.get('section')?.value || null;
+    }
+
+    set currentSection(section: Section | null) {
+        this.userForm?.patchValue({
+            section: section || null,
+        });
+    }
+
     constructor(
         private route: ActivatedRoute,
         private routerService: RouterService,
         private usersService: UsersService,
+        private sectionsService: SectionsService,
         private store: Store<RootState>,
         private ablePipe: AblePipe
     ) {}
@@ -192,6 +222,22 @@ export class UserEditComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.loggedInUser = null;
         this.userRoles = Object.values(UserRoles);
+
+        this.sectionList$ = this.searchSubject.pipe(
+            debounceTime(500),
+            switchMap((search) => {
+                const params = createSearchPaginationLimitOptions({
+                    search,
+                    page: pagination.CURRENT_PAGE,
+                    limit: pagination.ITEMS_PER_PAGE,
+                });
+
+                return this.sectionsService.getSections(
+                    params as FindAllSectionsDto
+                );
+            }),
+            map((sections) => sections?.data || [])
+        );
 
         this.buildUserForm();
 
@@ -218,31 +264,42 @@ export class UserEditComponent implements OnInit, OnDestroy {
             )
             .subscribe((user: User | null) => {
                 this.mode = user ? mode.EDIT_MODE : mode.CREATE_MODE;
-
                 this.userRecord = user;
 
                 if (user) {
-                    this.userForm.setValue({
-                        firstName: user[0]?.firstName || '',
-                        lastName: user[0]?.lastName || '',
-                        studentNo: user[0]?.studentNo || '',
-                        rfidNo: user[0]?.rfidNo || '',
-                        username: user[0]?.username || '',
-                        role: user[0]?.role || '',
-                        isActive: user[0]?.isActive || false,
+                    const {
+                        firstName,
+                        lastName,
+                        studentNo,
+                        section,
+                        rfidNo,
+                        username,
+                        role,
+                        isActive,
+                    } = user[0];
+
+                    this.userForm.patchValue({
+                        firstName,
+                        lastName,
+                        studentNo,
+                        section,
+                        rfidNo,
+                        username,
+                        role,
+                        isActive,
+                    });
+                } else {
+                    this.userForm.patchValue({
+                        firstName: '',
+                        lastName: '',
+                        studentNo: '',
+                        section: null,
+                        rfidNo: '',
+                        username: '',
+                        role: '',
+                        isActive: true,
                     });
                 }
-
-                // if (user) {
-                //     this.userForm.setValue({
-                //         firstName: user[0]?.firstName || '',
-                //         lastName: user[0]?.lastName || '',
-                //         studentId: user[0]?.studentId || '',
-                //         rfidNo: user[0]?.rfidNo || '',
-                //         role: user[0]?.role || '',
-                //         isActive: user[0]?.isActive || false,
-                //     });
-                // }
             });
 
         this.setupObservables();
@@ -253,6 +310,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
             firstName: new FormControl('', [Validators.required]),
             lastName: new FormControl('', [Validators.required]),
             studentNo: new FormControl('', [Validators.required]),
+            section: new FormControl(null, [Validators.required]),
             rfidNo: new FormControl('', [Validators.required]),
             username: new FormControl('', [Validators.required]),
             role: new FormControl('', [Validators.required]),
@@ -324,30 +382,6 @@ export class UserEditComponent implements OnInit, OnDestroy {
         }
     }
 
-    assignCourseAndSection(): void {
-        const dialogConfig = new MatDialogConfig();
-        dialogConfig.disableClose = true;
-        dialogConfig.autoFocus = true;
-        dialogConfig.panelClass = 'citiglobal-user-assign-course-section';
-
-        // this.unsubscribeDialogbox();
-
-        // this.assignFloristDialogSubscription = this.dialog
-        //   .open(UserAssignFloristComponent, dialogConfig)
-        //   .afterClosed()
-        //   .pipe(take(1))
-        //   .subscribe((florist) => {
-        //     if (florist) {
-        //       // assign florist
-        //       if (this.canAssignCourseAndSection && !this.isAssignedFlorist(florist.id)) {
-        //         this.store.dispatch(
-        //           UsersFloristsActions.onAddUserFlorist({ floristId: florist.id })
-        //         );
-        //       }
-        //     }
-        //   });
-    }
-
     assignSubject(): void {
         const dialogConfig = new MatDialogConfig();
         dialogConfig.disableClose = true;
@@ -407,5 +441,17 @@ export class UserEditComponent implements OnInit, OnDestroy {
         //     })
         //   );
         // this.listState$ = listState$;
+    }
+
+    handleSearchSection(text: string): void {
+        this.searchSubject.next(text);
+    }
+
+    handleSelectedSection(section: Section): void {
+        this.currentSection = section || null;
+    }
+
+    displayFn(section: Section): string {
+        return section?.name;
     }
 }
