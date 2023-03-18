@@ -77,7 +77,7 @@ export class AuthenticationEffects {
         return this.actions$.pipe(
             ofType(LoginActions.onTimeLogLogin),
             switchMap((action) =>
-                this.authService.loginByUserId(action.id).pipe(
+                this.authService.loginByStudentNumber(action.studentNo).pipe(
                     map((user) =>
                         AuthenticationActions.onAdminLogInSuccess({ user })
                     ),
