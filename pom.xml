@@ -6,10 +6,12 @@
 	<artifactId>citiglobal-dtr</artifactId>
     <packaging>pom</packaging>
 	<version>1.0.0-SNAPSHOT</version>
+	
 	<name>citiglobal-dtr</name>
 	<description>Citi Global Project for DTR Monitoring</description>
 
     <modules>
+        <module>frontend</module>
         <module>backend</module>
     </modules>
 
