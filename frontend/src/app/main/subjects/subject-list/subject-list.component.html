@@ -64,14 +64,14 @@
                     </mat-cell>
                 </ng-container>
 
-                <!-- Published At Column -->
-                <ng-container [matColumnDef]="SUBJECT_SORTABLES.PUBLISHED_AT">
+                <!-- Created At Column -->
+                <ng-container [matColumnDef]="SUBJECT_SORTABLES.CREATED_AT">
                     <mat-header-cell *matHeaderCellDef mat-sort-header
-                        >Published At</mat-header-cell
+                        >Created At</mat-header-cell
                     >
                     <mat-cell *matCellDef="let item">
                         <p class="text-truncate">
-                            {{ item.publishedAt | dateFormat }}
+                            {{ item.createdAt | dateFormat }}
                         </p>
                     </mat-cell>
                 </ng-container>

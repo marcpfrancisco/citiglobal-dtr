@@ -54,7 +54,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
         SubjectSortables.DESCRIPTION,
         SubjectSortables.START_TIME,
         SubjectSortables.END_TIME,
-        SubjectSortables.PUBLISHED_AT,
+        SubjectSortables.CREATED_AT,
         SubjectSortables.ACTIVE,
         'options',
     ];
