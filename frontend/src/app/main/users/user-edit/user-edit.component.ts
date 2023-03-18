@@ -44,7 +44,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
     COURSE_SECTION_DISPLAYED_COLUMNS = [
         SectionSortables.SECTION,
         SectionSortables.COURSE,
-        SectionSortables.PUBLISHED_AT,
+        SectionSortables.CREATED_AT,
         SectionSortables.ACTIVE,
         'options',
     ];

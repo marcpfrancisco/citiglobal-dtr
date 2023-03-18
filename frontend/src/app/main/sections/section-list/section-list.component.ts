@@ -29,7 +29,7 @@ export class SectionListComponent implements OnInit {
     displayedColumns = [
         SectionSortables.SECTION,
         SectionSortables.COURSE,
-        SectionSortables.PUBLISHED_AT,
+        SectionSortables.CREATED_AT,
         SectionSortables.ACTIVE,
     ];
 
