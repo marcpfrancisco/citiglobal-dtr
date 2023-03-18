@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { FindAllSubjectsDto } from '@interfaces';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { FiltersService, SnackbarService, SubjectsService } from '@services';
@@ -22,7 +23,7 @@ import {
 import { FindAllSectionsDto } from 'src/app/shared/interfaces/section/find-all-sections-dto.interface';
 
 import { SubjectListActions } from '.';
-import { RootState, SectionListReducer } from '..';
+import { RootState, SectionListReducer, SubjectListReducer } from '..';
 
 @Injectable()
 export class SubjectListeffects {
@@ -48,13 +49,13 @@ export class SubjectListeffects {
             concatMap((action) =>
                 of(action).pipe(
                     withLatestFrom(
-                        this.store.select(SectionListReducer.selectState)
+                        this.store.select(SubjectListReducer.selectState)
                     )
                 )
             ),
             switchMap(([action, listState]) => {
                 // param
-                const param: FindAllSectionsDto =
+                const param: FindAllSubjectsDto =
                     getParamFromListState(listState);
                 param.search = listState.search;
 

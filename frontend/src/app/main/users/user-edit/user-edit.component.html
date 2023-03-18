@@ -223,7 +223,7 @@
                         </div>
                     </mat-tab>
 
-                    <mat-tab label="Subjects">
+                    <mat-tab label="Subjects" *ngIf="hasAssignedSubject">
                         <ng-template matTabContent>
                             <div
                                 class="tab-content p-24 pb-0"
@@ -231,10 +231,29 @@
                             >
                                 <div
                                     fxLayout="row"
-                                    fxLayoutAlign="space-between cnter"
+                                    fxLayoutAlign="end center"
                                     class="pb-16"
                                 >
-                                    <div fxLayoutAlign="start center">
+                                    <button
+                                        mat-raised-button
+                                        class="mat-accent"
+                                        type="button"
+                                        *ngIf="
+                                            ('update' | able : 'Users') &&
+                                            canAssignSubject
+                                        "
+                                        (click)="assignSubject()"
+                                    >
+                                        <span>Assign Subject</span>
+                                    </button>
+                                </div>
+
+                                <div class="section pb-48">
+                                    <div
+                                        class="pb-16"
+                                        fxLayout="row"
+                                        fxLayoutAlign="start center"
+                                    >
                                         <mat-icon
                                             class="m-0 mr-16 secondary-text"
                                             >library_books</mat-icon
@@ -243,22 +262,25 @@
                                             Assigned Subjects
                                         </div>
                                     </div>
-
-                                    <button
-                                        mat-raised-button
-                                        class="mat-accent"
-                                        type="button"
-                                        (click)="assignSubject()"
-                                    >
-                                        <span>Assign Subject</span>
-                                    </button>
-                                </div>
-
-                                <div class="section pb-48">
                                     <mat-table
                                         class="items-table"
                                         matSort
+                                        [dataSource]="dataSource$"
                                         [@animateStagger]="{ value: '50' }"
+                                        [matSortActive]="
+                                            (
+                                                listState$
+                                                | listStateMatSort
+                                                | async
+                                            ).active
+                                        "
+                                        [matSortDirection]="
+                                            (
+                                                listState$
+                                                | listStateMatSort
+                                                | async
+                                            ).direction
+                                        "
                                         (matSortChange)="onToggleSort($event)"
                                     >
                                         <!-- Subject Code Column -->

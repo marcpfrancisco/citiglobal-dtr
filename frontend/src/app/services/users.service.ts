@@ -65,17 +65,21 @@ export class UsersService {
         return this.apiService.delete(`${this.USERS_URL}/${id}`);
     }
 
-    changeUserPassword(userId: string): Observable<void> {
-        return this.apiService.post(
-            `${this.USERS_URL}/${userId}/reset-password`,
-            {}
-        );
+    addSubjectToUser(
+        userId: string | number,
+        subjectId: string | number
+    ): Observable<User> {
+        return this.apiService.post(`${this.USERS_URL}/${userId}/subjects`, {
+            subjectId,
+        });
     }
 
-    adminResetUserPassword(userId: string): Observable<User> {
-        return this.apiService.patch(
-            `${this.USERS_URL}/${userId}/admin-reset-password`,
-            {}
+    deleteSubjectFromUser(
+        userId: string | number,
+        subjectId: string | number
+    ): Observable<User> {
+        return this.apiService.delete(
+            `${this.USERS_URL}/${userId}/subjects/${subjectId}`
         );
     }
 }

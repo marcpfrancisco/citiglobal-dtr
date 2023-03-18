@@ -12,6 +12,7 @@ import { LogsListModule } from './logs/logs-list.module';
 import { SectionListModule } from './sections/section-list.module';
 import { SubjectListModule } from './subjects/subject-list.module';
 import { TimeLogModule } from './time-log/time-log.module';
+import { UserSubjectListModule } from './user-subjects-list/user-subject-list.module';
 import { UsersListModule } from './users/users-list.module';
 
 @NgModule({
@@ -30,6 +31,7 @@ import { UsersListModule } from './users/users-list.module';
         SubjectListModule,
         TimeLogModule,
         UsersListModule,
+        UserSubjectListModule,
     ],
 })
 export class StoresModule {}

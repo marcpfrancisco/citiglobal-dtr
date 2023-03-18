@@ -1,15 +1,15 @@
 import { HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { isBoolean, isString } from 'lodash';
+import { isBoolean } from 'lodash';
 import { Observable } from 'rxjs';
 
 import {
     CreateSubjectDto,
     EditSubjectDto,
+    isNumericInteger,
     PaginationResult,
-    Section,
-    SectionSortables,
     SubjectModel,
+    SubjectSortables,
 } from '../shared';
 import { FindAllSubjectsDto } from '../shared/interfaces/subjects/find-all-subjects-dto.interface';
 import { ApiService } from './api.service';
@@ -44,17 +44,13 @@ export class SubjectsService {
     }
 
     createListOptions(options: FindAllSubjectsDto): HttpParams {
-        const { subjectCode, description, isActive } = options;
+        const { userId, isActive } = options;
         let params = this.apiService.createListRecordParameters(options, {
-            sortables: SectionSortables,
+            sortables: SubjectSortables,
         });
 
-        if (isString(subjectCode)) {
-            params = params.append('subjectCode', subjectCode);
-        }
-
-        if (isString(description)) {
-            params = params.append('description', description);
+        if (isNumericInteger(userId)) {
+            params = params.append('userId', userId);
         }
 
         if (isBoolean(isActive)) {
