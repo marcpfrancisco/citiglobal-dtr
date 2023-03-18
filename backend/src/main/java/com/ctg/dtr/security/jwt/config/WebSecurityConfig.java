@@ -69,7 +69,8 @@ public class WebSecurityConfig {
         "/swagger*/**",
         "/webjars/**",
         "/swagger-ui/**",
-        "/actuator/**").permitAll()
+        "/actuator/**",
+        "/auth/**").permitAll()
         .and()
         .authorizeHttpRequests()
         .requestMatchers(HttpMethod.POST, "/api/authentication",
