@@ -1,25 +1,12 @@
-import {
-    Component,
-    HostListener,
-    Inject,
-    OnInit,
-    SimpleChanges,
-    ViewEncapsulation,
-} from '@angular/core';
+import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseConfigService } from '@fuse/services/config.service';
 import { Store } from '@ngrx/store';
-import { RootState, TimeLogReducer } from '@stores/index';
+import { RootState } from '@stores/index';
 import { TimeLogActions } from '@stores/time-log';
-import { getCurrentTimeStamp, isNumericInteger } from '@utils';
-import { isString } from 'lodash';
-import { interval, Observable, Subject, Subscription } from 'rxjs';
-import {
-    debounceTime,
-    distinctUntilChanged,
-    map,
-    switchMap,
-} from 'rxjs/operators';
+import { getCurrentTimeStamp } from '@utils';
+import { interval, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
     selector: 'citiglobal-time-log',

@@ -58,9 +58,9 @@ export const navigation: FuseNavigation[] = [
         ],
     },
     {
-        id: 'profile',
-        title: 'Profile',
-        translate: 'NAV.PROFILE',
+        id: 'reports',
+        title: 'Reports',
+        translate: 'NAV.REPORTS',
         type: 'group',
         children: [
             {

@@ -23,6 +23,20 @@ export const onTimeLogSuccess = createAction(
     props<{ timeLog: TimeLog }>()
 );
 
+export const onShowTimeLogID = createAction(
+    '[Time Log Component] On Show Time Log ID'
+);
+
+export const onShowTimeLogIDSuccess = createAction(
+    '[Time Log Component] On Show Time Log ID Success',
+    props<{ user: User }>()
+);
+
+export const onShowTimeLogIDFailuer = createAction(
+    '[Time Log Component] On Show Time Log ID Failure',
+    props<{ error: Error }>()
+);
+
 export const onTimeLogFailure = createAction(
     '[Time Log Component] On Time Log Failure',
     props<{ error: Error }>()

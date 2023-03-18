@@ -1,0 +1,22 @@
+@import 'src/@fuse/scss/fuse';
+
+.citiglobal-user-identification-card {
+  .mat-dialog-content {
+    margin: 0;
+    padding: 0;
+    overflow: none;
+  }
+
+  .mat-dialog-container {
+    position: relative;
+    padding: 0;
+    height: 845px;
+  }
+
+  #cut-out-bg {
+    position: absolute;
+    bottom: 0;
+  }
+
+
+}

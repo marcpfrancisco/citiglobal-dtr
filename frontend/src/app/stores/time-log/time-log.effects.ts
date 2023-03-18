@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { TimeLogService } from '@services';
+import { SnackbarService, TimeLogService } from '@services';
 import { of } from 'rxjs';
 import {
     catchError,
@@ -11,6 +12,7 @@ import {
     tap,
     withLatestFrom,
 } from 'rxjs/operators';
+import { UserIdentifcationCardComponent } from 'src/app/main/users/user-identification-card/user-identification-card.component';
 
 import { TimeLogActions } from '.';
 import { RootState, TimeLogReducer } from '..';
@@ -20,7 +22,9 @@ export class TimeLogEffects {
     constructor(
         private actions$: Actions,
         private timeLogService: TimeLogService,
-        private store: Store<RootState>
+        private store: Store<RootState>,
+        private dialog: MatDialog,
+        private snackbarService: SnackbarService
     ) {}
 
     onLoadTimeLog$ = createEffect(() => {
@@ -40,6 +44,11 @@ export class TimeLogEffects {
                         map((timeLog) =>
                             TimeLogActions.onTimeLogSuccess({ timeLog })
                         ),
+                        tap(() =>
+                            this.store.dispatch(
+                                TimeLogActions.onShowTimeLogID()
+                            )
+                        ),
                         catchError((error) =>
                             of(TimeLogActions.onTimeLogFailure({ error }))
                         )
@@ -47,4 +56,34 @@ export class TimeLogEffects {
             })
         );
     });
+
+    onShowTimeLogID$ = createEffect(
+        () => {
+            return this.actions$.pipe(
+                ofType(TimeLogActions.onShowTimeLogID),
+                concatMap((action) =>
+                    of(action).pipe(
+                        withLatestFrom(
+                            this.store.select(TimeLogReducer.selectState)
+                        )
+                    )
+                ),
+                tap(([action, state]) => {
+                    const dialogRef = this.dialog.open(
+                        UserIdentifcationCardComponent,
+                        {
+                            panelClass:
+                                UserIdentifcationCardComponent.panelClass,
+                            data: state?.user,
+                        }
+                    );
+
+                    setTimeout(() => {
+                        dialogRef.close();
+                    }, 1000);
+                })
+            );
+        },
+        { dispatch: false }
+    );
 }

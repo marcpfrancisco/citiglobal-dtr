@@ -1,0 +1,32 @@
+<div id="identification-card" fxFlex fxLayout="column">
+    <div
+        class="identification-card-wrapper"
+        fxFlex
+        fxLayout="column"
+        fxLayoutAlign="center center"
+    >
+        <div
+            mat-dialog-content
+            class="card fuse-white"
+            fxLayout="column"
+            fxLayoutAlign="center"
+            *ngIf="{ user: user$ | async } as data"
+        >
+            <h4 class="identification-card-heading">
+                CITI GLOBAL COLLEGE INC.
+            </h4>
+            <p class="identification-card-subtitle">
+                VCB BUILDING 107 LIMCAOCO ST. BRGY UNO, CITY OF CABUYAO, LAGUNA
+            </p>
+
+            <h1
+                class="fullname"
+                fxFlex
+                fxLayout="column"
+                fxLayoutAlign="center center"
+            >
+                {{ data?.user | userFullName }}
+            </h1>
+        </div>
+    </div>
+</div>
