@@ -175,34 +175,37 @@ public class TimesheetServiceImpl implements TimesheetService {
 	public Timesheet dailyTimeRecord(String rfidNo) {
 
         User checkStudentNo = userRepository.findByRfidNo(rfidNo);
-        SimpleDateFormat formatter = new SimpleDateFormat("EEEE");
-        String checkDay = formatter.format(new Date());
 
         if (checkStudentNo == null) {
             return null;
         }
 
         Timesheet currentTimesheet = timesheetRepository.findTimesheetByUserId(checkStudentNo.getId());
-        Subject nextSubject = subjectRepository.findSubjectByDayAndUserId(checkDay.toUpperCase(), checkStudentNo.getId());
+
+        if (checkStudentNo.getSection() == null) {
+
+            if (currentTimesheet != null) {
+
+                Timesheet timesheet = setTimeOutRecord(rfidNo);
+
+                return timesheetRepository.save(timesheet);
+
+            } else {
+
+                Timesheet timesheet = setTimeInRecord(rfidNo);
+                timesheet.setStatus("LABORATORY");
+
+                return timesheetRepository.save(timesheet);
+            }
+        }
+
+        SimpleDateFormat formatter = new SimpleDateFormat("EEEE");
+        String checkDay = formatter.format(new Date());
+
+        Subject nextSubject = subjectRepository.findSubjectByDayAndSectionId(checkDay.toUpperCase(), checkStudentNo.getSection().getId());
 
         if (nextSubject != null) {
 
-            if (nextSubject.getSection() == null && nextSubject.getUser() != null) {
-
-                if (currentTimesheet != null) {
-
-                    Timesheet timesheet = setTimeOutRecord(rfidNo);
-
-                    return timesheetRepository.save(timesheet);
-
-                } else {
-
-                    Timesheet timesheet = setTimeInRecord(rfidNo);
-                    timesheet.setStatus("LABORATORY");
-
-                    return timesheetRepository.save(timesheet);
-                }
-            }
             if (nextSubject.getDay().equals(checkDay.toUpperCase())) {
 
                 if (currentTimesheet != null) {

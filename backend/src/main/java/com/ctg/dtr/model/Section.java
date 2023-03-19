@@ -59,5 +59,9 @@ public class Section {
 
     @OneToMany(mappedBy = "section")
 	@JsonIgnore
+    private List<User> users;
+
+    @OneToMany(mappedBy = "section")
+	@JsonIgnore
     private List<Subject> subjects;
 }
