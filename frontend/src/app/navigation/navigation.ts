@@ -32,14 +32,6 @@ export const navigation: FuseNavigation[] = [
                 url: '/sections',
             },
             {
-                id: 'students',
-                title: 'Students',
-                translate: 'NAV.STUDENTS.TITLE',
-                type: 'item',
-                icon: 'groups',
-                url: '/students',
-            },
-            {
                 id: 'subjects',
                 title: 'Subjects',
                 translate: 'NAV.SUBJECTS.TITLE',

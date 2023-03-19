@@ -317,8 +317,6 @@ export class SubjectEditComponent implements OnInit, OnDestroy {
     }
 
     private formatTime(timeInput: string): string {
-        let trimmedInput: string = '';
-
         if (!isString(timeInput)) {
             return;
         }
@@ -327,14 +325,10 @@ export class SubjectEditComponent implements OnInit, OnDestroy {
             return;
         }
 
-        // check if the string ends with "AM" or "PM"
-        if (/AM|PM/i.test(timeInput)) {
-            // extract the time portion without "AM" or "PM"
-            return (trimmedInput = timeInput.substring(0, 5)).trim();
-        } else {
-            // extract the time portion in military time format
-            return (trimmedInput = timeInput.substring(0, 5)).trim();
-        }
+        const dateObj = new Date(`01/01/2000 ${timeInput}`);
+        return dateObj
+            .toLocaleTimeString('en-US', { hour12: false })
+            .substring(0, 5);
     }
 
     submit(): void {
