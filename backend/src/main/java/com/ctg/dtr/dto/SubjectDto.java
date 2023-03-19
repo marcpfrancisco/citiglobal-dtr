@@ -38,4 +38,8 @@ public class SubjectDto {
     private Long sectionId;
 
     private Object section;
+
+    private Long userId;
+
+    private Object user;
 }
