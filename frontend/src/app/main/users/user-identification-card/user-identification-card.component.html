@@ -1,32 +1,42 @@
-<div id="identification-card" fxFlex fxLayout="column">
+<div id="identification-card">
     <div
-        class="identification-card-wrapper"
+        mat-dialog-content
+        class="card fuse-white"
         fxFlex
         fxLayout="column"
-        fxLayoutAlign="center center"
+        fxLayoutAlign="space-between"
+        *ngIf="{ user: user$ | async } as data"
     >
-        <div
-            mat-dialog-content
-            class="card fuse-white"
-            fxLayout="column"
-            fxLayoutAlign="center"
-            *ngIf="{ user: user$ | async } as data"
-        >
-            <h4 class="identification-card-heading">
-                CITI GLOBAL COLLEGE INC.
-            </h4>
-            <p class="identification-card-subtitle">
+        <header class="id-card__header">
+            <h4 class="header__title">CITI GLOBAL COLLEGE INC.</h4>
+            <p class="header__subtitle">
                 VCB BUILDING 107 LIMCAOCO ST. BRGY UNO, CITY OF CABUYAO, LAGUNA
             </p>
+        </header>
 
-            <h1
-                class="fullname"
-                fxFlex
-                fxLayout="column"
-                fxLayoutAlign="center center"
-            >
-                {{ data?.user | userFullName }}
+        <main class="id-card__content">
+            <img
+                class="id-card__person"
+                src="assets/images/avatars/barack-obama.png"
+                alt="User Image"
+            />
+            <img
+                class="id-card__logo"
+                src="assets/images/logo/citiglobal-logo.png"
+                alt="Citiglobal College Logo"
+            />
+        </main>
+
+        <footer class="id-card__footer" fxFlex fxLayout="column">
+            <h1 class="status">
+                <span *ngIf="data?.timeIn === null">TIME IN</span>
+                <span *ngIf="data?.timeIn !== null">TIME OUT</span>
             </h1>
-        </div>
+            <h2 class="fullname">{{ data?.user | userFullName }}</h2>
+            <h3 class="student_id">STUDENT ID: {{ data?.user?.studentNo }}</h3>
+            <h4 class="student_course">BS COMPUTER SCIENCE</h4>
+        </footer>
+
+        <div class="id-card__background"></div>
     </div>
 </div>

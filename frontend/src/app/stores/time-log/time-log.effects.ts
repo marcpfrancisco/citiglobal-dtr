@@ -78,9 +78,9 @@ export class TimeLogEffects {
                         }
                     );
 
-                    setTimeout(() => {
-                        dialogRef.close();
-                    }, 1000);
+                    // setTimeout(() => {
+                    //     dialogRef.close();
+                    // }, 1000);
                 })
             );
         },

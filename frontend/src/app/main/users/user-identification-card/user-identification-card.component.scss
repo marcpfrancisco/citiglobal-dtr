@@ -8,15 +8,88 @@
   }
 
   .mat-dialog-container {
-    position: relative;
     padding: 0;
     height: 845px;
   }
 
-  #cut-out-bg {
-    position: absolute;
-    bottom: 0;
+  #identification-card {
+    height: 100%;
+    position: relative;
+
+    .card {
+      width: 450px;
+
+      .id-card__header {
+        padding: 0 20px;
+        text-align: center;
+
+        .header__title {
+          font-size: 2.8rem;
+          font-weight: 600;
+          margin-top: 2rem;
+          margin-bottom: 0;
+        }
+
+        .header__subtitle {
+          margin-top: 0;
+        }
+      }
+
+      .id-card__content {
+        z-index: 2;
+
+        .id-card__person {
+          left: -29px;
+          position: absolute;
+          top: 194px;
+          width: 400px;
+          z-index: 0;
+        }
+
+        .id-card__logo {
+          height: 150px;
+          position: absolute;
+          right: 25px;
+          top: 150px;
+          width: 125px;
+        }
+      }
+
+      .id-card__footer {
+        bottom: 0;
+        color: #fff;
+        margin-bottom: 10px;
+        padding: 0 20px;
+        position: absolute;
+        text-align: center;
+        width: 100%;
+        z-index: 3;
+
+        .fullname {
+          font-size: 30px;
+          margin-bottom: 0;
+        }
+
+        .student_id {
+          margin-bottom: 0;
+        }
+
+        .student_course {
+          font-size: 24px;
+          margin-top: 10px;
+        }
+      }
+
+      .id-card__background {
+        background: url('/assets/images/logo/cut-out-id.svg') no-repeat;
+        background-position: bottom;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 2;
+      }
+    }
   }
-
-
 }
