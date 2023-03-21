@@ -76,7 +76,7 @@
                     >
                     <mat-cell *matCellDef="let item">
                         <p class="text-truncate">
-                            {{ item.timeIn | dateFormat }}
+                            {{ item.timeIn | dateTimeFormat }}
                         </p>
                     </mat-cell>
                 </ng-container>
@@ -88,7 +88,7 @@
                     >
                     <mat-cell *matCellDef="let item">
                         <p class="text-truncate">
-                            {{ item.timeOut | dateFormat }}
+                            {{ item.timeOut | dateTimeFormat }}
                         </p>
                     </mat-cell>
                 </ng-container>
@@ -99,7 +99,9 @@
                         >Time Rendered</mat-header-cell
                     >
                     <mat-cell *matCellDef="let item">
-                        <p class="text-truncate">{{ item.timeRendered }}</p>
+                        <p class="text-truncate">
+                            {{ item.timeIn | timeDifference : item.timeOut }}
+                        </p>
                     </mat-cell>
                 </ng-container>
 
