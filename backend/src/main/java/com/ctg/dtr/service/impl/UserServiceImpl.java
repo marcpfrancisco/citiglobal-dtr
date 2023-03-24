@@ -114,11 +114,7 @@ public class UserServiceImpl implements UserService {
 			+ userDto.getFirstName().toUpperCase() : ", "
 			+ userDto.getFirstName().toUpperCase() + " " + userDto.getMiddleName().toUpperCase());
 
-			if (userDto.getMiddleName() != null) {
-				mimeMessageHelper.setSubject("Citi Global DTR Credentials (" + fullName + ")");
-			} else {
-				mimeMessageHelper.setSubject("Citi Global DTR Credentials (" + fullName + ")");
-			}
+			mimeMessageHelper.setSubject("Citi Global DTR Credentials (" + fullName + ")");
 
 			String messageText = "Hello <b>" + fullName + "</b>,"
 			+ "<br><br>Here are your login details and the link that will connect you to your daily time record:<br>"
