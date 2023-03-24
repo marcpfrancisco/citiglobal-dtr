@@ -29,8 +29,11 @@
 
         <footer class="id-card__footer" fxFlex fxLayout="column">
             <h1 class="status">
-                <span *ngIf="data?.timeIn === null">TIME IN</span>
-                <span *ngIf="data?.timeIn !== null">TIME OUT</span>
+                TIME IN
+                <!-- <span *ngIf="data?.timeIn && data?.timeOut === null"
+                    >TIME IN</span
+                >
+                <span *ngIf="data?.timeIn && data?.timeOut">TIME OUT</span> -->
             </h1>
             <h2 class="fullname">{{ data?.user | userFullName }}</h2>
             <h3 class="student_id">STUDENT ID: {{ data?.user?.studentNo }}</h3>
