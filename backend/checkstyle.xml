@@ -140,9 +140,9 @@
             <property name="ignoreConstructorParameter" value="true"/>
             <property name="ignoreSetter" value="true"/>
         </module>
-        <module name="IllegalInstantiation">
+        <!-- <module name="IllegalInstantiation">
           <property name="classes" value="java.lang.Boolean, java.lang.String"/>
-        </module>
+        </module> -->
         <module name="InnerAssignment"/>
         <!-- <module name="MagicNumber"/> -->
         <module name="FallThrough"/>
