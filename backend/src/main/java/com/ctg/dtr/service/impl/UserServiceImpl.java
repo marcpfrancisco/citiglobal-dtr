@@ -1,5 +1,6 @@
 package com.ctg.dtr.service.impl;
 
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -10,6 +11,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +23,9 @@ import com.ctg.dtr.repository.RoleRepository;
 import com.ctg.dtr.repository.UserRepository;
 import com.ctg.dtr.service.UserService;
 
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeMessage;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Join;
@@ -37,6 +43,9 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+
+	@Autowired
+    private JavaMailSender javaMailSender;
 
 	public static Specification<User> byColumnNameAndValueUser(String value) {
         return new Specification<User>() {
@@ -79,6 +88,8 @@ public class UserServiceImpl implements UserService {
 
         User user = new User();
 
+		String tempPassword = generateRandomPassword(6);
+
         user.setPublishedAt(userDto.getPublishedAt());
         user.setIsActive(userDto.getIsActive());
         user.setFirstName(userDto.getFirstName());
@@ -89,10 +100,40 @@ public class UserServiceImpl implements UserService {
 		user.setRfidNo(userDto.getRfidNo());
 		user.setEmail(userDto.getEmail());
 		user.setUsername(userDto.getUsername());
-		user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+		user.setPassword(passwordEncoder.encode(tempPassword));
 
 		user.setRole(role.isPresent() ? role.get() : null);
 
+		try {
+			MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+			MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, "UTF-8");
+			mimeMessageHelper.setFrom(new InternetAddress("iamhitman15@gmail.com"));
+			mimeMessageHelper.setTo(new InternetAddress(userDto.getEmail()));
+
+			String fullName = userDto.getLastName().toUpperCase() + (userDto.getMiddleName() == null ? ", "
+			+ userDto.getFirstName().toUpperCase() : ", "
+			+ userDto.getFirstName().toUpperCase() + " " + userDto.getMiddleName().toUpperCase());
+
+			if (userDto.getMiddleName() != null) {
+				mimeMessageHelper.setSubject("Citi Global DTR Credentials (" + fullName + ")");
+			} else {
+				mimeMessageHelper.setSubject("Citi Global DTR Credentials (" + fullName + ")");
+			}
+
+			String messageText = "Hello <b>" + fullName + "</b>,"
+			+ "<br><br>Here are your login details and the link that will connect you to your daily time record:<br>"
+			+ "<br><b>Username:</b> " + userDto.getUsername()
+			+ "<br><b>Password:</b> " + tempPassword
+			+ "<br><b>Website URL: </b><a href='https://localhost:4200/auth/login'>https://localhost:4200/auth/login</a>"
+			+ "<br><br><b>Best Regards,</b>"
+			+ "<br>Citi Global Team";
+
+			mimeMessageHelper.setText(messageText, true);
+			javaMailSender.send(mimeMessage);
+
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		}
 
 		// if (null == user.getRoles()) {
         //     user.setRoles(new HashSet<>());
@@ -234,6 +275,21 @@ public class UserServiceImpl implements UserService {
 	public Boolean checkUsernameExists(String username) {
 		return userRepository.existsByUsername(username);
 	}
+
+	public static String generateRandomPassword(int passwordLength) {
+
+        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+ 
+        SecureRandom random = new SecureRandom();
+        StringBuilder sb = new StringBuilder();
+ 
+        for (int i = 0; i < passwordLength; i++) {
+            int randomIndex = random.nextInt(chars.length());
+            sb.append(chars.charAt(randomIndex));
+        }
+ 
+        return sb.toString();
+    }
 
     private void buildUserDto(User user, UserDto userDto) {
 
