@@ -12,7 +12,6 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -304,7 +303,7 @@ public class UserServiceImpl implements UserService {
 		String html = "";
 	
 		try {
-			Resource resource = new ClassPathResource("/constants/email-templates/" + templateName);
+			ClassPathResource resource = new ClassPathResource("constants/email-templates/" + templateName);
 		  	InputStream inputStream = resource.getInputStream();
 		  	byte[] bdata = FileCopyUtils.copyToByteArray(inputStream);
 			html = new String(bdata, StandardCharsets.UTF_8);
