@@ -35,7 +35,13 @@ public class SubjectDto {
 
     private Integer units;
 
+    private Boolean isSubjectProctor;
+
     private Long sectionId;
 
     private Object section;
+
+    private Long userId;
+
+    private Object user;
 }

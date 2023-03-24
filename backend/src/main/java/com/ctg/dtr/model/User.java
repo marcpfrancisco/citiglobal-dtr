@@ -71,14 +71,13 @@ public class User {
     private String rfidNo;
 
     @Column(nullable = false)
+    private String email;
+
+    @Column(nullable = false)
     private String username;
 
     @Column(nullable = false)
     private String password;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "section_id", referencedColumnName = "id", nullable = true)
-    private Section section;
 
     // @ManyToMany(cascade = { CascadeType.MERGE, CascadeType.PERSIST })
     // @JoinTable(name = "users_roles", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = {
@@ -96,6 +95,10 @@ public class User {
     @OneToMany(mappedBy = "user")
 	@JsonIgnore
     private List<Image> image;
+
+    @OneToMany(mappedBy = "user")
+	@JsonIgnore
+    private List<Subject> subject;
 
     // public void addRole(Role role) {
     //     this.roles.add(role);

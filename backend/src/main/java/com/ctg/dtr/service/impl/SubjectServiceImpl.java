@@ -15,13 +15,16 @@ import org.springframework.stereotype.Service;
 import com.ctg.dtr.dto.SubjectDto;
 import com.ctg.dtr.model.Section;
 import com.ctg.dtr.model.Subject;
+import com.ctg.dtr.model.User;
 import com.ctg.dtr.repository.SectionRepository;
 import com.ctg.dtr.repository.SubjectRepository;
+import com.ctg.dtr.repository.UserRepository;
 import com.ctg.dtr.service.SubjectService;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 
@@ -34,12 +37,16 @@ public class SubjectServiceImpl implements SubjectService {
 	@Autowired
     private SectionRepository sectionRepository;
 
+	@Autowired
+    private UserRepository userRepository;
+
 	public static Specification<Subject> byColumnNameAndValueSubject(String value) {
         return new Specification<Subject>() {
             @Override
             public Predicate toPredicate(Root<Subject> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
 
-				Join<Section, Subject> subquerySection = root.join("section");
+				Join<Section, Subject> subquerySection = root.join("section", JoinType.LEFT);
+				Join<User, Subject> subqueryUser = root.join("user", JoinType.INNER);
 
 				Predicate predicateForData = criteriaBuilder.or(
 					criteriaBuilder.like(root.get("id").as(String.class), "%" +  value + "%"),
@@ -54,7 +61,11 @@ public class SubjectServiceImpl implements SubjectService {
 					criteriaBuilder.like(root.get("endTime"), "%" + value + "%"),
 					criteriaBuilder.like(root.get("gracePeriod"), "%" + value + "%"),
 					criteriaBuilder.like(root.get("units").as(String.class), "%" + value + "%"),
-					criteriaBuilder.like(subquerySection.get("name"), "%" + value + "%"));
+					criteriaBuilder.like(root.get("isSubjectProctor").as(String.class), "%" + value + "%"),
+					criteriaBuilder.like(subquerySection.get("name"), "%" + value + "%"),
+					criteriaBuilder.like(subqueryUser.get("firstName"), "%" + value + "%"),
+					criteriaBuilder.like(subqueryUser.get("middleName"), "%" + value + "%"),
+					criteriaBuilder.like(subqueryUser.get("lastName"), "%" + value + "%"));
 
 				return criteriaBuilder.and(predicateForData);
             }
@@ -70,6 +81,7 @@ public class SubjectServiceImpl implements SubjectService {
 	public Subject createSubject(SubjectDto subjectDto) {
 
 		Optional<Section> section = sectionRepository.findById(subjectDto.getSectionId() != null ? subjectDto.getSectionId() : 0);
+		Optional<User> user = userRepository.findById(subjectDto.getUserId() != null ? subjectDto.getUserId() : 0);
 
         Subject subject = new Subject();
 
@@ -83,7 +95,14 @@ public class SubjectServiceImpl implements SubjectService {
         subject.setGracePeriod(subjectDto.getGracePeriod());
         subject.setUnits(subjectDto.getUnits());
 
+		if (user.isPresent()) {
+			subject.setIsSubjectProctor(user.get().getRole().getName().equals("ROLE_ADMIN") ? true : false);
+		} else {
+			subject.setIsSubjectProctor(false);
+		}
+
 		subject.setSection(section.isPresent() ? section.get() : null);
+		subject.setUser(user.isPresent() ? user.get() : null);
 
 		return subjectRepository.save(subject);
 	}
@@ -92,6 +111,7 @@ public class SubjectServiceImpl implements SubjectService {
 	public Subject updateSubject(Subject currentSubject, SubjectDto subjectDto) {
 
 		Optional<Section> section = sectionRepository.findById(subjectDto.getSectionId() != null ? subjectDto.getSectionId() : currentSubject.getSection().getId());
+		Optional<User> user = userRepository.findById(subjectDto.getUserId() != null ? subjectDto.getUserId() : currentSubject.getUser().getId());
 
         currentSubject.setPublishedAt(subjectDto.getPublishedAt() == null ? currentSubject.getPublishedAt() : subjectDto.getPublishedAt());
         currentSubject.setIsActive(subjectDto.getIsActive() == null ? currentSubject.getIsActive() : subjectDto.getIsActive());
@@ -103,7 +123,14 @@ public class SubjectServiceImpl implements SubjectService {
         currentSubject.setGracePeriod(subjectDto.getGracePeriod() == null ? currentSubject.getGracePeriod() : subjectDto.getGracePeriod());
         currentSubject.setUnits(subjectDto.getUnits() == null ? currentSubject.getUnits() : subjectDto.getUnits());
 
+		if (user.isPresent()) {
+			currentSubject.setIsSubjectProctor(user.get().getRole().getName().equals("ROLE_ADMIN") ? true : false);
+		} else {
+			currentSubject.setIsSubjectProctor(currentSubject.getIsSubjectProctor());
+		}
+
 		currentSubject.setSection(section.isPresent() ? section.get() : currentSubject.getSection());
+		currentSubject.setUser(user.isPresent() ? user.get() : currentSubject.getUser());
 
         return subjectRepository.save(currentSubject);
     }
@@ -188,7 +215,10 @@ public class SubjectServiceImpl implements SubjectService {
         subjectDto.setEndTime(subject.getEndTime());
         subjectDto.setGracePeriod(subject.getGracePeriod());
         subjectDto.setUnits(subject.getUnits());
+        subjectDto.setIsSubjectProctor(subject.getIsSubjectProctor());
 		subjectDto.setSectionId(subject.getSection() != null ? subject.getSection().getId() : 0);
 		subjectDto.setSection(subject.getSection() != null ? subject.getSection() : null);
+		subjectDto.setUserId(subject.getUser() != null ? subject.getUser().getId() : 0);
+		subjectDto.setUser(subject.getUser() != null ? subject.getUser() : null);
 	}
 }

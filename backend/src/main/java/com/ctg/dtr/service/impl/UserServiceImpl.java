@@ -15,17 +15,14 @@ import org.springframework.stereotype.Service;
 
 import com.ctg.dtr.dto.UserDto;
 import com.ctg.dtr.model.Role;
-import com.ctg.dtr.model.Section;
 import com.ctg.dtr.model.User;
 import com.ctg.dtr.repository.RoleRepository;
-import com.ctg.dtr.repository.SectionRepository;
 import com.ctg.dtr.repository.UserRepository;
 import com.ctg.dtr.service.UserService;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Join;
-import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 
@@ -34,9 +31,6 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
-
-	@Autowired
-    private SectionRepository sectionRepository;
 
 	@Autowired
     private RoleRepository roleRepository;
@@ -49,8 +43,7 @@ public class UserServiceImpl implements UserService {
             @Override
             public Predicate toPredicate(Root<User> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
 
-				Join<Section, User> subquerySection = root.join("section", JoinType.LEFT);
-				Join<Role, User> subqueryRole = root.join("role", JoinType.INNER);
+				Join<Role, User> subqueryRole = root.join("role");
 
 				Predicate predicateForData = criteriaBuilder.or(
 					criteriaBuilder.like(root.get("id").as(String.class), "%" +  value + "%"),
@@ -64,9 +57,9 @@ public class UserServiceImpl implements UserService {
 					criteriaBuilder.like(root.get("mobileNo"), "%" + value + "%"),
 					criteriaBuilder.like(root.get("studentNo"), "%" + value + "%"),
 					criteriaBuilder.like(root.get("rfidNo"), "%" + value + "%"),
+					criteriaBuilder.like(root.get("email"), "%" + value + "%"),
 					criteriaBuilder.like(root.get("username"), "%" + value + "%"),
 					criteriaBuilder.like(root.get("password"), "%" + value + "%"),
-					criteriaBuilder.like(subquerySection.get("name"), "%" + value + "%"),
 					criteriaBuilder.like(subqueryRole.get("name"), "%" + value + "%"));
 
 				return criteriaBuilder.and(predicateForData);
@@ -82,7 +75,6 @@ public class UserServiceImpl implements UserService {
     @Override
 	public User createUser(UserDto userDto) {
 
-		Optional<Section> section = sectionRepository.findById(userDto.getSectionId() != null ? userDto.getSectionId() : 0);
 		Optional<Role> role = roleRepository.findRoleByName(userDto.getRole() != null ? userDto.getRole() : null);
 
         User user = new User();
@@ -95,10 +87,10 @@ public class UserServiceImpl implements UserService {
 		user.setMobileNo(userDto.getMobileNo());
 		user.setStudentNo(userDto.getStudentNo());
 		user.setRfidNo(userDto.getRfidNo());
+		user.setEmail(userDto.getEmail());
 		user.setUsername(userDto.getUsername());
 		user.setPassword(passwordEncoder.encode(userDto.getPassword()));
 
-		user.setSection(section.isPresent() ? section.get() : null);
 		user.setRole(role.isPresent() ? role.get() : null);
 
 
@@ -121,7 +113,6 @@ public class UserServiceImpl implements UserService {
     @Override
 	public User updateUser(User currentUser, UserDto userDto) {
 
-		Optional<Section> section = sectionRepository.findById(userDto.getSectionId() != null ? userDto.getSectionId() : currentUser.getSection().getId());
 		Optional<Role> role = roleRepository.findRoleByName(userDto.getRole() != null ? userDto.getRole() : currentUser.getRole().getName());
 
         currentUser.setPublishedAt(userDto.getPublishedAt() == null ? currentUser.getPublishedAt() : userDto.getPublishedAt());
@@ -132,10 +123,10 @@ public class UserServiceImpl implements UserService {
 		currentUser.setMobileNo(userDto.getMobileNo() == null ? currentUser.getMobileNo() : userDto.getMobileNo());
 		currentUser.setStudentNo(userDto.getStudentNo() == null ? currentUser.getStudentNo() : userDto.getStudentNo());
 		currentUser.setRfidNo(userDto.getRfidNo() == null ? currentUser.getRfidNo() : userDto.getRfidNo());
+		currentUser.setEmail(userDto.getEmail() == null ? currentUser.getEmail() : userDto.getEmail());
 		currentUser.setUsername(userDto.getUsername() == null ? currentUser.getUsername() : userDto.getUsername());
 		currentUser.setPassword(userDto.getPassword() == null ? currentUser.getPassword() : passwordEncoder.encode(userDto.getPassword()));
 
-		currentUser.setSection(section != null ? section.get() : currentUser.getSection());
 		currentUser.setRole(role.isPresent() ? role.get() : currentUser.getRole());
 
 		// if (null == currentUser.getRoles()) {
@@ -258,11 +249,10 @@ public class UserServiceImpl implements UserService {
 		userDto.setMobileNo(user.getMobileNo());
 		userDto.setStudentNo(user.getStudentNo());
 		userDto.setRfidNo(user.getRfidNo());
+		userDto.setEmail(user.getEmail());
 		userDto.setUsername(user.getUsername());
 		userDto.setPassword(user.getPassword());
 
-		userDto.setSectionId(user.getSection() != null ? user.getSection().getId() : 0);
-		userDto.setSection(user.getSection() != null ? user.getSection() : null);
 		// userDto.setRoles(user.getRoles().stream().map(Role::getName).collect(Collectors.toSet()));
 		// userDto.setRoleId(user.getRole() != null ? user.getRole().getId() : 0);
 		userDto.setRole(user.getRole() != null ? user.getRole().getName() : "");

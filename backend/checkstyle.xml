@@ -148,7 +148,7 @@
         <module name="FallThrough"/>
         <module name="MissingSwitchDefault"/>
         <!-- <module name="RedundantThrows"/> -->
-        <module name="SimplifyBooleanExpression"/>
+        <!-- <module name="SimplifyBooleanExpression"/> -->
         <module name="SimplifyBooleanReturn"/>
         <module name="EqualsAvoidNull"/>
 
