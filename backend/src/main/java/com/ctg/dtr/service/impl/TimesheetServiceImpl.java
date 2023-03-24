@@ -324,7 +324,7 @@ public class TimesheetServiceImpl implements TimesheetService {
             timesheet.setDate(new Date());
             timesheet.setTimeIn(new Date());
             timesheet.setTimeOut(null);
-            timesheet.setTimeRendered("00:00:00");
+            timesheet.setTimeRendered("00 hour(s) 00 minute(s) 00 second(s)");
             timesheet.setUser(checkStudentNo != null ? checkStudentNo : null);
 
             return timesheet;
@@ -348,8 +348,9 @@ public class TimesheetServiceImpl implements TimesheetService {
 
         currentTimesheet.setTimeOut(new Date());
         currentTimesheet.setTimeRendered(String.format("%02d", hoursDifference)
-        + ":" + String.format("%02d", minutesDifference)
-        + ":" + String.format("%02d", secondsDifference));
+        + " hour(s) " + String.format("%02d", minutesDifference)
+        + " minute(s) " + String.format("%02d", secondsDifference)
+        + " second(s)");
 
         return currentTimesheet;
     }
