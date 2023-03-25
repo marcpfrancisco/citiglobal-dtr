@@ -20,4 +20,4 @@ INSERT INTO user (id, created_at, updated_at, published_at, is_active, first_nam
 
 -- SUBJECT
 INSERT INTO subject (id, created_at, updated_at, published_at, is_active, subject_code, description, day, start_time, end_time, grace_period, units, is_subject_proctor, user_id) VALUES (1, NOW(), NOW(), NOW(), 1, 'RTXG', 'SEEDER', 'MONDAY', '08:00', '10:00', '08:15', 3, 1, 1);
-INSERT INTO subject (id, created_at, updated_at, published_at, is_active, subject_code, description, day, start_time, end_time, grace_period, units, is_subject_proctor, user_id) VALUES (2, NOW(), NOW(), NOW(), 1, 'RTXG', 'SEEDER', 'MONDAY', '05:00', '10:00', '08:15', 3, 1, 2);
+INSERT INTO subject (id, created_at, updated_at, published_at, is_active, subject_code, description, day, start_time, end_time, grace_period, units, is_subject_proctor, user_id) VALUES (2, NOW(), NOW(), NOW(), 1, 'RTXG', 'SEEDER', 'MONDAY', '05:00', '10:00', '08:15', 3, 0, 2);
