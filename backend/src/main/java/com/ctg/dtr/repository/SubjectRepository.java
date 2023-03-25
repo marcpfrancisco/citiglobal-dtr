@@ -17,4 +17,6 @@ public interface SubjectRepository extends JpaRepository<Subject, Long>, JpaSpec
 
     @Query(value = "SELECT * FROM subject WHERE id = ?1", nativeQuery = true)
     List<Subject> findSubjectById(Long id);
+
+    List<Subject> findByUserId(Long userId);
 }
