@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.citiglobal</groupId>
 	<artifactId>frontend</artifactId>
-	<version>1.0-SNAPSHOT</version>
+	<version>1.0.0</version>
     <packaging>jar</packaging>
 
     <name>frontend</name>
@@ -51,12 +51,12 @@
                       </configuration>
                   </execution>
                   <execution>
-                      <id>npm run build --prod</id>
+                      <id>npm run build</id>
                       <goals>
                           <goal>npm</goal>
                       </goals>
                       <configuration>
-                          <arguments>run build --prod</arguments>
+                          <arguments>run build</arguments>
                       </configuration>
                   </execution>
               </executions>
