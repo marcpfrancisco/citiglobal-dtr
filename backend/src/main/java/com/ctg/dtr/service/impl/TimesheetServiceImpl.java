@@ -187,7 +187,7 @@ public class TimesheetServiceImpl implements TimesheetService {
 
         if (nextSubject != null) {
 
-            if (nextSubject.getSection() == null && nextSubject.getUser() != null) {
+            if (nextSubject.getUser().getSection() == null && nextSubject.getUser() != null) {
 
                 if (currentTimesheet != null) {
 

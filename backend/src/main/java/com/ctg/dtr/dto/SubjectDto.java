@@ -37,10 +37,6 @@ public class SubjectDto {
 
     private Boolean isSubjectProctor;
 
-    private Long sectionId;
-
-    private Object section;
-
     private Long userId;
 
     private Object user;

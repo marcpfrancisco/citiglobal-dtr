@@ -37,6 +37,10 @@ public class UserDto {
 
     private String password;
 
+    private Long sectionId;
+
+    private Object section;
+
     // private Long roleId;
 
     private String role;

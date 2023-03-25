@@ -64,10 +64,6 @@ public class Subject {
     private Boolean isSubjectProctor;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "section_id", referencedColumnName = "id", nullable = true)
-    private Section section;
-
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = true)
     private User user;
 }

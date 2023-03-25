@@ -85,6 +85,10 @@ public class User {
     // private Set<Role> roles;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "section_id", referencedColumnName = "id", nullable = true)
+    private Section section;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id", referencedColumnName = "id", nullable = false)
     private Role role;
 
