@@ -2,8 +2,6 @@ package com.ctg.dtr.dto;
 
 import java.util.Date;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -36,11 +34,4 @@ public class SubjectDto {
     private String gracePeriod;
 
     private Integer units;
-
-    private Boolean isSubjectProctor;
-
-    private Long userId;
-
-    @JsonIgnore
-    private Object user;
 }

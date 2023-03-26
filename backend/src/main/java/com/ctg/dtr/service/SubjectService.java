@@ -10,6 +10,8 @@ public interface SubjectService {
 
     Optional<Subject> getById(Long id);
 
+	Subject saveSubject(Subject subject);
+
     Subject createSubject(SubjectDto subjectDto);
 
     Subject updateSubject(Subject currentSubject, SubjectDto subjectDto);
@@ -20,4 +22,5 @@ public interface SubjectService {
 
     List<SubjectDto> getPaginatedSubjectSort(int pageNo, int pageSize, String columnName, String value, String asc);
 
+	List<SubjectDto> getAllSubjectsByUserId(Long userId);
 }

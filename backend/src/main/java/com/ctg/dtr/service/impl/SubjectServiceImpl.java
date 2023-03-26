@@ -14,14 +14,11 @@ import org.springframework.stereotype.Service;
 
 import com.ctg.dtr.dto.SubjectDto;
 import com.ctg.dtr.model.Subject;
-import com.ctg.dtr.model.User;
 import com.ctg.dtr.repository.SubjectRepository;
-import com.ctg.dtr.repository.UserRepository;
 import com.ctg.dtr.service.SubjectService;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 
@@ -31,15 +28,10 @@ public class SubjectServiceImpl implements SubjectService {
 	@Autowired
     private SubjectRepository subjectRepository;
 
-	@Autowired
-    private UserRepository userRepository;
-
 	public static Specification<Subject> byColumnNameAndValueSubject(String value) {
         return new Specification<Subject>() {
             @Override
             public Predicate toPredicate(Root<Subject> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-
-				Join<User, Subject> subqueryUser = root.join("user");
 
 				Predicate predicateForData = criteriaBuilder.or(
 					criteriaBuilder.like(root.get("id").as(String.class), "%" +  value + "%"),
@@ -53,11 +45,7 @@ public class SubjectServiceImpl implements SubjectService {
 					criteriaBuilder.like(root.get("startTime"), "%" + value + "%"),
 					criteriaBuilder.like(root.get("endTime"), "%" + value + "%"),
 					criteriaBuilder.like(root.get("gracePeriod"), "%" + value + "%"),
-					criteriaBuilder.like(root.get("units").as(String.class), "%" + value + "%"),
-					criteriaBuilder.like(root.get("isSubjectProctor").as(String.class), "%" + value + "%"),
-					criteriaBuilder.like(subqueryUser.get("firstName"), "%" + value + "%"),
-					criteriaBuilder.like(subqueryUser.get("middleName"), "%" + value + "%"),
-					criteriaBuilder.like(subqueryUser.get("lastName"), "%" + value + "%"));
+					criteriaBuilder.like(root.get("units").as(String.class), "%" + value + "%"));
 
 				return criteriaBuilder.and(predicateForData);
             }
@@ -70,9 +58,12 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     @Override
-	public Subject createSubject(SubjectDto subjectDto) {
+	public Subject saveSubject(Subject subject) {
+		return subjectRepository.save(subject);
+	}
 
-		Optional<User> user = userRepository.findById(subjectDto.getUserId() != null ? subjectDto.getUserId() : 0);
+    @Override
+	public Subject createSubject(SubjectDto subjectDto) {
 
         Subject subject = new Subject();
 
@@ -86,21 +77,11 @@ public class SubjectServiceImpl implements SubjectService {
         subject.setGracePeriod(subjectDto.getGracePeriod());
         subject.setUnits(subjectDto.getUnits());
 
-		if (user.isPresent()) {
-			subject.setIsSubjectProctor(user.get().getRole().getName().equals("ROLE_ADMIN") ? true : false);
-		} else {
-			subject.setIsSubjectProctor(false);
-		}
-
-		subject.setUser(user.isPresent() ? user.get() : null);
-
 		return subjectRepository.save(subject);
 	}
 
     @Override
 	public Subject updateSubject(Subject currentSubject, SubjectDto subjectDto) {
-
-		Optional<User> user = userRepository.findById(subjectDto.getUserId() != null ? subjectDto.getUserId() : currentSubject.getUser().getId());
 
         currentSubject.setPublishedAt(subjectDto.getPublishedAt() == null ? currentSubject.getPublishedAt() : subjectDto.getPublishedAt());
         currentSubject.setIsActive(subjectDto.getIsActive() == null ? currentSubject.getIsActive() : subjectDto.getIsActive());
@@ -111,14 +92,6 @@ public class SubjectServiceImpl implements SubjectService {
         currentSubject.setEndTime(subjectDto.getEndTime() == null ? currentSubject.getEndTime() : subjectDto.getEndTime());
         currentSubject.setGracePeriod(subjectDto.getGracePeriod() == null ? currentSubject.getGracePeriod() : subjectDto.getGracePeriod());
         currentSubject.setUnits(subjectDto.getUnits() == null ? currentSubject.getUnits() : subjectDto.getUnits());
-
-		if (user.isPresent()) {
-			currentSubject.setIsSubjectProctor(user.get().getRole().getName().equals("ROLE_ADMIN") ? true : false);
-		} else {
-			currentSubject.setIsSubjectProctor(currentSubject.getIsSubjectProctor());
-		}
-
-		currentSubject.setUser(user.isPresent() ? user.get() : currentSubject.getUser());
 
         return subjectRepository.save(currentSubject);
     }
@@ -189,6 +162,26 @@ public class SubjectServiceImpl implements SubjectService {
 		return lSubjectDto;
 	}
 
+	@Override
+	public List<SubjectDto> getAllSubjectsByUserId(Long userId) {
+
+		List<Subject> lSubjects = subjectRepository.findSubjectsByUsersId(userId);
+
+		List<SubjectDto> lSubjectDto = new ArrayList<SubjectDto>();
+
+		for (Subject subject : lSubjects) {
+
+			SubjectDto tmpSubject = new SubjectDto();
+
+			buildSubjectDto(subject, tmpSubject);
+
+			lSubjectDto.add(tmpSubject);
+		}
+		return lSubjectDto;
+	}
+
+	
+
     private void buildSubjectDto(Subject subject, SubjectDto subjectDto) {
 
         subjectDto.setId(subject.getId());
@@ -203,8 +196,5 @@ public class SubjectServiceImpl implements SubjectService {
         subjectDto.setEndTime(subject.getEndTime());
         subjectDto.setGracePeriod(subject.getGracePeriod());
         subjectDto.setUnits(subject.getUnits());
-        subjectDto.setIsSubjectProctor(subject.getIsSubjectProctor());
-		subjectDto.setUserId(subject.getUser() != null ? subject.getUser().getId() : 0);
-		subjectDto.setUser(subject.getUser() != null ? subject.getUser() : null);
 	}
 }

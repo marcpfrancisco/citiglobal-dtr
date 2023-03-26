@@ -25,4 +25,6 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
 
     @Query(value = "SELECT * FROM user WHERE id = ?1", nativeQuery = true)
     List<User> findUserById(Long id);
+
+    // List<User> findUsersBySubjectsId(Long tagId);
 }

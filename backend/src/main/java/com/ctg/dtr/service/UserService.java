@@ -10,6 +10,8 @@ public interface UserService {
 
     Optional<User> getById(Long id);
 
+    User saveUser(User user);
+
     User createUser(UserDto userDto);
 
     User updateUser(User currentUser, UserDto userDto);

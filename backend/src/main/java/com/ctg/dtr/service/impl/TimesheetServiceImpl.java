@@ -183,26 +183,10 @@ public class TimesheetServiceImpl implements TimesheetService {
         }
 
         Timesheet currentTimesheet = timesheetRepository.findTimesheetByUserId(checkStudentNo.getId());
-        Subject nextSubject = subjectRepository.findSubjectByDayAndUserId(checkDay.toUpperCase(), checkStudentNo.getId());
+        Subject nextSubject = subjectRepository.findSubjectByDay(checkDay.toUpperCase());
 
         if (nextSubject != null) {
 
-            if (nextSubject.getUser().getSection() == null && nextSubject.getUser() != null) {
-
-                if (currentTimesheet != null) {
-
-                    Timesheet timesheet = setTimeOutRecord(rfidNo);
-
-                    return timesheetRepository.save(timesheet);
-
-                } else {
-
-                    Timesheet timesheet = setTimeInRecord(rfidNo);
-                    timesheet.setStatus("LABORATORY");
-
-                    return timesheetRepository.save(timesheet);
-                }
-            }
             if (nextSubject.getDay().equals(checkDay.toUpperCase())) {
 
                 if (currentTimesheet != null) {

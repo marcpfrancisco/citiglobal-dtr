@@ -11,12 +11,12 @@ import com.ctg.dtr.model.Subject;
 
 @Repository
 public interface SubjectRepository extends JpaRepository<Subject, Long>, JpaSpecificationExecutor<Subject> {
-    @Query(value = "SELECT * FROM subject WHERE day = ?1 AND user_id = ?2 "
+    @Query(value = "SELECT * FROM subject WHERE day = ?1 "
     + "AND end_time > CURRENT_TIME() ORDER BY grace_period ASC LIMIT 1", nativeQuery = true)
-    Subject findSubjectByDayAndUserId(String day, Long userId);
+    Subject findSubjectByDay(String day);
 
     @Query(value = "SELECT * FROM subject WHERE id = ?1", nativeQuery = true)
     List<Subject> findSubjectById(Long id);
 
-    List<Subject> findByUserId(Long userId);
+    List<Subject> findSubjectsByUsersId(Long userId);
 }

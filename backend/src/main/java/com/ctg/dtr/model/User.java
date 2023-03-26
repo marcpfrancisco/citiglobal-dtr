@@ -1,23 +1,29 @@
 package com.ctg.dtr.model;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -27,7 +33,7 @@ import org.hibernate.annotations.Parameter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-// @EqualsAndHashCode(exclude="roles")
+@EqualsAndHashCode(exclude = "subjects")
 public class User {
 
     @Id
@@ -100,12 +106,27 @@ public class User {
 	@JsonIgnore
     private List<Image> image;
 
-    @OneToMany(mappedBy = "user")
-	@JsonIgnore
-    private List<Subject> subject;
+    @ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    @JoinTable(name = "users_subjects",
+            joinColumns = { @JoinColumn(name = "user_id") },
+            inverseJoinColumns = { @JoinColumn(name = "subject_id") })
+    private Set<Subject> subjects = new HashSet<>();
 
     // public void addRole(Role role) {
     //     this.roles.add(role);
     //     role.getUsers().add(this);
     // }
+
+    public void addSubject(Subject subject) {
+        this.subjects.add(subject);
+        subject.getUsers().add(this);
+    }
+
+    public void removeSubject(Long subjectId) {
+        Subject subject = this.subjects.stream().filter(s -> s.getId() == subjectId).findFirst().orElse(null);
+        if (subject != null) {
+            this.subjects.remove(subject);
+            subject.getUsers().remove(this);
+        }
+    }
 }
