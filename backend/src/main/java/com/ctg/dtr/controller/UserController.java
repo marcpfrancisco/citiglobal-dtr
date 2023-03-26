@@ -26,6 +26,7 @@ import com.ctg.dtr.dto.SubjectDto;
 import com.ctg.dtr.dto.UserDto;
 import com.ctg.dtr.model.Subject;
 import com.ctg.dtr.model.User;
+import com.ctg.dtr.payload.request.SubjectIdRequest;
 import com.ctg.dtr.service.SubjectService;
 import com.ctg.dtr.service.UserService;
 
@@ -209,7 +210,7 @@ public class UserController {
 	@SecurityRequirement(name = "Bearer Authentication")
 	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
 	@PostMapping(value = "/{userId}/subjects")
-	public ResponseEntity<?> addSubject(@PathVariable Long userId, @RequestBody Subject subjectRequest,
+	public ResponseEntity<?> addSubject(@PathVariable Long userId, @RequestBody SubjectIdRequest subjectIdRequest,
 										HttpServletRequest request, HttpServletResponse response) {
 
 		Optional<User> userOptional = userService.getById(userId);
@@ -229,12 +230,11 @@ public class UserController {
 		}
 	
 		User user = userOptional.get();
-		long subjectId = subjectRequest.getId();
+		long subjectId = subjectIdRequest.getSubjectId();
+		Optional<Subject> subjectOptional = subjectService.getById(subjectId);
 	
 		if (subjectId != 0L) {
 
-			Optional<Subject> subjectOptional = subjectService.getById(subjectId);
-	
 			if (!subjectOptional.isPresent()) {
 
 				response.setContentType(MediaType.APPLICATION_JSON_VALUE);
@@ -254,8 +254,8 @@ public class UserController {
 			return new ResponseEntity<>(subject, HttpStatus.CREATED);
 
 		} else {
-			user.addSubject(subjectRequest);
-			Subject subject = subjectService.saveSubject(subjectRequest);
+			user.addSubject(subjectOptional.get());
+			Subject subject = subjectService.saveSubject(subjectOptional.get());
 			return new ResponseEntity<>(subject, HttpStatus.CREATED);
 		}
 	}
