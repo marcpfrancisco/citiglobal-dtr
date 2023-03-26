@@ -179,7 +179,7 @@ public class SubjectController {
 	@Operation(summary = "Add subject to user")
 	@SecurityRequirement(name = "Bearer Authentication")
 	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
-	@PostMapping(value = "/users/{userId}/subjects")
+	@PostMapping(value = "/users/{userId}")
 	public ResponseEntity<?> addSubject(@PathVariable Long userId, @RequestBody Subject subjectRequest,
 										HttpServletRequest request, HttpServletResponse response) {
 
@@ -234,7 +234,7 @@ public class SubjectController {
 	@Operation(summary = "Delete subject from user")
 	@SecurityRequirement(name = "Bearer Authentication")
 	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
-	@DeleteMapping(value = "/users/{userId}/subjects/{subjectId}")
+	@DeleteMapping(value = "/users/{userId}/{subjectId}")
 	public ResponseEntity<?> deleteSubjectFromUser(@PathVariable Long userId, @PathVariable Long subjectId,
 															HttpServletRequest request, HttpServletResponse response) {
 
@@ -277,7 +277,7 @@ public class SubjectController {
 	@Operation(summary = "Get all subject from user")
 	@SecurityRequirement(name = "Bearer Authentication")
 	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
-	@GetMapping("/users/{userId}/subjects")
+	@GetMapping("/users/{userId}")
 	public ResponseEntity<?> getAllSubjectsByUserId(@PathVariable Long userId, HttpServletRequest request, HttpServletResponse response) {
 
 		Map<String, Object> tempMap = new TreeMap<String, Object>();
