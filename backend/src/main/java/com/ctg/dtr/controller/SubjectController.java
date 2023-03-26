@@ -24,9 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ctg.dtr.dto.SubjectDto;
 import com.ctg.dtr.model.Subject;
-import com.ctg.dtr.model.User;
 import com.ctg.dtr.service.SubjectService;
-import com.ctg.dtr.service.UserService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -40,9 +38,6 @@ public class SubjectController {
 
     @Autowired
     private SubjectService subjectService;
-
-	@Autowired
-    private UserService userService;
 
 	@Operation(summary = "Add subject")
 	@SecurityRequirement(name = "Bearer Authentication")
@@ -173,129 +168,6 @@ public class SubjectController {
 			return ResponseEntity.status(HttpStatus.OK).body(tempMap);
 		} else {
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).body(subjectInfo);
-		}
-	}
-
-	@Operation(summary = "Add subject to user")
-	@SecurityRequirement(name = "Bearer Authentication")
-	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
-	@PostMapping(value = "/users/{userId}")
-	public ResponseEntity<?> addSubject(@PathVariable Long userId, @RequestBody Subject subjectRequest,
-										HttpServletRequest request, HttpServletResponse response) {
-
-		Optional<User> userOptional = userService.getById(userId);
-		Map<String, Object> tempMap = new HashMap<String, Object>();
-	
-		if (!userOptional.isPresent()) {
-
-			response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-
-			tempMap.put("status", HttpServletResponse.SC_NOT_FOUND);
-			tempMap.put("error", HttpStatus.NOT_FOUND);
-			tempMap.put("message", "Missing User ID: " + userId);
-			tempMap.put("path", request.getServletPath());
-
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(tempMap);
-		}
-	
-		User user = userOptional.get();
-		long subjectId = subjectRequest.getId();
-	
-		if (subjectId != 0L) {
-
-			Optional<Subject> subjectOptional = subjectService.getById(subjectId);
-	
-			if (!subjectOptional.isPresent()) {
-
-				response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-				response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-	
-				tempMap.put("status", HttpServletResponse.SC_NOT_FOUND);
-				tempMap.put("error", HttpStatus.NOT_FOUND);
-				tempMap.put("message", "Missing Subject ID: " + subjectId);
-				tempMap.put("path", request.getServletPath());
-	
-				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(tempMap);
-			}
-	
-			Subject subject = subjectOptional.get();
-			user.addSubject(subject);
-			userService.saveUser(user);
-			return new ResponseEntity<>(subject, HttpStatus.CREATED);
-
-		} else {
-			user.addSubject(subjectRequest);
-			Subject subject = subjectService.saveSubject(subjectRequest);
-			return new ResponseEntity<>(subject, HttpStatus.CREATED);
-		}
-	}
-
-	@Operation(summary = "Delete subject from user")
-	@SecurityRequirement(name = "Bearer Authentication")
-	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
-	@DeleteMapping(value = "/users/{userId}/{subjectId}")
-	public ResponseEntity<?> deleteSubjectFromUser(@PathVariable Long userId, @PathVariable Long subjectId,
-															HttpServletRequest request, HttpServletResponse response) {
-
-		Map<String, Object> tempMap = new TreeMap<String, Object>();
-
-    	Optional<User> userOptional = userService.getById(userId);
-		Optional<Subject> subjectOptional = subjectService.getById(subjectId);
-
-    	if (!userOptional.isPresent()) {
-			response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-
-			tempMap.put("status", HttpServletResponse.SC_NOT_FOUND);
-			tempMap.put("error", HttpStatus.NOT_FOUND);
-			tempMap.put("message", "Missing User ID: " + userId);
-			tempMap.put("path", request.getServletPath());
-
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(tempMap);
-    	}
-		if (!subjectOptional.isPresent()) {
-
-			response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-
-			tempMap.put("status", HttpServletResponse.SC_NOT_FOUND);
-			tempMap.put("error", HttpStatus.NOT_FOUND);
-			tempMap.put("message", "Missing Subject ID: " + subjectId);
-			tempMap.put("path", request.getServletPath());
-
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(tempMap);
-		}
-
-    	User user = userOptional.get();
-    	user.removeSubject(subjectId);
-    	userService.saveUser(user);
-
-    	return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-	}
-
-	@Operation(summary = "Get all subject from user")
-	@SecurityRequirement(name = "Bearer Authentication")
-	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
-	@GetMapping("/users/{userId}")
-	public ResponseEntity<?> getAllSubjectsByUserId(@PathVariable Long userId, HttpServletRequest request, HttpServletResponse response) {
-
-		Map<String, Object> tempMap = new TreeMap<String, Object>();
-		Optional<User> userOptional = userService.getById(userId);
-
-    	if (!userOptional.isPresent()) {
-			response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-
-			tempMap.put("status", HttpServletResponse.SC_NOT_FOUND);
-			tempMap.put("error", HttpStatus.NOT_FOUND);
-			tempMap.put("message", "Missing User ID: " + userId);
-			tempMap.put("path", request.getServletPath());
-
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(tempMap);
-    	} else {
-			List<SubjectDto> subjectInfo = subjectService.getAllSubjectsByUserId(userId);
-			return new ResponseEntity<List<SubjectDto>>(subjectInfo, HttpStatus.OK);
 		}
 	}
 }
