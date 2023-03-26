@@ -7,7 +7,7 @@ import {
     createSelector,
     on,
 } from '@ngrx/store';
-import { getInitialListState } from '@utils';
+import { getCurrentTimeStamp, getInitialListState } from '@utils';
 import { UserSubjectListActions } from '.';
 import { RootState } from '..';
 
@@ -17,6 +17,7 @@ export interface State
     extends ListState<SubjectSortables>,
         EntityState<SubjectModel> {
     // Add extra properties here...
+    updatedAtTimestamp: number;
     userId: number;
 }
 
@@ -25,6 +26,7 @@ export const adapter = createEntityAdapter<SubjectModel>();
 export const initialState = adapter.getInitialState({
     // Add extra properties here...
     ...getInitialListState<SubjectSortables>(),
+    updatedAtTimestamp: getCurrentTimeStamp(),
     userId: null,
 });
 
@@ -68,7 +70,13 @@ export const reducer = createReducer(
             sort: action.sort,
             sortDirection: action.sortDirection,
         };
-    })
+    }),
+
+    on(
+        UserSubjectListActions.onAddUserSubjectSuccess,
+        UserSubjectListActions.onRemoveUserSubjectSuccess,
+        (state) => ({ ...state, updatedAtTimestamp: getCurrentTimeStamp() })
+    )
 );
 
 // Selectors

@@ -223,7 +223,10 @@
                         </div>
                     </mat-tab>
 
-                    <mat-tab label="Subjects" *ngIf="hasAssignedSubject">
+                    <mat-tab
+                        label="Subjects"
+                        *ngIf="hasAssignedSubject && isEditMode"
+                    >
                         <ng-template matTabContent>
                             <div
                                 class="tab-content p-24 pb-0"
@@ -388,9 +391,16 @@
                                                 >Active</mat-header-cell
                                             >
                                             <mat-cell *matCellDef="let item">
-                                                <p class="text-truncate">
-                                                    {{ item.isActive }}
-                                                </p>
+                                                <mat-icon
+                                                    *ngIf="item.isActive"
+                                                    class="active-icon green-600 s-16"
+                                                    >check</mat-icon
+                                                >
+                                                <mat-icon
+                                                    *ngIf="!item.isActive"
+                                                    class="active-icon red-500 s-16"
+                                                    >close</mat-icon
+                                                >
                                             </mat-cell>
                                         </ng-container>
 
@@ -421,14 +431,21 @@
                                                     </mat-icon>
                                                 </button>
                                                 <mat-menu #menu="matMenu">
-                                                    <!-- && hasAssignedSubject(item.id)
-                            (click)="unassignSubject(item.id)" -->
                                                     <button
                                                         mat-menu-item
                                                         type="button"
                                                         *ngIf="
-                                                            'update'
-                                                                | able : 'Users'
+                                                            ('update'
+                                                                | able
+                                                                    : 'Users') &&
+                                                            isAssignedSubject(
+                                                                item.id
+                                                            )
+                                                        "
+                                                        (click)="
+                                                            unassignSubject(
+                                                                item.id
+                                                            )
                                                         "
                                                     >
                                                         Remove

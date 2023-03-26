@@ -48,6 +48,10 @@ import {
     take,
     tap,
 } from 'rxjs/operators';
+import {
+    AlertComponent,
+    ButtonTypes,
+} from 'src/app/shared/dialogs/alert/alert.component';
 import { FindAllSectionsDto } from 'src/app/shared/interfaces/section/find-all-sections-dto.interface';
 import { UserAssignSubjectComponent } from '../user-assign-subject/user-assign-subject.component';
 
@@ -252,6 +256,10 @@ export class UserEditComponent implements OnInit, OnDestroy {
                         return of(null);
                     }
 
+                    this.store.dispatch(
+                        UserSubjectListActions.onInit({ userId: this.userId })
+                    );
+
                     return this.usersService
                         .getUserById(this.userId)
                         .pipe(catchError(() => of(null)));
@@ -408,6 +416,37 @@ export class UserEditComponent implements OnInit, OnDestroy {
                         this.store.dispatch(
                             UserSubjectListActions.onAddUserSubject({
                                 subjectId: subject.id,
+                            })
+                        );
+                    }
+                }
+            });
+    }
+
+    unassignSubject(subjectId: number): void {
+        this.unsubscribeDialogbox();
+
+        this.assignSubjectDialogSubscription = this.dialog
+            .open(AlertComponent, {
+                disableClose: true,
+                minWidth: 280,
+                data: {
+                    title: 'Remove Assigned Subject',
+                    message: 'Are you sure you want to remove subject?',
+                    buttons: [
+                        { title: 'CANCEL', type: ButtonTypes.CANCEL },
+                        { title: 'REMOVE', type: ButtonTypes.CONFIRM },
+                    ],
+                },
+            })
+            .afterClosed()
+            .subscribe((result) => {
+                if (result === ButtonTypes.CONFIRM) {
+                    // remove assigned subject
+                    if (this.isAssignedSubject(subjectId)) {
+                        this.store.dispatch(
+                            UserSubjectListActions.onRemoveUserSubject({
+                                subjectId,
                             })
                         );
                     }

@@ -74,6 +74,44 @@ export class UserSubjectListEffects {
         );
     });
 
+    onAddUserSubject$ = createEffect(() => {
+        return this.actions$.pipe(
+            ofType(UserSubjectListActions.onAddUserSubject),
+            concatMap((action) =>
+                of(action).pipe(
+                    withLatestFrom(
+                        this.store.select(UserSubjectListReducer.selectState)
+                    )
+                )
+            ),
+            switchMap(([{ subjectId }, { userId }]) => {
+                return this.usersService
+                    .addSubjectToUser(userId, subjectId)
+                    .pipe(
+                        map((user) => {
+                            return UserSubjectListActions.onAddUserSubjectSuccess(
+                                {
+                                    user,
+                                }
+                            );
+                        }),
+                        tap(() =>
+                            this.snackbarService.openSuccess(
+                                USER_ASSIGN_SUBJECT_SUCCESS_MESSAGE
+                            )
+                        ),
+                        catchError((httpError) =>
+                            of(
+                                UserSubjectListActions.onAddUserSubjectFailure({
+                                    error: httpError.error,
+                                })
+                            )
+                        )
+                    );
+            })
+        );
+    });
+
     onRemoveUserSubject$ = createEffect(() => {
         return this.actions$.pipe(
             ofType(UserSubjectListActions.onRemoveUserSubject),
