@@ -20,7 +20,7 @@ public interface SubjectService {
 
 	List<SubjectDto> getSubjectById(Long id);
 
-    List<SubjectDto> getPaginatedSubjectSort(int pageNo, int pageSize, String columnName, String value, String asc);
+    List<SubjectDto> getPaginatedSubjectSort(int pageNo, int pageSize, String columnName, String value, String asc, String userId);
 
 	List<SubjectDto> getAllSubjectsByUserId(Long userId);
 }

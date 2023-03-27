@@ -2,6 +2,7 @@ package com.ctg.dtr.model;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -15,6 +16,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -71,4 +73,7 @@ public class Subject {
     @JsonIgnore
     private Set<User> users = new HashSet<>();
 
+    @OneToMany(mappedBy = "subject")
+	@JsonIgnore
+    private List<UsersSubjects> usersSubjects;
 }

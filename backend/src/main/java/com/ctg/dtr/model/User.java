@@ -112,6 +112,10 @@ public class User {
             inverseJoinColumns = { @JoinColumn(name = "subject_id") })
     private Set<Subject> subjects = new HashSet<>();
 
+    @OneToMany(mappedBy = "user")
+	@JsonIgnore
+    private List<UsersSubjects> usersSubjects;
+
     // public void addRole(Role role) {
     //     this.roles.add(role);
     //     role.getUsers().add(this);

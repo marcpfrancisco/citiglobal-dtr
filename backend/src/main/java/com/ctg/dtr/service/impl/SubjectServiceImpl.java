@@ -14,11 +14,15 @@ import org.springframework.stereotype.Service;
 
 import com.ctg.dtr.dto.SubjectDto;
 import com.ctg.dtr.model.Subject;
+import com.ctg.dtr.model.User;
+import com.ctg.dtr.model.UsersSubjects;
 import com.ctg.dtr.repository.SubjectRepository;
 import com.ctg.dtr.service.SubjectService;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 
@@ -46,6 +50,22 @@ public class SubjectServiceImpl implements SubjectService {
 					criteriaBuilder.like(root.get("endTime"), "%" + value + "%"),
 					criteriaBuilder.like(root.get("gracePeriod"), "%" + value + "%"),
 					criteriaBuilder.like(root.get("units").as(String.class), "%" + value + "%"));
+
+				return criteriaBuilder.and(predicateForData);
+            }
+        };
+    }
+
+	public static Specification<Subject> byUserIdAndValue(String value) {
+        return new Specification<Subject>() {
+            @Override
+            public Predicate toPredicate(Root<Subject> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+
+				Join<Subject, UsersSubjects> joinUsersSubjects = root.join("usersSubjects", JoinType.INNER);
+				Join<UsersSubjects, User> joinUser = joinUsersSubjects.join("user", JoinType.INNER);
+
+				Predicate predicateForData = criteriaBuilder.or(
+					criteriaBuilder.like(joinUser.get("id").as(String.class), "%" + value + "%"));
 
 				return criteriaBuilder.and(predicateForData);
             }
@@ -120,7 +140,7 @@ public class SubjectServiceImpl implements SubjectService {
 	}
 
 	@Override
-	public List<SubjectDto> getPaginatedSubjectSort(int pageNo, int pageSize, String columnName, String value, String sortDirection) {
+	public List<SubjectDto> getPaginatedSubjectSort(int pageNo, int pageSize, String columnName, String value, String sortDirection, String userId) {
 
 		Pageable paging;
 		Page<Subject> pagedResult = null;
@@ -141,8 +161,10 @@ public class SubjectServiceImpl implements SubjectService {
 			paging =  PageRequest.of(pageNo, pageSize);
 		}
 
-		if (value != null) {
+		if (value != null && userId == null) {
 			pagedResult = subjectRepository.findAll(byColumnNameAndValueSubject(value), paging);
+		} else if (value == null && userId != null) {
+			pagedResult = subjectRepository.findAll(byUserIdAndValue(userId), paging);
 		} else {
 			pagedResult = subjectRepository.findAll(paging);
 		}
@@ -179,8 +201,6 @@ public class SubjectServiceImpl implements SubjectService {
 		}
 		return lSubjectDto;
 	}
-
-	
 
     private void buildSubjectDto(Subject subject, SubjectDto subjectDto) {
 
