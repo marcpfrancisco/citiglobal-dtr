@@ -41,6 +41,8 @@ public class UserDto {
 
     private Object section;
 
+    private Object subject;
+
     // private Long roleId;
 
     private String role;

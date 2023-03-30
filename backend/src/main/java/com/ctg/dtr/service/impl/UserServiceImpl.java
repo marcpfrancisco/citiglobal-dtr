@@ -26,9 +26,11 @@ import org.springframework.util.FileCopyUtils;
 import com.ctg.dtr.dto.UserDto;
 import com.ctg.dtr.model.Role;
 import com.ctg.dtr.model.Section;
+import com.ctg.dtr.model.Subject;
 import com.ctg.dtr.model.User;
 import com.ctg.dtr.repository.RoleRepository;
 import com.ctg.dtr.repository.SectionRepository;
+import com.ctg.dtr.repository.SubjectRepository;
 import com.ctg.dtr.repository.UserRepository;
 import com.ctg.dtr.service.UserService;
 
@@ -53,6 +55,9 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
     private RoleRepository roleRepository;
+
+	@Autowired
+	private SubjectRepository subjectRepository;
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
@@ -340,6 +345,8 @@ public class UserServiceImpl implements UserService {
 
     private void buildUserDto(User user, UserDto userDto) {
 
+		List<Subject> lSubjects = subjectRepository.findSubjectsByUsersId(user.getId());
+
         userDto.setId(user.getId());
 		userDto.setCreatedAt(user.getCreatedAt());
 		userDto.setUpdatedAt(user.getUpdatedAt());
@@ -357,6 +364,7 @@ public class UserServiceImpl implements UserService {
 		userDto.setPassword(user.getPassword());
 		userDto.setSectionId(user.getSection() != null ? user.getSection().getId() : 0);
 		userDto.setSection(user.getSection() != null ? user.getSection() : null);
+		userDto.setSubject(lSubjects.isEmpty() ? null : lSubjects);
 		// userDto.setRoles(user.getRoles().stream().map(Role::getName).collect(Collectors.toSet()));
 		// userDto.setRoleId(user.getRole() != null ? user.getRole().getId() : 0);
 		userDto.setRole(user.getRole() != null ? user.getRole().getName() : "");
