@@ -1,4 +1,5 @@
 import { UserRoles } from '@enums';
+import { Section } from '../../models/section.model';
 
 export interface EditUserDto {
     firstName?: string;
@@ -7,7 +8,9 @@ export interface EditUserDto {
     middleName?: string;
     mobileNumber?: string;
     role?: UserRoles;
-    section?: any;
+    section?: Section;
     studentId?: string;
+    username?: string;
+    email?: string;
     rfidNo?: string;
 }

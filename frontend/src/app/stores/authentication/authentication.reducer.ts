@@ -13,7 +13,7 @@ import { RootState } from '..';
 export const featureKey = 'authentication';
 
 export interface State {
-    id: string;
+    id: number;
     token: string;
     role: UserRoles;
     currentUser: User | null;

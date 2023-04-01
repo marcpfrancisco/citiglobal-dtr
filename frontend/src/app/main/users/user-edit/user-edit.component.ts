@@ -276,6 +276,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
                         studentNo,
                         section,
                         rfidNo,
+                        email,
                         username,
                         role,
                         isActive,
@@ -287,6 +288,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
                         studentNo,
                         section,
                         rfidNo,
+                        email,
                         username,
                         role,
                         isActive,
@@ -315,6 +317,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
             studentNo: new FormControl('', [Validators.required]),
             section: new FormControl(null, [Validators.required]),
             rfidNo: new FormControl('', [Validators.required]),
+            email: new FormControl('', [Validators.required]),
             username: new FormControl('', [Validators.required]),
             role: new FormControl('', [Validators.required]),
             isActive: new FormControl(true, [Validators.required]),
@@ -372,9 +375,13 @@ export class UserEditComponent implements OnInit, OnDestroy {
         const formData = this.formData;
 
         this.isLoading = true;
+
+        if (isNumericInteger(this.sectionId)) {
+            formData['sectionId'] = this.sectionId;
+        }
+
         // Edit User
         if (this.mode === mode.EDIT_MODE) {
-            console.log(formData, 'Update');
             // the id of the user to be edited
             this.store.dispatch(
                 UsersListActions.onUpdateUser({
@@ -499,6 +506,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
 
     handleSelectedSection(section: Section): void {
         this.currentSection = section || null;
+        this.sectionId = section?.id || null;
     }
 
     displayFn(section: Section): string {

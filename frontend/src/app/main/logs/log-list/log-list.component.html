@@ -100,7 +100,14 @@
                     >
                     <mat-cell *matCellDef="let item">
                         <p class="text-truncate">
-                            {{ item.timeIn | timeDifference : item.timeOut }}
+                            <span *ngIf="!item?.timeIn || !item?.timeOut">
+                                N/A
+                            </span>
+                            <span *ngIf="item?.timeIn && item?.timeOut">
+                                {{
+                                    item.timeIn | timeDifference : item.timeOut
+                                }}
+                            </span>
                         </p>
                     </mat-cell>
                 </ng-container>
