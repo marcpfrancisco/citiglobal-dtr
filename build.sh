@@ -7,8 +7,7 @@ then
 fi
 
 mvn clean install
-rm citiglobal-prod/citiglobal-app.jar
-mv backend/target/citiglobal-app.jar citiglobal-prod
+rm citiglobal-prod/backend-1.0.0.jar
+mv backend/target/backend-1.0.0.jar citiglobal-prod
 
 cp frontend/src/environments/environment.test.ts frontend/src/environments/environment.ts
- 
