@@ -33,14 +33,14 @@
                     <mat-label>Username</mat-label>
                     <input
                         matInput
-                        formControlName="email"
+                        formControlName="username"
                         autocomplete="off"
                     />
-                    <mat-icon matSuffix class="secondary-text">mail</mat-icon>
+                    <mat-icon matSuffix class="secondary-text">person</mat-icon>
                     <mat-error
-                        *ngIf="loginForm.get('email').hasError('required')"
+                        *ngIf="loginForm.get('username').hasError('required')"
                     >
-                        Username is required
+                        username is required
                     </mat-error>
                 </mat-form-field>
 

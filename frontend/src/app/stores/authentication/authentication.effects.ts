@@ -94,7 +94,7 @@ export class AuthenticationEffects {
         return this.actions$.pipe(
             ofType(LoginActions.onLogin),
             switchMap((action) =>
-                this.authService.login(action.email, action.password).pipe(
+                this.authService.login(action.username, action.password).pipe(
                     map((user) => {
                         return AuthenticationActions.onAdminLogInSuccess({
                             user,

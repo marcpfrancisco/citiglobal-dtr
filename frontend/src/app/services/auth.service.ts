@@ -16,7 +16,6 @@ export class AuthService {
         return this.apiService
             .post(`${this.AUTH_URL}`, { username, password })
             .pipe(
-                tap((response: any) => this.getCurrentSignInUser(response)),
                 switchMap((response: any) => {
                     const { id, username, role, token } = response;
 
