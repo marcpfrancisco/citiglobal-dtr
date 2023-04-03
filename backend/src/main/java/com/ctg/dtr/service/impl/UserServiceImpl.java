@@ -341,7 +341,19 @@ public class UserServiceImpl implements UserService {
 			e.printStackTrace();
 		}
 		return html;
-	  }
+	}
+
+	@Override
+	public User updatePassword(String password, Long userId) {
+
+		Optional<User> optUser = userRepository.findById(userId);
+
+		User currentUser = optUser.get();
+
+		currentUser.setPassword(password == null ? currentUser.getPassword() : passwordEncoder.encode(password));
+
+        return userRepository.save(currentUser);
+    }
 
     private void buildUserDto(User user, UserDto userDto) {
 

@@ -25,4 +25,6 @@ public interface UserService {
     List<UserDto> getPaginatedUserSort(int pageNo, int pageSize, String columnName, String value, String asc);
 
     Boolean checkUsernameExists(String username);
+
+    User updatePassword(String password, Long userId);
 }

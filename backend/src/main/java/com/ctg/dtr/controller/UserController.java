@@ -26,6 +26,7 @@ import com.ctg.dtr.dto.SubjectDto;
 import com.ctg.dtr.dto.UserDto;
 import com.ctg.dtr.model.Subject;
 import com.ctg.dtr.model.User;
+import com.ctg.dtr.payload.request.PasswordRequest;
 import com.ctg.dtr.payload.request.SubjectIdRequest;
 import com.ctg.dtr.service.SubjectService;
 import com.ctg.dtr.service.UserService;
@@ -325,6 +326,33 @@ public class UserController {
     	} else {
 			List<SubjectDto> subjectInfo = subjectService.getAllSubjectsByUserId(userId);
 			return new ResponseEntity<List<SubjectDto>>(subjectInfo, HttpStatus.OK);
+		}
+	}
+
+	@Operation(summary = "Reset user password")
+	@SecurityRequirement(name = "Bearer Authentication")
+	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
+	@PutMapping("/reset-password/{id}")
+	public ResponseEntity<?> resetUserPassword(@PathVariable Long id, @RequestBody PasswordRequest passwordRequest, HttpServletRequest request, HttpServletResponse response) {
+
+		Optional<User> user = userService.getById(id);
+		Map<String, Object> tempMap = new HashMap<String, Object>();
+
+		if (!user.isPresent()) {
+
+			response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+
+			tempMap.put("status", HttpServletResponse.SC_NOT_FOUND);
+			tempMap.put("error",  HttpStatus.NOT_FOUND);
+			tempMap.put("message", "Missing User ID: " + id);
+			tempMap.put("path", request.getServletPath());
+
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(tempMap);
+
+		} else {
+			User currentUser = userService.updatePassword(passwordRequest.getNewPassword(), id);
+			return new ResponseEntity<User>(currentUser, HttpStatus.OK);
 		}
 	}
 }
