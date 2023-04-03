@@ -12,6 +12,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -145,7 +146,7 @@ public class UserServiceImpl implements UserService {
 
 			String username = userDto.getUsername();
 			String subject = "Citi Global DTR Credentials (" + fullName + ")";
-			String templateName = "new-user.template.html";
+			String templateName = "new-user-template.html";
 
 			Map<String, Object> params = new HashMap<>();
 			params.put("fullName", fullName);
@@ -325,7 +326,7 @@ public class UserServiceImpl implements UserService {
 		String html = "";
 	
 		try {
-			ClassPathResource resource = new ClassPathResource("com/ctg/dtr/constants/email-templates/" + templateName);
+			Resource resource = new ClassPathResource("templates/email/" + templateName);
 		  	InputStream inputStream = resource.getInputStream();
 		  	byte[] bdata = FileCopyUtils.copyToByteArray(inputStream);
 			html = new String(bdata, StandardCharsets.UTF_8);
