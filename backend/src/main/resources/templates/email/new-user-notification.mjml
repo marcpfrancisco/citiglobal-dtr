@@ -1,0 +1,73 @@
+<mjml>
+  <mj-head>
+    <mj-attributes>
+      <mj-all font-family="Inter, sans-serif" font-size="14px" />
+      <mj-wrapper background-color="white" />
+      <mj-section background-color="white" />
+      <mj-column width="100%" />
+      <mj-text line-height="18px" />
+      <mj-image width="100px" />
+
+      <!-- Custom Class -->
+      <mj-class name="footer" background-color="#8154B3" padding="30px" />
+    </mj-attributes>
+  </mj-head>
+
+  <mj-body background-color="#f0f0f0">
+    <mj-wrapper>
+      <!-- Header -->
+      <mj-section mj-class="header">
+        <mj-column>
+          <mj-image
+            align="left"
+            src="assets/images/logo/citiglobal-logo.png"
+          ></mj-image>
+        </mj-column>
+      </mj-section>
+
+      <!-- Greetings -->
+      <mj-section padding-top="10px" padding-bottom="0px">
+        <mj-column>
+          <mj-text>
+            <h3>Hello ${{ fullName }},</h3>
+          </mj-text>
+        </mj-column>
+      </mj-section>
+
+      <!-- Content -->
+      <mj-section mj-class="content">
+        <mj-column>
+          <mj-text>
+            <p>
+              You're almost done! Click the link below to verify your email
+              address and login to Citiglobal DTR.
+            </p>
+          </mj-text>
+
+          <mj-text>
+            <p>Here are your account details to get started.</p>
+          </mj-text>
+
+          <mj-text>
+            <p>Username: <span>${{ username }}</span></p>
+            <p>Temporary password: <span>${{ tempPassword }}</span></p>
+            <p>
+              Log in to:
+              <a href="http://localhost:4200/auth/admin-login"
+                >http://localhost:4200/auth/admin-login</a
+              >
+            </p>
+          </mj-text>
+
+          <!-- Closing Remarks -->
+          <mj-text>
+            <p>Best Regards,</p>
+            <p>Citiglobal College Team</p>
+          </mj-text>
+        </mj-column>
+      </mj-section>
+    </mj-wrapper>
+    <!-- Footer Background -->
+    <mj-wrapper mj-class="footer"> </mj-wrapper>
+  </mj-body>
+</mjml>

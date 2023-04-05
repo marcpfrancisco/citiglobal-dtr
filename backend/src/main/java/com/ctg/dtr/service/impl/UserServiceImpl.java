@@ -45,14 +45,14 @@ import jakarta.persistence.criteria.Root;
 @Service
 public class UserServiceImpl implements UserService {
 
-    @Autowired
-    private UserRepository userRepository;
+	@Autowired
+	private UserRepository userRepository;
 
 	@Autowired
-    private SectionRepository sectionRepository;
+	private SectionRepository sectionRepository;
 
 	@Autowired
-    private RoleRepository roleRepository;
+	private RoleRepository roleRepository;
 
 	@Autowired
 	private SubjectRepository subjectRepository;
@@ -61,67 +61,67 @@ public class UserServiceImpl implements UserService {
 	private PasswordEncoder passwordEncoder;
 
 	@Autowired
-    private JavaMailSender javaMailSender;
+	private JavaMailSender javaMailSender;
 
 	@Autowired
 	private SpringTemplateEngine springTemplateEngine;
 
 	public static Specification<User> byColumnNameAndValueUser(String value) {
-        return new Specification<User>() {
-            @Override
-            public Predicate toPredicate(Root<User> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+		return new Specification<User>() {
+			@Override
+			public Predicate toPredicate(Root<User> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
 
 				Join<Section, User> subquerySection = root.join("section", JoinType.LEFT);
 				Join<Role, User> subqueryRole = root.join("role", JoinType.INNER);
 
 				Predicate predicateForData = criteriaBuilder.or(
-					criteriaBuilder.like(root.get("id").as(String.class), "%" + value + "%"),
-					criteriaBuilder.like(root.get("createdAt").as(String.class), "%" + value + "%"),
-					criteriaBuilder.like(root.get("updatedAt").as(String.class), "%" + value + "%"),
-					criteriaBuilder.like(root.get("publishedAt").as(String.class), "%" + value + "%"),
-					criteriaBuilder.like(root.get("isActive").as(String.class), "%" + value + "%"),
-					criteriaBuilder.like(root.get("firstName"), "%" + value + "%"),
-					criteriaBuilder.like(root.get("middleName"), "%" + value + "%"),
-					criteriaBuilder.like(root.get("lastName"), "%" + value + "%"),
-					criteriaBuilder.like(root.get("mobileNo"), "%" + value + "%"),
-					criteriaBuilder.like(root.get("studentNo"), "%" + value + "%"),
-					criteriaBuilder.like(root.get("rfidNo"), "%" + value + "%"),
-					criteriaBuilder.like(root.get("email"), "%" + value + "%"),
-					criteriaBuilder.like(root.get("username"), "%" + value + "%"),
-					criteriaBuilder.like(root.get("password"), "%" + value + "%"),
-					criteriaBuilder.like(subquerySection.get("name"), "%" + value + "%"),
-					criteriaBuilder.like(subqueryRole.get("name"), "%" + value + "%"));
+						criteriaBuilder.like(root.get("id").as(String.class), "%" + value + "%"),
+						criteriaBuilder.like(root.get("createdAt").as(String.class), "%" + value + "%"),
+						criteriaBuilder.like(root.get("updatedAt").as(String.class), "%" + value + "%"),
+						criteriaBuilder.like(root.get("publishedAt").as(String.class), "%" + value + "%"),
+						criteriaBuilder.like(root.get("isActive").as(String.class), "%" + value + "%"),
+						criteriaBuilder.like(root.get("firstName"), "%" + value + "%"),
+						criteriaBuilder.like(root.get("middleName"), "%" + value + "%"),
+						criteriaBuilder.like(root.get("lastName"), "%" + value + "%"),
+						criteriaBuilder.like(root.get("mobileNo"), "%" + value + "%"),
+						criteriaBuilder.like(root.get("studentNo"), "%" + value + "%"),
+						criteriaBuilder.like(root.get("rfidNo"), "%" + value + "%"),
+						criteriaBuilder.like(root.get("email"), "%" + value + "%"),
+						criteriaBuilder.like(root.get("username"), "%" + value + "%"),
+						criteriaBuilder.like(root.get("password"), "%" + value + "%"),
+						criteriaBuilder.like(subquerySection.get("name"), "%" + value + "%"),
+						criteriaBuilder.like(subqueryRole.get("name"), "%" + value + "%"));
 
 				return criteriaBuilder.and(predicateForData);
-            }
-        };
-    }
+			}
+		};
+	}
 
-    @Override
-    public Optional<User> getById(Long id) {
-        return userRepository.findById(id);
-    }
+	@Override
+	public Optional<User> getById(Long id) {
+		return userRepository.findById(id);
+	}
 
 	@Override
 	public User saveUser(User user) {
 		return userRepository.save(user);
 	}
 
-    @Override
+	@Override
 	public User createUser(UserDto userDto) {
 
 		Optional<Section> section = sectionRepository.findById(userDto.getSectionId() != null ? userDto.getSectionId() : 0);
 		Optional<Role> role = roleRepository.findRoleByName(userDto.getRole() != null ? userDto.getRole() : null);
 
-        User user = new User();
+		User user = new User();
 
 		String tempPassword = generateRandomPassword(6);
 
-        user.setPublishedAt(userDto.getPublishedAt());
-        user.setIsActive(userDto.getIsActive());
-        user.setFirstName(userDto.getFirstName());
-        user.setMiddleName(userDto.getMiddleName());
-        user.setLastName(userDto.getLastName());
+		user.setPublishedAt(userDto.getPublishedAt());
+		user.setIsActive(userDto.getIsActive());
+		user.setFirstName(userDto.getFirstName());
+		user.setMiddleName(userDto.getMiddleName());
+		user.setLastName(userDto.getLastName());
 		user.setMobileNo(userDto.getMobileNo());
 		user.setStudentNo(userDto.getStudentNo());
 		user.setRfidNo(userDto.getRfidNo());
@@ -134,19 +134,21 @@ public class UserServiceImpl implements UserService {
 
 		try {
 			MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-			MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
+			MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage,
+					MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
 			mimeMessageHelper.setFrom(new InternetAddress("iamhitman15@gmail.com"));
 			mimeMessageHelper.setTo(new InternetAddress(userDto.getEmail()));
 
 			String fullName = userDto.getLastName().toUpperCase() + (userDto.getMiddleName() == null ? ", "
-			+ userDto.getFirstName().toUpperCase() : ", "
-			+ userDto.getFirstName().toUpperCase() + " " + userDto.getMiddleName().toUpperCase());
+					+ userDto.getFirstName().toUpperCase()
+					: ", "
+							+ userDto.getFirstName().toUpperCase() + " " + userDto.getMiddleName().toUpperCase());
 
 			mimeMessageHelper.setSubject("Citi Global DTR Credentials (" + fullName + ")");
 
 			String username = userDto.getUsername();
 			String subject = "Citi Global DTR Credentials (" + fullName + ")";
-			String templateName = "new-user-template";
+			String templateName = "new-user-notification";
 
 			Map<String, Object> params = new HashMap<>();
 			params.put("fullName", fullName);
@@ -167,64 +169,68 @@ public class UserServiceImpl implements UserService {
 		}
 
 		// if (null == user.getRoles()) {
-        //     user.setRoles(new HashSet<>());
-        // }
-        // userDto.getRoles().stream().forEach(roleName -> {
-        //     Role role = roleRepository.findByName(roleName);
-        //     if (null == role) {
-        //         role = new Role();
-        //         role.setUsers(new HashSet<>());
-        //     }
-        //     role.setName(roleName);
-        //     user.addRole(role);
-        // });
+		// user.setRoles(new HashSet<>());
+		// }
+		// userDto.getRoles().stream().forEach(roleName -> {
+		// Role role = roleRepository.findByName(roleName);
+		// if (null == role) {
+		// role = new Role();
+		// role.setUsers(new HashSet<>());
+		// }
+		// role.setName(roleName);
+		// user.addRole(role);
+		// });
 
 		return userRepository.save(user);
 	}
 
-    @Override
+	@Override
 	public User updateUser(User currentUser, UserDto userDto) {
 
-		Optional<Section> section = sectionRepository.findById(userDto.getSectionId() != null ? userDto.getSectionId() : currentUser.getSection().getId());
-		Optional<Role> role = roleRepository.findRoleByName(userDto.getRole() != null ? userDto.getRole() : currentUser.getRole().getName());
+		Optional<Section> section = sectionRepository
+				.findById(userDto.getSectionId() != null ? userDto.getSectionId() : currentUser.getSection().getId());
+		Optional<Role> role = roleRepository
+				.findRoleByName(userDto.getRole() != null ? userDto.getRole() : currentUser.getRole().getName());
 
-        currentUser.setPublishedAt(userDto.getPublishedAt() == null ? currentUser.getPublishedAt() : userDto.getPublishedAt());
-        currentUser.setIsActive(userDto.getIsActive() == null ? currentUser.getIsActive() : userDto.getIsActive());
-        currentUser.setFirstName(userDto.getFirstName() == null ? currentUser.getFirstName() : userDto.getFirstName());
-        currentUser.setMiddleName(userDto.getMiddleName() == null ? currentUser.getMiddleName() : userDto.getMiddleName());
-        currentUser.setLastName(userDto.getLastName() == null ? currentUser.getLastName() : userDto.getLastName());
+		currentUser
+				.setPublishedAt(userDto.getPublishedAt() == null ? currentUser.getPublishedAt() : userDto.getPublishedAt());
+		currentUser.setIsActive(userDto.getIsActive() == null ? currentUser.getIsActive() : userDto.getIsActive());
+		currentUser.setFirstName(userDto.getFirstName() == null ? currentUser.getFirstName() : userDto.getFirstName());
+		currentUser.setMiddleName(userDto.getMiddleName() == null ? currentUser.getMiddleName() : userDto.getMiddleName());
+		currentUser.setLastName(userDto.getLastName() == null ? currentUser.getLastName() : userDto.getLastName());
 		currentUser.setMobileNo(userDto.getMobileNo() == null ? currentUser.getMobileNo() : userDto.getMobileNo());
 		currentUser.setStudentNo(userDto.getStudentNo() == null ? currentUser.getStudentNo() : userDto.getStudentNo());
 		currentUser.setRfidNo(userDto.getRfidNo() == null ? currentUser.getRfidNo() : userDto.getRfidNo());
 		currentUser.setEmail(userDto.getEmail() == null ? currentUser.getEmail() : userDto.getEmail());
 		currentUser.setUsername(userDto.getUsername() == null ? currentUser.getUsername() : userDto.getUsername());
-		currentUser.setPassword(userDto.getPassword() == null ? currentUser.getPassword() : passwordEncoder.encode(userDto.getPassword()));
+		currentUser.setPassword(
+				userDto.getPassword() == null ? currentUser.getPassword() : passwordEncoder.encode(userDto.getPassword()));
 
 		currentUser.setSection(section != null ? section.get() : currentUser.getSection());
 		currentUser.setRole(role.isPresent() ? role.get() : currentUser.getRole());
 
 		// if (null == currentUser.getRoles()) {
-        //     currentUser.setRoles(new HashSet<>());
-        // }
-        // userDto.getRoles().stream().forEach(roleName -> {
-        //     Role role = roleRepository.findByName(roleName);
-        //     if (null == role) {
-        //         role = new Role();
-        //         role.setUsers(new HashSet<>());
-        //     }
-        //     role.setName(roleName);
-        //     currentUser.addRole(role);
-        // });
+		// currentUser.setRoles(new HashSet<>());
+		// }
+		// userDto.getRoles().stream().forEach(roleName -> {
+		// Role role = roleRepository.findByName(roleName);
+		// if (null == role) {
+		// role = new Role();
+		// role.setUsers(new HashSet<>());
+		// }
+		// role.setName(roleName);
+		// currentUser.addRole(role);
+		// });
 
-        return userRepository.save(currentUser);
-    }
+		return userRepository.save(currentUser);
+	}
 
 	@Override
 	public void deleteUser(Long id) {
 		userRepository.deleteById(id);
 	}
 
-    @Override
+	@Override
 	public List<UserDto> getUserById(Long id) {
 
 		List<User> lUsers = userRepository.findUserById(id);
@@ -261,7 +267,8 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public List<UserDto> getPaginatedUserSort(int pageNo, int pageSize, String columnName, String value, String sortDirection) {
+	public List<UserDto> getPaginatedUserSort(int pageNo, int pageSize, String columnName, String value,
+			String sortDirection) {
 
 		Pageable paging;
 		Page<User> pagedResult = null;
@@ -269,17 +276,17 @@ public class UserServiceImpl implements UserService {
 		if (columnName != null) {
 			if (sortDirection != null) {
 				if (sortDirection.toLowerCase().equals("asc")) {
-					paging =  PageRequest.of(pageNo, pageSize, Sort.by(columnName).ascending());
+					paging = PageRequest.of(pageNo, pageSize, Sort.by(columnName).ascending());
 				} else if (sortDirection.toLowerCase().equals("desc")) {
-					paging =  PageRequest.of(pageNo, pageSize, Sort.by(columnName).descending());
+					paging = PageRequest.of(pageNo, pageSize, Sort.by(columnName).descending());
 				} else {
-					paging =  PageRequest.of(pageNo, pageSize, Sort.by(columnName));
+					paging = PageRequest.of(pageNo, pageSize, Sort.by(columnName));
 				}
 			} else {
-				paging =  PageRequest.of(pageNo, pageSize, Sort.by(columnName));
+				paging = PageRequest.of(pageNo, pageSize, Sort.by(columnName));
 			}
 		} else {
-			paging =  PageRequest.of(pageNo, pageSize);
+			paging = PageRequest.of(pageNo, pageSize);
 		}
 
 		if (value != null) {
@@ -311,40 +318,41 @@ public class UserServiceImpl implements UserService {
 
 	public static String generateRandomPassword(int passwordLength) {
 
-        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
- 
-        SecureRandom random = new SecureRandom();
-        StringBuilder sb = new StringBuilder();
- 
-        for (int i = 0; i < passwordLength; i++) {
-            int randomIndex = random.nextInt(chars.length());
-            sb.append(chars.charAt(randomIndex));
-        }
- 
-        return sb.toString();
-    }
+		String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-	// private String getHtmlTemplate(String templateName, Map<String, Object> model) {
+		SecureRandom random = new SecureRandom();
+		StringBuilder sb = new StringBuilder();
 
-	// 	String html = "";
-	
-	// 	try {
-	// 		Resource resource = new ClassPathResource("templates/email/" + templateName);
-	// 	  	InputStream inputStream = resource.getInputStream();
-	// 	  	byte[] bdata = FileCopyUtils.copyToByteArray(inputStream);
-	// 		html = new String(bdata, StandardCharsets.UTF_8);
-	
-	// 	  	if (model != null && !model.isEmpty()) {
-	// 			for (Map.Entry<String, Object> entry : model.entrySet()) {
-	// 		  		String key = "{{ " + entry.getKey() + " }}";
-	// 		  		String value = entry.getValue().toString();
-	// 		  		html = html.replace(key, value);
-	// 			}
-	// 	  	}
-	// 	} catch (IOException e) {
-	// 		e.printStackTrace();
-	// 	}
-	// 	return html;
+		for (int i = 0; i < passwordLength; i++) {
+			int randomIndex = random.nextInt(chars.length());
+			sb.append(chars.charAt(randomIndex));
+		}
+
+		return sb.toString();
+	}
+
+	// private String getHtmlTemplate(String templateName, Map<String, Object>
+	// model) {
+
+	// String html = "";
+
+	// try {
+	// Resource resource = new ClassPathResource("templates/email/" + templateName);
+	// InputStream inputStream = resource.getInputStream();
+	// byte[] bdata = FileCopyUtils.copyToByteArray(inputStream);
+	// html = new String(bdata, StandardCharsets.UTF_8);
+
+	// if (model != null && !model.isEmpty()) {
+	// for (Map.Entry<String, Object> entry : model.entrySet()) {
+	// String key = "{{ " + entry.getKey() + " }}";
+	// String value = entry.getValue().toString();
+	// html = html.replace(key, value);
+	// }
+	// }
+	// } catch (IOException e) {
+	// e.printStackTrace();
+	// }
+	// return html;
 	// }
 
 	@Override
@@ -356,22 +364,23 @@ public class UserServiceImpl implements UserService {
 
 		currentUser.setPassword(password == null ? currentUser.getPassword() : passwordEncoder.encode(password));
 
-        return userRepository.save(currentUser);
-    }
+		return userRepository.save(currentUser);
+	}
 
-    private void buildUserDto(User user, UserDto userDto) {
+	private void buildUserDto(User user, UserDto userDto) {
 
 		List<Subject> lSubjects = subjectRepository.findSubjectsByUsersId(user.getId());
 
-        userDto.setId(user.getId());
+		userDto.setId(user.getId());
 		userDto.setCreatedAt(user.getCreatedAt());
 		userDto.setUpdatedAt(user.getUpdatedAt());
 		userDto.setPublishedAt(user.getPublishedAt());
-        userDto.setIsActive(user.getIsActive());
-        userDto.setFirstName(user.getFirstName());
-        userDto.setMiddleName(user.getMiddleName());
-        userDto.setLastName(user.getLastName());
-        userDto.setFullName(user.getFirstName() + (user.getMiddleName() == null ? " " + user.getLastName() : " " + user.getMiddleName() + " " + user.getLastName()));
+		userDto.setIsActive(user.getIsActive());
+		userDto.setFirstName(user.getFirstName());
+		userDto.setMiddleName(user.getMiddleName());
+		userDto.setLastName(user.getLastName());
+		userDto.setFullName(user.getFirstName() + (user.getMiddleName() == null ? " " + user.getLastName()
+				: " " + user.getMiddleName() + " " + user.getLastName()));
 		userDto.setMobileNo(user.getMobileNo());
 		userDto.setStudentNo(user.getStudentNo());
 		userDto.setRfidNo(user.getRfidNo());
