@@ -9,7 +9,7 @@
       <mj-image width="100px" />
 
       <!-- Custom Class -->
-      <mj-class name="footer" background-color="#8154B3" padding="30px" />
+      <mj-class name="footer" background-color="#A81620" padding="30px" />
     </mj-attributes>
   </mj-head>
 
