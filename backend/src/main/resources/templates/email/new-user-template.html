@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>{{ subject }}</title>
+    <title th:text="${subject}">{{ subject }}</title>
 
     <style type="text/css">
       *,
@@ -79,7 +79,7 @@
   <body style="padding: 40px 20px">
     <header class="header" style="margin: 20px 0">
       <div class="header__wrapper"></div>
-      <h2 class="header-greeting">Hello {{ fullName }},</h2>
+      <h2 class="header-greeting" th:text="${fullName}">Hello {{ fullName }},</h2>
     </header>
 
     <main class="main" style="margin: 20px 0">
@@ -93,11 +93,11 @@
           <p>Here are your account details to get started.</p>
         </header>
 
-        <p>
+        <p th:text="${username}">
           <span style="font-weight: 600">Username:</span>
           {{ username }}
         </p>
-        <p>
+        <p th:text="${tempPassword}">
           <span style="font-weight: 600">Temporary password:</span> {{ tempPassword }}
         </p>
         <p>

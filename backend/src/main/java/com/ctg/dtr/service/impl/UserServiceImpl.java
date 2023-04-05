@@ -1,7 +1,5 @@
 package com.ctg.dtr.service.impl;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.ArrayList;
@@ -11,8 +9,6 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -22,7 +18,8 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.util.FileCopyUtils;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring6.SpringTemplateEngine;
 
 import com.ctg.dtr.dto.UserDto;
 import com.ctg.dtr.model.Role;
@@ -65,6 +62,9 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
     private JavaMailSender javaMailSender;
+
+	@Autowired
+	private SpringTemplateEngine springTemplateEngine;
 
 	public static Specification<User> byColumnNameAndValueUser(String value) {
         return new Specification<User>() {
@@ -134,7 +134,7 @@ public class UserServiceImpl implements UserService {
 
 		try {
 			MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-			MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+			MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
 			mimeMessageHelper.setFrom(new InternetAddress("iamhitman15@gmail.com"));
 			mimeMessageHelper.setTo(new InternetAddress(userDto.getEmail()));
 
@@ -146,7 +146,7 @@ public class UserServiceImpl implements UserService {
 
 			String username = userDto.getUsername();
 			String subject = "Citi Global DTR Credentials (" + fullName + ")";
-			String templateName = "new-user-template.html";
+			String templateName = "new-user-template";
 
 			Map<String, Object> params = new HashMap<>();
 			params.put("fullName", fullName);
@@ -154,8 +154,11 @@ public class UserServiceImpl implements UserService {
 			params.put("username", username);
 			params.put("tempPassword", tempPassword);
 
-			String messageText = getHtmlTemplate(templateName, params);
-			mimeMessageHelper.setText(messageText, true);
+			Context context = new Context();
+			context.setVariables(params);
+
+			String html = springTemplateEngine.process(templateName, context);
+			mimeMessageHelper.setText(html, true);
 
 			javaMailSender.send(mimeMessage);
 
@@ -321,28 +324,28 @@ public class UserServiceImpl implements UserService {
         return sb.toString();
     }
 
-	private String getHtmlTemplate(String templateName, Map<String, Object> model) {
+	// private String getHtmlTemplate(String templateName, Map<String, Object> model) {
 
-		String html = "";
+	// 	String html = "";
 	
-		try {
-			Resource resource = new ClassPathResource("templates/email/" + templateName);
-		  	InputStream inputStream = resource.getInputStream();
-		  	byte[] bdata = FileCopyUtils.copyToByteArray(inputStream);
-			html = new String(bdata, StandardCharsets.UTF_8);
+	// 	try {
+	// 		Resource resource = new ClassPathResource("templates/email/" + templateName);
+	// 	  	InputStream inputStream = resource.getInputStream();
+	// 	  	byte[] bdata = FileCopyUtils.copyToByteArray(inputStream);
+	// 		html = new String(bdata, StandardCharsets.UTF_8);
 	
-		  	if (model != null && !model.isEmpty()) {
-				for (Map.Entry<String, Object> entry : model.entrySet()) {
-			  		String key = "{{ " + entry.getKey() + " }}";
-			  		String value = entry.getValue().toString();
-			  		html = html.replace(key, value);
-				}
-		  	}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return html;
-	}
+	// 	  	if (model != null && !model.isEmpty()) {
+	// 			for (Map.Entry<String, Object> entry : model.entrySet()) {
+	// 		  		String key = "{{ " + entry.getKey() + " }}";
+	// 		  		String value = entry.getValue().toString();
+	// 		  		html = html.replace(key, value);
+	// 			}
+	// 	  	}
+	// 	} catch (IOException e) {
+	// 		e.printStackTrace();
+	// 	}
+	// 	return html;
+	// }
 
 	@Override
 	public User updatePassword(String password, Long userId) {
