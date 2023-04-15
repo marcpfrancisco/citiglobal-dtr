@@ -78,10 +78,13 @@ export class TimeLogEffects {
                         }
                     );
 
-                    // setTimeout(() => {
-                    //     dialogRef.close();
-                    // }, 1000);
-                })
+                    setTimeout(() => {
+                        dialogRef.close();
+                    }, 1500);
+                }),
+                catchError((error) =>
+                    of(TimeLogActions.onShowTimeLogIDFailuer({ error }))
+                )
             );
         },
         { dispatch: false }

@@ -29,15 +29,19 @@
 
         <footer class="id-card__footer" fxFlex fxLayout="column">
             <h1 class="status">
-                TIME IN
-                <!-- <span *ngIf="data?.timeIn && data?.timeOut === null"
-                    >TIME IN</span
+                <ng-container
+                    *ngIf="data?.timeIn === null && data?.timeOut === null"
                 >
-                <span *ngIf="data?.timeIn && data?.timeOut">TIME OUT</span> -->
+                    <span>TIME IN</span>
+                </ng-container>
+
+                <ng-container *ngIf="data?.timeIn !== null">
+                    <span>TIME OUT</span>
+                </ng-container>
             </h1>
             <h2 class="fullname">{{ data?.user | userFullName }}</h2>
             <h3 class="student_id">STUDENT ID: {{ data?.user?.studentNo }}</h3>
-            <h4 class="student_course">BS COMPUTER SCIENCE</h4>
+            <h4 class="student_course">{{ data?.user?.section?.name }}</h4>
         </footer>
 
         <div class="id-card__background"></div>
