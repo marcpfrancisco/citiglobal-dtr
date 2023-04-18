@@ -17,14 +17,15 @@
             </ng-template>
 
             <ng-template #actions>
-                <button
+                <a
                     mat-raised-button
                     class="buttons fuse-white mt-24 mt-md-0"
                     *ngIf="'exportList' | able : 'Logs'"
+                    target="_blank"
                     (click)="exportTimeSheet()"
                 >
                     <span>EXPORT</span>
-                </button>
+                </a>
             </ng-template>
         </citiglobal-header>
         <!-- / HEADER -->

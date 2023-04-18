@@ -60,3 +60,8 @@ export const selectCurrentUser = createSelector(
     selectAuthenticationState,
     (state) => state.currentUser
 );
+
+export const selectAuthToken = createSelector(
+    selectAuthenticationState,
+    (state) => state.token
+);

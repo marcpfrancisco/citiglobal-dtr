@@ -9,6 +9,7 @@ import { FusePerfectScrollbarDirective } from '@fuse/directives/fuse-perfect-scr
 import { Section, TimeLog } from '@models';
 import { Store } from '@ngrx/store';
 import { AblePipe } from '@pipes';
+import { ReportsService } from '@services';
 import { LogsListReducer, RootState } from '@stores/index';
 import { LogsListActions } from '@stores/logs';
 import { getSortData } from '@utils';
@@ -51,8 +52,7 @@ export class LogListComponent implements OnInit {
         private router: Router,
         private activatedRoute: ActivatedRoute,
         private store: Store<RootState>,
-        private dialog: MatDialog,
-        private ablePipe: AblePipe
+        private reportsService: ReportsService
     ) {}
 
     ngOnInit(): void {
@@ -93,7 +93,9 @@ export class LogListComponent implements OnInit {
     }
 
     exportTimeSheet(): void {
-        this.store.dispatch(LogsListActions.onExportTimeSheet());
+        this.reportsService.downloadAllTimeSheet().subscribe((url) => {
+            window.open(url, '_blank');
+        });
     }
 
     private setupObservables(): void {
