@@ -23,7 +23,7 @@
     </mat-toolbar>
     <div mat-dialog-content class="p-24 pb-0 m-0">
         <form [formGroup]="userForm">
-            <div fxLayout="column" fxLayoutAlign="center center">
+            <div fxLayout="row" fxLayoutAlign="start start">
                 <mat-form-field appearance="outline" fxFlex>
                     <mat-label>Name</mat-label>
                     <mat-icon matSuffix class="secondary-text"
@@ -49,7 +49,7 @@
                 </mat-form-field>
             </div>
 
-            <div fxLayout="row" fxLayoutAlign="center start">
+            <div fxLayout="row" fxLayoutAlign="start start">
                 <button
                     mat-raised-button
                     class="button"
