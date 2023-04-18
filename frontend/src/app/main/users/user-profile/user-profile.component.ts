@@ -48,10 +48,15 @@ export class UserProfileComponent implements OnInit {
     ngOnInit(): void {
         this.userForm = new FormGroup({
             name: new FormControl('', [Validators.required]),
+            email: new FormControl({ value: '', disabled: true }, [
+                Validators.required,
+                Validators.email,
+            ]),
         });
 
         this.userForm.setValue({
             name: createUserFullName(this.data),
+            email: this.data.email,
         });
     }
 
@@ -66,16 +71,16 @@ export class UserProfileComponent implements OnInit {
         });
     }
 
-    // handleSave(): void {
-    //     const { name } = this.userForm.getRawValue();
+    handleSave(): void {
+        const { name } = this.userForm.getRawValue();
 
-    //     if (this.userForm.valid) {
-    //         this.matDialogRef.close({
-    //             type: UserProfileDialogResultType.SAVE,
-    //             value: { name },
-    //         });
-    //     }
-    // }
+        if (this.userForm.valid) {
+            this.matDialogRef.close({
+                type: UserProfileDialogResultType.SAVE,
+                value: { firstName: name },
+            });
+        }
+    }
 
     get name(): string {
         return this.userForm.get('name').value;

@@ -65,6 +65,20 @@ export class UsersService {
         return this.apiService.delete(`${this.USERS_URL}/${id}`);
     }
 
+    changeUserPassword(userId: number): Observable<void> {
+        return this.apiService.post(
+            `${this.USERS_URL}/reset-password/${userId}`,
+            {}
+        );
+    }
+
+    adminResetUserPassword(userId: string): Observable<User> {
+        return this.apiService.patch(
+            `${this.USERS_URL}/admin-reset-password/${userId}`,
+            {}
+        );
+    }
+
     addSubjectToUser(
         userId: string | number,
         subjectId: string | number

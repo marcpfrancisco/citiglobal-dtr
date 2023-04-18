@@ -16,11 +16,6 @@
             fxLayout="column"
             fxLayoutAlign="center center"
         >
-            <!-- <img
-        src="assets/images/avatars/profile.jpg"
-        class="avatar contact-avatar huge m-0"
-        alt="Sample Alt"
-      /> -->
             <div class="contact-name mt-8">
                 {{ name }}
             </div>
@@ -28,7 +23,7 @@
     </mat-toolbar>
     <div mat-dialog-content class="p-24 pb-0 m-0">
         <form [formGroup]="userForm">
-            <div fxLayout="row" fxLayoutAlign="start start">
+            <div fxLayout="column" fxLayoutAlign="center center">
                 <mat-form-field appearance="outline" fxFlex>
                     <mat-label>Name</mat-label>
                     <mat-icon matSuffix class="secondary-text"
@@ -36,6 +31,21 @@
                     >
                     <input formControlName="name" matInput required />
                     <mat-error>Name is required!</mat-error>
+                </mat-form-field>
+            </div>
+
+            <div fxLayout="row" fxLayoutAlign="start start">
+                <mat-form-field appearance="outline" fxFlex>
+                    <mat-label>Email</mat-label>
+                    <mat-icon matSuffix class="secondary-text">email</mat-icon>
+                    <input formControlName="email" matInput />
+
+                    <mat-error *ngIf="hasError('email', 'required')"
+                        >Email is required!</mat-error
+                    >
+                    <mat-error *ngIf="hasError('email', 'email')"
+                        >This is not a valid email address!</mat-error
+                    >
                 </mat-form-field>
             </div>
 
@@ -52,7 +62,7 @@
                     CHANGE MY PASSWORD
                 </button>
             </div>
-            <!-- (click)="handleSave()" -->
+
             <div fxLayout="row" fxLayoutAlign="center start">
                 <button
                     mat-raised-button
@@ -61,6 +71,7 @@
                     color="accent"
                     aria-label="Save"
                     matTooltip="Save"
+                    (click)="handleSave()"
                     [disabled]="userForm.invalid || !hasChanges"
                 >
                     SAVE

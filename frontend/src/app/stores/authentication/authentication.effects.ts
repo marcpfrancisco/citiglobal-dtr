@@ -28,7 +28,7 @@ import {
 import { LoginActions } from '@stores/login';
 import { UsersListActions } from '@stores/users';
 import { isArray, isFunction } from 'lodash';
-import { of } from 'rxjs';
+import { from, of } from 'rxjs';
 import {
     withLatestFrom,
     filter,
@@ -175,6 +175,28 @@ export class AuthenticationEffects {
         },
         { dispatch: false }
     );
+
+    // Reset Current User Password
+    resetCurrentUserPassword$ = createEffect(() => {
+        return this.actions$.pipe(
+            ofType(AuthenticationActions.onResetCurrentUserPassword),
+            withLatestFrom(
+                this.store.select(AuthenticationReducer.selectUserId)
+            ),
+            switchMap(([action, userId]) =>
+                from(this.usersService.changeUserPassword(userId)).pipe(
+                    map(() => AuthenticationActions.onChangePasswordSuccess()),
+                    catchError((error) =>
+                        of(
+                            AuthenticationActions.onChangePasswordFailure({
+                                error,
+                            })
+                        )
+                    )
+                )
+            )
+        );
+    });
 
     // Showing Angular Material Snack Bar
     showErrorSnackBar$ = createEffect(

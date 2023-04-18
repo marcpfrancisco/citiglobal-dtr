@@ -15,6 +15,7 @@ export interface User {
     middleName?: string;
     lastName: string;
 
+    email?: string;
     mobileNo?: string;
     studentNo: string;
     rfidNo: string;
