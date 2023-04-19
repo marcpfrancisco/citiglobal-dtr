@@ -56,25 +56,23 @@
                                 </mat-form-field>
 
                                 <!-- Course  -->
-                                <mat-form-field
-                                    appearance="outline"
-                                    floatLabel="always"
-                                    class="w-100-p"
+
+                                <citiglobal-auto-complete
+                                    [hasLabel]="'Course'"
+                                    placeholder="Choose Course"
+                                    [options]="courseList$ | async"
+                                    [displayOption]="displayFn"
+                                    (search)="handleSearchCourse($event)"
+                                    (selected)="handleSelectedCourse($event)"
+                                    [value]="currentCourse"
                                 >
-                                    <mat-label>Course</mat-label>
-                                    <mat-select
-                                        formControlName="course"
-                                        required
-                                        (selectionChange)="handleChange($event)"
+                                    <ng-template let-option="option"
+                                        ><span>{{
+                                            option?.name
+                                        }}</span></ng-template
                                     >
-                                        <mat-option
-                                            *ngFor="let option of courseOptions"
-                                            [value]="option"
-                                            >{{ option.name }}</mat-option
-                                        >
-                                    </mat-select>
                                     <mat-error>Course is required!</mat-error>
-                                </mat-form-field>
+                                </citiglobal-auto-complete>
 
                                 <!-- Status  -->
                                 <mat-form-field
@@ -102,6 +100,184 @@
                                 </mat-form-field>
                             </form>
                         </div>
+                    </mat-tab>
+
+                    <mat-tab label="Students" *ngIf="isEditMode">
+                        <ng-template matTabContent>
+                            <div
+                                class="tab-content p-24 pb-0"
+                                fusePerfectScrollbar
+                            >
+                                <mat-table
+                                    class="items-table"
+                                    matSort
+                                    [dataSource]="dataSource$"
+                                    [@animateStagger]="{ value: '50' }"
+                                    [matSortActive]="
+                                        (listState$ | listStateMatSort | async)
+                                            .active
+                                    "
+                                    [matSortDirection]="
+                                        (listState$ | listStateMatSort | async)
+                                            .direction
+                                    "
+                                    (matSortChange)="onToggleSort($event)"
+                                >
+                                    <!-- Name Column -->
+                                    <ng-container
+                                        [matColumnDef]="USER_SORTABLES.NAME"
+                                    >
+                                        <mat-header-cell
+                                            *matHeaderCellDef
+                                            mat-sort-header
+                                            >Name</mat-header-cell
+                                        >
+                                        <mat-cell *matCellDef="let item">
+                                            <p class="text-truncate">
+                                                {{ item | userFullName }}
+                                            </p>
+                                        </mat-cell>
+                                    </ng-container>
+
+                                    <!-- Role Column -->
+                                    <ng-container
+                                        [matColumnDef]="USER_SORTABLES.ROLE"
+                                    >
+                                        <mat-header-cell
+                                            *matHeaderCellDef
+                                            mat-sort-header
+                                            >Role</mat-header-cell
+                                        >
+                                        <mat-cell *matCellDef="let item">
+                                            <p class="text-truncate">
+                                                {{
+                                                    item.role
+                                                        | userRoles
+                                                        | titlecase
+                                                }}
+                                            </p>
+                                        </mat-cell>
+                                    </ng-container>
+
+                                    <!-- Created At Column -->
+                                    <ng-container
+                                        [matColumnDef]="
+                                            USER_SORTABLES.CREATED_AT
+                                        "
+                                    >
+                                        <mat-header-cell
+                                            *matHeaderCellDef
+                                            mat-sort-header
+                                            >Created At</mat-header-cell
+                                        >
+                                        <mat-cell *matCellDef="let item">
+                                            <p class="text-truncate">
+                                                {{
+                                                    item.createdAt | dateFormat
+                                                }}
+                                            </p>
+                                        </mat-cell>
+                                    </ng-container>
+
+                                    <!-- Active Column -->
+                                    <ng-container
+                                        [matColumnDef]="USER_SORTABLES.ACTIVE"
+                                    >
+                                        <mat-header-cell
+                                            *matHeaderCellDef
+                                            mat-sort-header
+                                            >Active</mat-header-cell
+                                        >
+                                        <mat-cell *matCellDef="let item">
+                                            <span *ngIf="isDeleted(item)"
+                                                >&nbsp;</span
+                                            >
+                                            <span *ngIf="!isDeleted(item)">
+                                                <mat-icon
+                                                    *ngIf="item.isActive"
+                                                    class="active-icon green-600 s-16"
+                                                    >check</mat-icon
+                                                >
+                                                <mat-icon
+                                                    *ngIf="!item.isActive"
+                                                    class="active-icon red-500 s-16"
+                                                    >close</mat-icon
+                                                >
+                                            </span>
+                                        </mat-cell>
+                                    </ng-container>
+
+                                    <!-- Options Column -->
+                                    <ng-container matColumnDef="options">
+                                        <mat-header-cell
+                                            *matHeaderCellDef
+                                        ></mat-header-cell>
+                                        <mat-cell *matCellDef="let item">
+                                            <button
+                                                mat-button
+                                                [matMenuTriggerFor]="menu"
+                                                (click)="
+                                                    $event.stopPropagation();
+                                                    $event.preventDefault()
+                                                "
+                                            >
+                                                <mat-icon
+                                                    class="logo-icon s-32"
+                                                    [@animate]="{
+                                                        value: '*',
+                                                        params: {
+                                                            delay: '50ms',
+                                                            scale: '0.2'
+                                                        }
+                                                    }"
+                                                    >more_vert
+                                                </mat-icon>
+                                            </button>
+                                            <mat-menu #menu="matMenu">
+                                                <button
+                                                    mat-menu-item
+                                                    type="button"
+                                                    *ngIf="
+                                                        'update'
+                                                            | able : 'Users'
+                                                    "
+                                                    (click)="
+                                                        unassignUser(item.id)
+                                                    "
+                                                >
+                                                    Remove
+                                                </button>
+                                            </mat-menu>
+                                        </mat-cell>
+                                    </ng-container>
+
+                                    <mat-header-row
+                                        *matHeaderRowDef="
+                                            userDisplayedColumns;
+                                            sticky: true
+                                        "
+                                    ></mat-header-row>
+                                    <mat-row
+                                        *matRowDef="
+                                            let item;
+                                            columns: userDisplayedColumns
+                                        "
+                                        class="item"
+                                        matRipple
+                                        (click)="$event.preventDefault()"
+                                    ></mat-row>
+                                </mat-table>
+
+                                <mat-paginator
+                                    [length]="total$ | async"
+                                    [pageIndex]="pageIndex$ | async"
+                                    [pageSize]="pageSize$ | async"
+                                    [pageSizeOptions]="pageSizeOptions$ | async"
+                                    (page)="onChangePage($event)"
+                                >
+                                </mat-paginator>
+                            </div>
+                        </ng-template>
                     </mat-tab>
                 </mat-tab-group>
             </div>

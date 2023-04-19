@@ -19,6 +19,7 @@ import * as SectionListReducer from './sections/section-list.reducer';
 import * as SubjectListReducer from './subjects/subject-list.reducer';
 import * as CourseListReducer from './courses/course-list.reducer';
 import * as UserSubjectListReducer from './user-subjects-list/user-subject-list.reducer';
+import * as SectionUserListReducer from './section-users-list/section-users-list.reducer';
 // export reducers here
 export {
     AuthenticationReducer,
@@ -30,6 +31,7 @@ export {
     TimeLogReducer,
     UsersListReducer,
     UserSubjectListReducer,
+    SectionUserListReducer,
 };
 
 export interface RootState {
@@ -43,6 +45,7 @@ export interface RootState {
     [SubjectListReducer.featureKey]: SubjectListReducer.State;
     [CourseListReducer.featureKey]: CourseListReducer.State;
     [UserSubjectListReducer.featureKey]: UserSubjectListReducer.State;
+    [SectionUserListReducer.featureKey]: SectionUserListReducer.State;
 }
 
 export const ROOT_REDUCERS = new InjectionToken<
@@ -59,6 +62,7 @@ export const ROOT_REDUCERS = new InjectionToken<
         [SubjectListReducer.featureKey]: SubjectListReducer.reducer,
         [CourseListReducer.featureKey]: CourseListReducer.reducer,
         [UserSubjectListReducer.featureKey]: UserSubjectListReducer.reducer,
+        [SectionUserListReducer.featureKey]: SectionUserListReducer.reducer,
     }),
 });
 

@@ -9,6 +9,7 @@ import { SectionEditComponent } from './section-edit/section-edit.component';
 
 import { SectionListComponent } from './section-list/section-list.component';
 import { SectionsRoutingModule } from './sections-routing.module';
+import { MatMenuModule } from '@angular/material/menu';
 
 @NgModule({
     declarations: [SectionListComponent, SectionEditComponent],
@@ -19,6 +20,7 @@ import { SectionsRoutingModule } from './sections-routing.module';
         SharedMaterialModule,
         SharedComponentsModule,
         FuseSharedModule,
+        MatMenuModule,
         PipesModule,
     ],
 })
