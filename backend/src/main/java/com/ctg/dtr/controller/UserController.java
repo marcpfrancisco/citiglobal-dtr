@@ -329,13 +329,13 @@ public class UserController {
 		}
 	}
 
-	@Operation(summary = "Reset user password")
+	@Operation(summary = "Update user password")
 	@SecurityRequirement(name = "Bearer Authentication")
 	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
-	@PutMapping("/reset-password/{id}")
-	public ResponseEntity<?> resetUserPassword(@PathVariable Long id, @RequestBody PasswordRequest passwordRequest, HttpServletRequest request, HttpServletResponse response) {
+	@PutMapping("/update-password/{userId}")
+	public ResponseEntity<?> updateUserPassword(@PathVariable Long userId, @RequestBody PasswordRequest passwordRequest, HttpServletRequest request, HttpServletResponse response) {
 
-		Optional<User> user = userService.getById(id);
+		Optional<User> user = userService.getById(userId);
 		Map<String, Object> tempMap = new HashMap<String, Object>();
 
 		if (!user.isPresent()) {
@@ -345,14 +345,50 @@ public class UserController {
 
 			tempMap.put("status", HttpServletResponse.SC_NOT_FOUND);
 			tempMap.put("error",  HttpStatus.NOT_FOUND);
-			tempMap.put("message", "Missing User ID: " + id);
+			tempMap.put("message", "Missing User ID: " + userId);
 			tempMap.put("path", request.getServletPath());
 
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(tempMap);
 
 		} else {
-			User currentUser = userService.updatePassword(passwordRequest.getNewPassword(), id);
+			User currentUser = userService.updatePassword(passwordRequest.getNewPassword(), userId);
 			return new ResponseEntity<User>(currentUser, HttpStatus.OK);
+		}
+	}
+
+	@Operation(summary = "Reset user password")
+	@SecurityRequirement(name = "Bearer Authentication")
+	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
+	@PutMapping("/reset-password/{userId}")
+	public ResponseEntity<?> resetUserPassword(@PathVariable Long userId, @RequestBody PasswordRequest passwordRequest, HttpServletRequest request, HttpServletResponse response) {
+
+		Optional<User> user = userService.getById(userId);
+		Map<String, Object> tempMap = new HashMap<String, Object>();
+
+		if (!user.isPresent()) {
+
+			response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+
+			tempMap.put("status", HttpServletResponse.SC_NOT_FOUND);
+			tempMap.put("error",  HttpStatus.NOT_FOUND);
+			tempMap.put("message", "Missing User ID: " + userId);
+			tempMap.put("path", request.getServletPath());
+
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(tempMap);
+
+		} else {
+
+			response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+			response.setStatus(HttpServletResponse.SC_OK);
+
+			tempMap.put("status", HttpServletResponse.SC_OK);
+			tempMap.put("message", "Successfully!");
+			tempMap.put("path", request.getServletPath());
+
+			userService.resetPassword(userId);
+
+			return ResponseEntity.status(HttpStatus.OK).body(tempMap);
 		}
 	}
 }

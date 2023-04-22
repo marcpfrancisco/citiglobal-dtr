@@ -367,6 +367,50 @@ public class UserServiceImpl implements UserService {
 		return userRepository.save(currentUser);
 	}
 
+	@Override
+	public void resetPassword(Long userId) {
+
+		Optional<User> optUser = userRepository.findById(userId);
+
+		User currentUser = optUser.get();
+
+		if (optUser.isPresent()) {
+
+			try {
+				MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+				MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage,
+						MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
+				mimeMessageHelper.setFrom(new InternetAddress("iamhitman15@gmail.com"));
+				mimeMessageHelper.setTo(new InternetAddress(currentUser.getEmail()));
+	
+				String fullName = currentUser.getLastName().toUpperCase() + (currentUser.getMiddleName() == null ? ", "
+						+ currentUser.getFirstName().toUpperCase()
+						: ", "
+								+ currentUser.getFirstName().toUpperCase() + " " + currentUser.getMiddleName().toUpperCase());
+	
+				mimeMessageHelper.setSubject("Citi Global DTR Credentials (" + fullName + ")");
+	
+				String subject = "???";
+				String templateName = "reset-password-notification";
+	
+				Map<String, Object> params = new HashMap<>();
+				params.put("fullName", fullName);
+				params.put("subject", subject);
+	
+				Context context = new Context();
+				context.setVariables(params);
+	
+				String html = springTemplateEngine.process(templateName, context);
+				mimeMessageHelper.setText(html, true);
+	
+				javaMailSender.send(mimeMessage);
+	
+			} catch (MessagingException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
 	private void buildUserDto(User user, UserDto userDto) {
 
 		List<Subject> lSubjects = subjectRepository.findSubjectsByUsersId(user.getId());

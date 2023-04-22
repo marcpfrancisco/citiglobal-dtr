@@ -1,6 +1,7 @@
 package com.ctg.dtr.service.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,12 +12,18 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ctg.dtr.dto.SectionDto;
+import com.ctg.dtr.dto.UserDto;
 import com.ctg.dtr.model.Course;
 import com.ctg.dtr.model.Section;
+import com.ctg.dtr.model.Subject;
+import com.ctg.dtr.model.User;
 import com.ctg.dtr.repository.CourseRepository;
 import com.ctg.dtr.repository.SectionRepository;
+import com.ctg.dtr.repository.SubjectRepository;
+import com.ctg.dtr.repository.UserRepository;
 import com.ctg.dtr.service.SectionService;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -33,6 +40,12 @@ public class SectionServiceImpl implements SectionService {
 
 	@Autowired
     private CourseRepository courseRepository;
+
+	@Autowired
+    private UserRepository userRepository;
+
+	@Autowired
+    private SubjectRepository subjectRepository;
 
 	public static Specification<Section> byColumnNameAndValueSection(String value) {
         return new Specification<Section>() {
@@ -154,6 +167,32 @@ public class SectionServiceImpl implements SectionService {
 		return lSectionDto;
 	}
 
+	@Override
+	public List<UserDto> getUserBySectionId(Long sectionId) {
+
+		List<User> lUsers = userRepository.findUserBySectionId(sectionId);
+
+		List<UserDto> lUserDto = new ArrayList<UserDto>();
+
+		for (User user : lUsers) {
+
+			UserDto tmpUser = new UserDto();
+
+			buildUserDto(user, tmpUser);
+
+			lUserDto.add(tmpUser);
+		}
+		return lUserDto;
+	}
+
+
+	@Override
+	@Transactional
+	public void removeUserBySectionId(Long[] userIds) {
+		userRepository.removeSectionByUserId(Arrays.asList(userIds));
+	}
+
+
     private void buildSectionDto(Section section, SectionDto sectionDto) {
 
         sectionDto.setId(section.getId());
@@ -164,5 +203,33 @@ public class SectionServiceImpl implements SectionService {
         sectionDto.setName(section.getName());
 		sectionDto.setCourseId(section.getCourse() != null ? section.getCourse().getId() : 0);
 		sectionDto.setCourse(section.getCourse() != null ? section.getCourse() : null);
+	}
+
+	private void buildUserDto(User user, UserDto userDto) {
+
+		List<Subject> lSubjects = subjectRepository.findSubjectsByUsersId(user.getId());
+
+		userDto.setId(user.getId());
+		userDto.setCreatedAt(user.getCreatedAt());
+		userDto.setUpdatedAt(user.getUpdatedAt());
+		userDto.setPublishedAt(user.getPublishedAt());
+		userDto.setIsActive(user.getIsActive());
+		userDto.setFirstName(user.getFirstName());
+		userDto.setMiddleName(user.getMiddleName());
+		userDto.setLastName(user.getLastName());
+		userDto.setFullName(user.getFirstName() + (user.getMiddleName() == null ? " " + user.getLastName()
+				: " " + user.getMiddleName() + " " + user.getLastName()));
+		userDto.setMobileNo(user.getMobileNo());
+		userDto.setStudentNo(user.getStudentNo());
+		userDto.setRfidNo(user.getRfidNo());
+		userDto.setEmail(user.getEmail());
+		userDto.setUsername(user.getUsername());
+		userDto.setPassword(user.getPassword());
+		userDto.setSectionId(user.getSection() != null ? user.getSection().getId() : 0);
+		userDto.setSection(user.getSection() != null ? user.getSection() : null);
+		userDto.setSubject(lSubjects.isEmpty() ? null : lSubjects);
+		// userDto.setRoles(user.getRoles().stream().map(Role::getName).collect(Collectors.toSet()));
+		// userDto.setRoleId(user.getRole() != null ? user.getRole().getId() : 0);
+		userDto.setRole(user.getRole() != null ? user.getRole().getName() : "");
 	}
 }

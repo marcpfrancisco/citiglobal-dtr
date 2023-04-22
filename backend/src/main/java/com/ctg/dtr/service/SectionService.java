@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.ctg.dtr.dto.SectionDto;
+import com.ctg.dtr.dto.UserDto;
 import com.ctg.dtr.model.Section;
 
 public interface SectionService {
@@ -19,4 +20,8 @@ public interface SectionService {
 	List<SectionDto> getSectionById(Long id);
 
     List<SectionDto> getPaginatedSectionSort(int pageNo, int pageSize, String columnName, String value, String asc);
+
+	List<UserDto> getUserBySectionId(Long sectionId);
+
+	void removeUserBySectionId(Long[] userIds);
 }

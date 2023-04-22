@@ -27,4 +27,6 @@ public interface UserService {
     Boolean checkUsernameExists(String username);
 
     User updatePassword(String password, Long userId);
+
+    void resetPassword(Long userId);
 }

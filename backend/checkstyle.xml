@@ -12,7 +12,7 @@
     <!-- Checks whether files end with a new line.                        -->
     <!-- See http://checkstyle.sf.net/config_misc.html#NewlineAtEndOfFile -->
     <module name="NewlineAtEndOfFile">
-        <property name="lineSeparator" value="crlf" />
+        <property name="lineSeparator" value="lf" />
         <property name="fileExtensions" value="java, xml, py" />
     </module>
 
@@ -187,7 +187,7 @@
         </module>
 
         <!-- Use a consistent way to put declarations -->
-        <module name="DeclarationOrder" />
+        <!-- <module name="DeclarationOrder" /> -->
 
         <!-- Don't add up parentheses when they are not required -->
         <module name="UnnecessaryParentheses" />

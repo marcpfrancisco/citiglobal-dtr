@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ctg.dtr.dto.SectionDto;
+import com.ctg.dtr.dto.UserDto;
 import com.ctg.dtr.model.Section;
 import com.ctg.dtr.service.SectionService;
 
@@ -169,5 +170,46 @@ public class SectionController {
 		} else {
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).body(sectionInfo);
 		}
+	}
+
+	@Operation(summary = "Get user by section id")
+	@SecurityRequirement(name = "Bearer Authentication")
+	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
+	@GetMapping("/{sectionId}/students")
+	public ResponseEntity<?> getUserBySectionId(@PathVariable Long sectionId, HttpServletRequest request, HttpServletResponse response) {
+
+		Optional<Section> section = sectionService.getById(sectionId);
+		Map<String, Object> tempMap = new HashMap<String, Object>();
+
+		if (!section.isPresent()) {
+
+			response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+
+			tempMap.put("status", HttpServletResponse.SC_NOT_FOUND);
+			tempMap.put("error", HttpStatus.NOT_FOUND);
+			tempMap.put("message", "Missing Section ID: " + sectionId);
+			tempMap.put("path", request.getServletPath());
+
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(tempMap);
+
+		} else {
+			List<UserDto> userInfo = sectionService.getUserBySectionId(sectionId);
+			return new ResponseEntity<List<UserDto>>(userInfo, HttpStatus.OK);
+		}
+	}
+
+	@Operation(summary = "Remove user by section id")
+	@SecurityRequirement(name = "Bearer Authentication")
+	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
+	@DeleteMapping("/remove/{userIds}")
+	public ResponseEntity<?> removeUserBySectionId(@PathVariable Long[] userIds, HttpServletRequest request, HttpServletResponse response) {
+
+		Map<String, Object> tempMap = new HashMap<String, Object>();
+
+		sectionService.removeUserBySectionId(userIds);
+		tempMap.put("message", "Successfully Remove User by Section!");
+
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).body(tempMap);
 	}
 }
