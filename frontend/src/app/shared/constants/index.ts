@@ -7,3 +7,4 @@ export * from './pagination.constant';
 export * from './service.constant';
 export * from './snackbar.constants';
 export * from './user.constant';
+export * from './section.constant';

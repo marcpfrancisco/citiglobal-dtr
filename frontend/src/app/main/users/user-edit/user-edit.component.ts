@@ -433,7 +433,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
     unassignSubject(subjectId: number): void {
         this.unsubscribeDialogbox();
 
-        this.assignSubjectDialogSubscription = this.dialog
+        this.unassignSubjectDialogSubscription = this.dialog
             .open(AlertComponent, {
                 disableClose: true,
                 minWidth: 280,

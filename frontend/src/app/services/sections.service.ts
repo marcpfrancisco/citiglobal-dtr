@@ -8,6 +8,7 @@ import {
     PaginationResult,
     Section,
     SectionSortables,
+    User,
 } from '../shared';
 import { CreateSectionDto } from '../shared/interfaces/section/create-section-dto.interface';
 import { EditSectionDto } from '../shared/interfaces/section/edit-section-dto.interface';
@@ -32,12 +33,20 @@ export class SectionsService {
         return this.apiService.get(`${this.SECTION_URL}/${sectionId}`);
     }
 
+    getSectionUsers(sectionId: number): Observable<Array<User>> {
+        return this.apiService.get(`${this.SECTION_URL}/${sectionId}/students`);
+    }
+
     create(payload: CreateSectionDto): Observable<Section> {
         return this.apiService.post(`${this.SECTION_URL}`, payload);
     }
 
     update(sectionId: number, payload: EditSectionDto): Observable<Section> {
         return this.apiService.put(`${this.SECTION_URL}/${sectionId}`, payload);
+    }
+
+    deleteUserFromSetion(userIds: number): Observable<User> {
+        return this.apiService.delete(`${this.SECTION_URL}/remove/${userIds}`);
     }
 
     createListOptions(options: FindAllSectionsDto): HttpParams {

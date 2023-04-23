@@ -16,17 +16,17 @@ export const onLoadSectionUsers = createAction(
 
 export const onRemoveSectionUser = createAction(
     '[Section Users Component] On Remove Section User',
-    props<{ subjectId: number }>()
+    props<{ userId: number }>()
 );
 
 export const onRemoveSectionUserConfirmation = createAction(
     '[Section Users Component] On Remove Section User Confirmation',
-    props<{ subjectId: number }>()
+    props<{ userId: number }>()
 );
 
 export const onAddSectionUser = createAction(
     '[Section Users Component] On Add Section Users',
-    props<{ subjectId: number }>()
+    props<{ userId: number }>()
 );
 
 export const onToggleSort = createAction(
@@ -40,7 +40,7 @@ export const onToggleSort = createAction(
 // API Actions
 export const onLoadSectionUsersSuccess = createAction(
     '[Subjects API] On Load Users Subjects Success',
-    props<{ result: PaginationResult<User> }>()
+    props<{ result: Array<User> }>()
 );
 
 export const onLoadSectionUsersFailure = createAction(

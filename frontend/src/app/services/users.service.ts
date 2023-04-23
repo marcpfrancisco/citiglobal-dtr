@@ -66,7 +66,7 @@ export class UsersService {
     }
 
     changeUserPassword(userId: number): Observable<void> {
-        return this.apiService.post(
+        return this.apiService.put(
             `${this.USERS_URL}/reset-password/${userId}`,
             {}
         );

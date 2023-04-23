@@ -42,20 +42,21 @@ export const reducer = createReducer(
         limit,
     })),
 
-    on(SectionUserListActions.onLoadSectionUsersSuccess, (state, { result }) =>
-        adapter.setAll(result.data, state)
+    on(
+        SectionUserListActions.onLoadSectionUsersSuccess,
+        (state, { result }) => {
+            console.log(result, 'On Load Section-Users');
+            return adapter.setAll(result, state);
+        }
     ),
 
     on(
         SectionUserListActions.onLoadSectionUsersSuccess,
         (state, { result }) => {
             // update `sortIds` based on API response
-            const ids = result.data.map((item) => item.id);
+            const ids = result.map((item) => item.id);
             return {
                 ...state,
-                page: result.page,
-                total: result.total,
-                limit: result.limit,
                 sortIds: ids,
             };
         }
@@ -89,6 +90,7 @@ export const selectList = createSelector(
     (state, entities) => {
         // use `sortIds` as basis for the sort order of items
         return state.sortIds.reduce<User[]>((accumulator, id) => {
+            console.log(entities[id], 'entities');
             if (entities[id]) {
                 accumulator.push(entities[id]);
             }

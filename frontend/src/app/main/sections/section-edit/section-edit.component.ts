@@ -6,9 +6,10 @@ import {
     ViewEncapsulation,
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
 import { Sort } from '@angular/material/sort';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
     ACTION_CREATE,
     ACTION_UPDATE,
@@ -37,6 +38,10 @@ import {
 import { isBoolean, isString } from 'lodash';
 import { BehaviorSubject, Observable, of, Subject, Subscription } from 'rxjs';
 import { catchError, debounceTime, map, switchMap, tap } from 'rxjs/operators';
+import {
+    AlertComponent,
+    ButtonTypes,
+} from 'src/app/shared/dialogs/alert/alert.component';
 import { FindAllCoursesDto } from 'src/app/shared/interfaces/course/find-all-courses-dto.interface';
 import { CreateSectionDto } from 'src/app/shared/interfaces/section/create-section-dto.interface';
 import { EditSectionDto } from 'src/app/shared/interfaces/section/edit-section-dto.interface';
@@ -68,6 +73,7 @@ export class SectionEditComponent implements OnInit, OnDestroy {
 
     sectionReloadSubscription: Subscription;
     formSubmitSubscription: Subscription;
+    unassignSubjectDialogSubscription: Subscription | null;
 
     form: FormGroup;
     tabIndex: number;
@@ -79,7 +85,7 @@ export class SectionEditComponent implements OnInit, OnDestroy {
     courseId: number;
     courseList$: Observable<Course[]>;
 
-    dataSource$: Observable<User[]>;
+    dataSource: Array<User>;
 
     /** Pagination */
     pageSizeOptions$: Observable<number[]>;
@@ -162,11 +168,13 @@ export class SectionEditComponent implements OnInit, OnDestroy {
 
     constructor(
         private route: ActivatedRoute,
+        private router: Router,
         private routerService: RouterService,
         private sectionService: SectionsService,
         private courseService: CourseService,
         private permissionService: PermissionsService,
         private ablePipe: AblePipe,
+        private dialog: MatDialog,
         private store: Store<RootState>
     ) {}
 
@@ -253,6 +261,7 @@ export class SectionEditComponent implements OnInit, OnDestroy {
             });
 
         this.setupObservables();
+        this.onLoadSectionUsers();
     }
 
     private buildSubjectForm(): void {
@@ -316,6 +325,44 @@ export class SectionEditComponent implements OnInit, OnDestroy {
         this.formSubmit$.next(this.transformFormDataToPayload());
     }
 
+    unsubscribeDialogbox(): void {
+        if (this.unassignSubjectDialogSubscription) {
+            this.unassignSubjectDialogSubscription.unsubscribe();
+            this.unassignSubjectDialogSubscription = null;
+        }
+    }
+
+    unassignUser(userId: number): void {
+        this.unsubscribeDialogbox();
+
+        this.unassignSubjectDialogSubscription = this.dialog
+            .open(AlertComponent, {
+                disableClose: true,
+                minWidth: 280,
+                data: {
+                    title: 'Remove Assigned User',
+                    message: 'Are you sure you want to remove User?',
+                    buttons: [
+                        { title: 'CANCEL', type: ButtonTypes.CANCEL },
+                        { title: 'REMOVE', type: ButtonTypes.CONFIRM },
+                    ],
+                },
+            })
+            .afterClosed()
+            .subscribe((result) => {
+                if (result === ButtonTypes.CONFIRM) {
+                    // remove assigned subject
+                    this.store.dispatch(
+                        SectionUserListActions.onRemoveSectionUser({
+                            userId,
+                        })
+                    );
+
+                    this.navigateBack();
+                }
+            });
+    }
+
     navigateBack() {
         this.routerService.back(['sections']);
     }
@@ -330,14 +377,20 @@ export class SectionEditComponent implements OnInit, OnDestroy {
         );
         this.pageSize$ = listState$.pipe(map((state) => state.limit));
         this.pageIndex$ = listState$.pipe(map((state) => state.page));
-        this.dataSource$ = this.store
-            .select(SectionUserListReducer.selectList)
-            .pipe(
-                tap((items) => {
-                    this.directiveScroll?.scrollToTop();
-                })
-            );
+        // this.dataSource$ = this.store
+        //     .select(SectionUserListReducer.selectList)
+        //     .pipe(
+        //         tap((items) => {
+        //             this.directiveScroll?.scrollToTop();
+        //         })
+        //     );
         this.listState$ = listState$;
+    }
+
+    onLoadSectionUsers() {
+        this.sectionService
+            .getSectionUsers(this.sectionId)
+            .subscribe((response: Array<User>) => (this.dataSource = response));
     }
 
     handleSearchCourse(text: string): void {
@@ -346,6 +399,10 @@ export class SectionEditComponent implements OnInit, OnDestroy {
 
     handleSelectedCourse(course: Course): void {
         this.courseId = course?.id || null;
+    }
+
+    assignSubject() {
+        this.router.navigateByUrl('/users/create');
     }
 
     displayFn(course: Course): string {
