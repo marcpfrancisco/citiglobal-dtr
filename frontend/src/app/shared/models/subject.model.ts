@@ -1,7 +1,7 @@
 import { Section } from './section.model';
 
 export interface SubjectModel {
-    id: string;
+    id: number;
 
     name: string;
     subjectCode: string;

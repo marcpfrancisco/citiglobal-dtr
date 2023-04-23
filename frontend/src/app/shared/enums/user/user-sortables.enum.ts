@@ -1,5 +1,5 @@
 export enum UserSortables {
-    NAME = 'name',
+    NAME = 'firstName',
     STUDENT_ID = 'idNo',
     ROLE = 'role',
     ACTIVE = 'active',

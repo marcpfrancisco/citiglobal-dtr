@@ -6,16 +6,16 @@ export const navigation: FuseNavigation[] = [
         title: 'Home',
         translate: 'NAV.HOME',
         type: 'group',
-        children: [
-            {
-                id: 'dashboard',
-                title: 'Dashboard',
-                translate: 'NAV.DASHBOARD.TITLE',
-                type: 'item',
-                icon: 'dashboard',
-                url: '/dashboard',
-            },
-        ],
+        // children: [
+        //     {
+        //         id: 'dashboard',
+        //         title: 'Dashboard',
+        //         translate: 'NAV.DASHBOARD.TITLE',
+        //         type: 'item',
+        //         icon: 'dashboard',
+        //         url: '/dashboard',
+        //     },
+        // ],
     },
     {
         id: 'management',
@@ -30,14 +30,6 @@ export const navigation: FuseNavigation[] = [
                 type: 'item',
                 icon: 'info',
                 url: '/sections',
-            },
-            {
-                id: 'students',
-                title: 'Students',
-                translate: 'NAV.STUDENTS.TITLE',
-                type: 'item',
-                icon: 'groups',
-                url: '/students',
             },
             {
                 id: 'subjects',
@@ -58,9 +50,9 @@ export const navigation: FuseNavigation[] = [
         ],
     },
     {
-        id: 'profile',
-        title: 'Profile',
-        translate: 'NAV.PROFILE',
+        id: 'reports',
+        title: 'Reports',
+        translate: 'NAV.REPORTS',
         type: 'group',
         children: [
             {

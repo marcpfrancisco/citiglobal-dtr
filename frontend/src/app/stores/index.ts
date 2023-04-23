@@ -18,6 +18,8 @@ import * as TimeLogReducer from './time-log/time-log.reducer';
 import * as SectionListReducer from './sections/section-list.reducer';
 import * as SubjectListReducer from './subjects/subject-list.reducer';
 import * as CourseListReducer from './courses/course-list.reducer';
+import * as UserSubjectListReducer from './user-subjects-list/user-subject-list.reducer';
+import * as SectionUserListReducer from './section-users-list/section-users-list.reducer';
 // export reducers here
 export {
     AuthenticationReducer,
@@ -28,6 +30,8 @@ export {
     SubjectListReducer,
     TimeLogReducer,
     UsersListReducer,
+    UserSubjectListReducer,
+    SectionUserListReducer,
 };
 
 export interface RootState {
@@ -40,6 +44,8 @@ export interface RootState {
     [SectionListReducer.featureKey]: SectionListReducer.State;
     [SubjectListReducer.featureKey]: SubjectListReducer.State;
     [CourseListReducer.featureKey]: CourseListReducer.State;
+    [UserSubjectListReducer.featureKey]: UserSubjectListReducer.State;
+    [SectionUserListReducer.featureKey]: SectionUserListReducer.State;
 }
 
 export const ROOT_REDUCERS = new InjectionToken<
@@ -55,6 +61,8 @@ export const ROOT_REDUCERS = new InjectionToken<
         [SectionListReducer.featureKey]: SectionListReducer.reducer,
         [SubjectListReducer.featureKey]: SubjectListReducer.reducer,
         [CourseListReducer.featureKey]: CourseListReducer.reducer,
+        [UserSubjectListReducer.featureKey]: UserSubjectListReducer.reducer,
+        [SectionUserListReducer.featureKey]: SectionUserListReducer.reducer,
     }),
 });
 

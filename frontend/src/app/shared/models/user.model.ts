@@ -1,5 +1,6 @@
 import { UserRoles } from '@enums';
 import { Section } from './section.model';
+import { SubjectModel } from './subject.model';
 export interface User {
     id: number;
 
@@ -14,9 +15,11 @@ export interface User {
     middleName?: string;
     lastName: string;
 
+    email?: string;
     mobileNo?: string;
     studentNo: string;
     rfidNo: string;
     role: UserRoles;
     section?: Section;
+    subjects?: SubjectModel[];
 }

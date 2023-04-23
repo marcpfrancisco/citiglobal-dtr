@@ -28,7 +28,7 @@ import {
 import { LoginActions } from '@stores/login';
 import { UsersListActions } from '@stores/users';
 import { isArray, isFunction } from 'lodash';
-import { of } from 'rxjs';
+import { from, of } from 'rxjs';
 import {
     withLatestFrom,
     filter,
@@ -94,7 +94,7 @@ export class AuthenticationEffects {
         return this.actions$.pipe(
             ofType(LoginActions.onLogin),
             switchMap((action) =>
-                this.authService.login(action.email, action.password).pipe(
+                this.authService.login(action.username, action.password).pipe(
                     map((user) => {
                         return AuthenticationActions.onAdminLogInSuccess({
                             user,
@@ -175,6 +175,28 @@ export class AuthenticationEffects {
         },
         { dispatch: false }
     );
+
+    // Reset Current User Password
+    resetCurrentUserPassword$ = createEffect(() => {
+        return this.actions$.pipe(
+            ofType(AuthenticationActions.onResetCurrentUserPassword),
+            withLatestFrom(
+                this.store.select(AuthenticationReducer.selectUserId)
+            ),
+            switchMap(([action, userId]) =>
+                from(this.usersService.changeUserPassword(userId)).pipe(
+                    map(() => AuthenticationActions.onChangePasswordSuccess()),
+                    catchError((error) =>
+                        of(
+                            AuthenticationActions.onChangePasswordFailure({
+                                error,
+                            })
+                        )
+                    )
+                )
+            )
+        );
+    });
 
     // Showing Angular Material Snack Bar
     showErrorSnackBar$ = createEffect(
@@ -297,21 +319,21 @@ export class AuthenticationEffects {
     private updateMenuNavigation(sessionUser: User): void {
         const navigationItems: Array<RootToggleNavigationItem> = [
             // HOME
-            {
-                name: 'home',
-                children: [
-                    {
-                        name: 'dashboard',
-                        rules: [
-                            {
-                                actions: [ACTION_READ, ACTION_LIST],
-                                subject: SUBJECT_DASHBOARD,
-                            },
-                        ],
-                        condition: (user) => user.role !== UserRoles.STUDENT,
-                    },
-                ],
-            },
+            // {
+            //     name: 'home',
+            //     children: [
+            //         {
+            //             name: 'dashboard',
+            //             rules: [
+            //                 {
+            //                     actions: [ACTION_READ, ACTION_LIST],
+            //                     subject: SUBJECT_DASHBOARD,
+            //                 },
+            //             ],
+            //             condition: (user) => user.role !== UserRoles.STUDENT,
+            //         },
+            //     ],
+            // },
             // Management
             {
                 name: 'management',

@@ -13,7 +13,7 @@ import { RootState } from '..';
 export const featureKey = 'authentication';
 
 export interface State {
-    id: string;
+    id: number;
     token: string;
     role: UserRoles;
     currentUser: User | null;
@@ -59,4 +59,9 @@ export const selectUserId = createSelector(
 export const selectCurrentUser = createSelector(
     selectAuthenticationState,
     (state) => state.currentUser
+);
+
+export const selectAuthToken = createSelector(
+    selectAuthenticationState,
+    (state) => state.token
 );

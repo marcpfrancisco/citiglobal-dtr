@@ -34,8 +34,4 @@ public class SubjectDto {
     private String gracePeriod;
 
     private Integer units;
-
-    private Long sectionId;
-
-    private Object section;
 }

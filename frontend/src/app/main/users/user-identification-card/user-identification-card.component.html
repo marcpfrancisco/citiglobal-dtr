@@ -1,0 +1,49 @@
+<div id="identification-card">
+    <div
+        mat-dialog-content
+        class="card fuse-white"
+        fxFlex
+        fxLayout="column"
+        fxLayoutAlign="space-between"
+        *ngIf="{ user: user$ | async } as data"
+    >
+        <header class="id-card__header">
+            <h4 class="header__title">CITI GLOBAL COLLEGE INC.</h4>
+            <p class="header__subtitle">
+                VCB BUILDING 107 LIMCAOCO ST. BRGY UNO, CITY OF CABUYAO, LAGUNA
+            </p>
+        </header>
+
+        <main class="id-card__content">
+            <img
+                class="id-card__person"
+                src="assets/images/avatars/barack-obama.png"
+                alt="User Image"
+            />
+            <img
+                class="id-card__logo"
+                src="assets/images/logo/citiglobal-logo.png"
+                alt="Citiglobal College Logo"
+            />
+        </main>
+
+        <footer class="id-card__footer" fxFlex fxLayout="column">
+            <h1 class="status">
+                <ng-container
+                    *ngIf="data?.timeIn === null && data?.timeOut === null"
+                >
+                    <span>TIME IN</span>
+                </ng-container>
+
+                <ng-container *ngIf="data?.timeIn !== null">
+                    <span>TIME OUT</span>
+                </ng-container>
+            </h1>
+            <h2 class="fullname">{{ data?.user | userFullName }}</h2>
+            <h3 class="student_id">STUDENT ID: {{ data?.user?.studentNo }}</h3>
+            <h4 class="student_course">{{ data?.user?.section?.name }}</h4>
+        </footer>
+
+        <div class="id-card__background"></div>
+    </div>
+</div>

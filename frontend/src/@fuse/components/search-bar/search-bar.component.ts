@@ -14,7 +14,7 @@ export class FuseSearchBarComponent implements OnInit, OnDestroy
     collapsed: boolean;
     fuseConfig: any;
 
-    // tslint:disable-next-line: no-output-native
+    // eslint-disable-next-line @angular-eslint/no-output-native
     @Output()
     input: EventEmitter<any>;
 

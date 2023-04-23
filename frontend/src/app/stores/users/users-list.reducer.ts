@@ -43,25 +43,31 @@ export const initialState = adapter.getInitialState({
 
 export const reducer = createReducer(
     initialState,
-    on(UsersListActions.onLoadUsers, (state, { limit, page }) => {
-        return { ...state, page, limit };
-    }),
+    on(UsersListActions.onLoadUsers, (state, { limit, page }) => ({
+        ...state,
+        page,
+        limit,
+    })),
 
     // SEARCH
-    on(UsersListActions.onSearch, (state, { search }) => {
-        return { ...state, search, page: 0 }; // reset page when searching
-    }),
+    on(UsersListActions.onSearch, (state, { search }) => ({
+        ...state,
+        search,
+        page: 0,
+    })),
 
     // FILTER
-    on(UsersListActions.onApplyFilters, (state, { filters }) => {
-        return { ...state, filters, page: 0 }; // reset page when filtering
-    }),
+    on(UsersListActions.onApplyFilters, (state, { filters }) => ({
+        ...state,
+        filters,
+        page: 0,
+    })),
 
     // UPDATE
-    on(UsersListActions.onLoadUsersSuccess, (state, { result }) => {
-        // Replace current collection with provided collection.
-        return adapter.setAll(result.data, state);
-    }),
+    on(UsersListActions.onLoadUsersSuccess, (state, { result }) =>
+        adapter.setAll(result.data, state)
+    ),
+
     on(UsersListActions.onLoadUsersSuccess, (state, { result }) => {
         // update `sortIds` based on API response
         const ids = result.data.map((item) => item.id);
@@ -73,19 +79,16 @@ export const reducer = createReducer(
             sortIds: ids,
         };
     }),
-    on(AuthenticationActions.onUpdateCurrentUserSuccess, (state, { user }) => {
-        // Replace current collection with provided collection.
-        return adapter.updateOne({ id: user.id, changes: { ...user } }, state);
-    }),
+    on(AuthenticationActions.onUpdateCurrentUserSuccess, (state, { user }) =>
+        adapter.updateOne({ id: user.id, changes: { ...user } }, state)
+    ),
 
     // SORT
-    on(UsersListActions.onToggleSort, (state, action) => {
-        return {
-            ...state,
-            sort: action.sort,
-            sortDirection: action.sortDirection,
-        };
-    }),
+    on(UsersListActions.onToggleSort, (state, action) => ({
+        ...state,
+        sort: action.sort,
+        sortDirection: action.sortDirection,
+    })),
 
     on(
         AuthenticationActions.onUpdateCurrentUserSuccess,
@@ -94,21 +97,13 @@ export const reducer = createReducer(
         UsersListActions.onDeleteUserSuccess,
         UsersListActions.onUndeleteUserSuccess,
         UsersListActions.onResetPasswordUserSuccess,
-        (state) => {
-            // Replace current collection with provided collection.
-            return {
-                ...state,
-                updatedAtTimestamp: getCurrentTimeStamp(),
-            };
-        }
+        (state) => ({ ...state, updatedAtTimestamp: getCurrentTimeStamp() })
     ),
 
-    on(UsersListActions.onHasFilters, (state, { hasFilters }) => {
-        return {
-            ...state,
-            hasFilters,
-        };
-    })
+    on(UsersListActions.onHasFilters, (state, { hasFilters }) => ({
+        ...state,
+        hasFilters,
+    }))
 );
 
 // Selectors

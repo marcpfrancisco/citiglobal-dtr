@@ -141,9 +141,10 @@ public class SubjectController {
 	public ResponseEntity<?> getAllSubject(@RequestParam(value =  "page") int pageNo, @RequestParam(value =  "limit") int pageSize,
 	@RequestParam(value =  "sort", required = false) String columnName,
 	@RequestParam(value =  "search", required = false) String keyword,
-	@RequestParam(required = false) String sortDirection) {
+	@RequestParam(required = false) String sortDirection,
+	@RequestParam(required = false) String userId) {
 
-		List<SubjectDto> subjectInfo = subjectService.getPaginatedSubjectSort(pageNo, pageSize, columnName, keyword, sortDirection);
+		List<SubjectDto> subjectInfo = subjectService.getPaginatedSubjectSort(pageNo, pageSize, columnName, keyword, sortDirection, userId);
 
 		if (subjectInfo != null) {
 
@@ -161,6 +162,9 @@ public class SubjectController {
 			}
 			if (sortDirection != null) {
 				tempMap.put("sortDirection", sortDirection);
+			}
+			if (userId != null) {
+				tempMap.put("userId", userId);
 			}
 
 			tempMap.put("total", subjectInfo.size());

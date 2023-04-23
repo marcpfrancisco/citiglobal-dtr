@@ -9,7 +9,7 @@ import { FusePerfectScrollbarDirective } from '@fuse/directives/fuse-perfect-scr
 import { User } from '@models';
 import { Store } from '@ngrx/store';
 import { AblePipe } from '@pipes';
-import { PermissionsService } from '@services';
+import { PermissionsService, ReportsService } from '@services';
 import { RootState, UsersListReducer } from '@stores/index';
 import { UsersListActions } from '@stores/users';
 import { getSortData } from '@utils';
@@ -52,7 +52,8 @@ export class UsersListComponent implements OnInit {
         private router: Router,
         private activatedRoute: ActivatedRoute,
         private permissionService: PermissionsService,
-        private store: Store<RootState>
+        private store: Store<RootState>,
+        private reportsService: ReportsService
     ) {}
 
     ngOnInit(): void {
@@ -91,6 +92,10 @@ export class UsersListComponent implements OnInit {
 
     onCreate(): void {
         this.router.navigate(['create'], { relativeTo: this.activatedRoute });
+    }
+
+    exportUsers(): void {
+        //  TODO: download report from specific user
     }
 
     isDeleted(user: User): boolean {

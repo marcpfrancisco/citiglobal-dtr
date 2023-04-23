@@ -10,12 +10,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
 
 @Data
 @AllArgsConstructor
@@ -25,7 +27,16 @@ import lombok.NoArgsConstructor;
 public class Role {
 
     @Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(generator = "role-sequence-generator")
+    @GenericGenerator(
+      name = "role-sequence-generator",
+      strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
+      parameters = {
+        @Parameter(name = "sequence_name", value = "role_seq"),
+        @Parameter(name = "initial_value", value = "4"),
+        @Parameter(name = "increment_size", value = "1")
+        }
+    )
 	private Long id;
 
     @CreationTimestamp

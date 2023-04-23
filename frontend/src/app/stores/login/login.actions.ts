@@ -4,7 +4,7 @@ import { createAction, props } from '@ngrx/store';
 // User Actions
 export const onLogin = createAction(
     '[Admin Login Component] On Login',
-    props<{ email: string; password: string }>()
+    props<{ username: string; password: string }>()
 );
 
 export const onAdminLoginInit = createAction(

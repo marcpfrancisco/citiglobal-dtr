@@ -17,25 +17,21 @@
             </ng-template>
 
             <ng-template #actions>
-                <button
+                <a
                     mat-raised-button
                     class="buttons fuse-white mt-24 mt-md-0"
                     *ngIf="'exportList' | able : 'Logs'"
+                    target="_blank"
                     (click)="exportTimeSheet()"
                 >
                     <span>EXPORT</span>
-                </button>
+                </a>
             </ng-template>
         </citiglobal-header>
         <!-- / HEADER -->
 
         <!-- Content Card  -->
         <div class="content-card">
-            <!-- [dataSource]="dataSource$" -->
-            <!-- [matSortActive]="(listState$ | listStateMatSort | async).active"
-            [matSortDirection]="
-                (listState$ | listStateMatSort | async).direction
-            " -->
             <mat-table
                 #table
                 matSort
@@ -43,6 +39,11 @@
                 [@animateStagger]="{ value: '50' }"
                 fusePerfectScrollbar
                 [fusePerfectScrollbarOptions]="{ suppressScrollX: true }"
+                [dataSource]="dataSource$"
+                [matSortActive]="(listState$ | listStateMatSort | async).active"
+                [matSortDirection]="
+                    (listState$ | listStateMatSort | async).direction
+                "
                 (matSortChange)="onToggleSort($event)"
             >
                 <!-- Name Column -->
@@ -51,7 +52,9 @@
                         >Name</mat-header-cell
                     >
                     <mat-cell *matCellDef="let item">
-                        <p class="text-truncate">{{ item.name }}</p>
+                        <p class="text-truncate">
+                            {{ item.user | userFullName }}
+                        </p>
                     </mat-cell>
                 </ng-container>
 
@@ -74,7 +77,7 @@
                     >
                     <mat-cell *matCellDef="let item">
                         <p class="text-truncate">
-                            {{ item.time_in | dateFormat }}
+                            {{ item.timeIn | dateTimeFormat }}
                         </p>
                     </mat-cell>
                 </ng-container>
@@ -86,7 +89,7 @@
                     >
                     <mat-cell *matCellDef="let item">
                         <p class="text-truncate">
-                            {{ item.time_out | dateFormat }}
+                            {{ item.timeOut | dateTimeFormat }}
                         </p>
                     </mat-cell>
                 </ng-container>
@@ -97,14 +100,22 @@
                         >Time Rendered</mat-header-cell
                     >
                     <mat-cell *matCellDef="let item">
-                        <p class="text-truncate">{{ item.time_rendered }}</p>
+                        <p class="text-truncate">
+                            <span *ngIf="!item?.timeIn || !item?.timeOut">
+                                N/A
+                            </span>
+                            <span *ngIf="item?.timeIn && item?.timeOut">
+                                {{
+                                    item.timeIn | timeDifference : item.timeOut
+                                }}
+                            </span>
+                        </p>
                     </mat-cell>
                 </ng-container>
 
                 <mat-header-row
                     *matHeaderRowDef="displayedColumns; sticky: true"
                 ></mat-header-row>
-                <!-- [class]="{ deleted: item.deletedAt }" -->
                 <mat-row
                     *matRowDef="let item; columns: displayedColumns"
                     class="item"

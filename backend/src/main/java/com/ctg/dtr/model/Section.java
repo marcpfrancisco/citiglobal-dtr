@@ -11,7 +11,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -20,6 +19,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -27,7 +29,16 @@ import lombok.NoArgsConstructor;
 public class Section {
 
     @Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(generator = "section-sequence-generator")
+    @GenericGenerator(
+      name = "section-sequence-generator",
+      strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
+      parameters = {
+        @Parameter(name = "sequence_name", value = "section_seq"),
+        @Parameter(name = "initial_value", value = "5"),
+        @Parameter(name = "increment_size", value = "1")
+        }
+    )
 	private Long id;
 
     @CreationTimestamp
@@ -50,7 +61,4 @@ public class Section {
 	@JsonIgnore
     private List<User> users;
 
-    @OneToMany(mappedBy = "section")
-	@JsonIgnore
-    private List<Subject> subjects;
 }

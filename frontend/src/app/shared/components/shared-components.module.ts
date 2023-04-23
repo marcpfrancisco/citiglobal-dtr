@@ -8,6 +8,7 @@ import { CleanrInputValueDirective } from '../directives/clear-input-value.direc
 import { FocusElementDirective } from '../directives/focus-element.directive';
 import { ObserveVisibilityDirective } from '../directives/observe-visibility.directive';
 import { PipesModule } from '../pipes/pipes.module';
+import { AutoCompleteComponent } from './auto-complete/auto-complete.component';
 import { FilterListComponent } from './filter-list/filter-list.component';
 import { HeaderComponent } from './header/header.component';
 import { NumberRangeFieldModule } from './number-range-field/number-range-field.module';
@@ -22,6 +23,7 @@ const COMPONENTS = [
     SearchComponent,
     FilterListComponent,
     TimeLogFieldComponent,
+    AutoCompleteComponent,
 
     // directives
     ObserveVisibilityDirective,

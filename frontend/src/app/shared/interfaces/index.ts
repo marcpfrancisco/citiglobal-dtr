@@ -16,3 +16,9 @@ export * from './time-log/find-time-log-dto.interface';
 export * from './subjects/create-subject-dto.interface';
 export * from './subjects/find-all-subjects-dto.interface';
 export * from './subjects/edit-subject-dto.interface';
+
+// sections
+export * from './section/create-section-dto.interface';
+export * from './section/edit-section-dto.interface';
+export * from './section/find-all-section-users-dto.interface';
+export * from './section/find-all-sections-dto.interface';

@@ -21,6 +21,7 @@ import {
     CourseService,
     FiltersService,
     PermissionsService,
+    ReportsService,
     RouterService,
     SectionsService,
     SnackbarService,
@@ -90,6 +91,7 @@ const { apiUrl } = environment;
         SubjectsService,
         TimeLogService,
         UsersService,
+        ReportsService,
     ],
     bootstrap: [AppComponent],
 })

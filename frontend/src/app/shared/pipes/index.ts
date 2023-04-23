@@ -7,3 +7,4 @@ export * from './phone-number-uri.pipe';
 export * from './pipes.module';
 export * from './title-case.pipe';
 export * from './user-roles.pipe';
+export * from './time-difference.pipe';

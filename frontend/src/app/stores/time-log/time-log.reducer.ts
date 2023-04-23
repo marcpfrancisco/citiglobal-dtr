@@ -1,5 +1,5 @@
 import { TimeLogSortables } from '@enums';
-import { ListState, TimeLog } from '@models';
+import { ListState, TimeLog, User } from '@models';
 import { createEntityAdapter, EntityState } from '@ngrx/entity';
 import {
     createFeatureSelector,
@@ -19,13 +19,13 @@ export interface State
     // Add extra properties here...
     updatedAtTimestamp: number;
     rfidNo: string;
-    prevRfidValue: string;
     filters: {
         periodDateRange: {
             from: Date;
             to: Date;
         };
     };
+    user: User;
     hasFilters: boolean;
 }
 
@@ -36,13 +36,13 @@ export const initialState = adapter.getInitialState({
     ...getInitialListState<TimeLogSortables>(),
     updatedAtTimestamp: getCurrentTimeStamp(),
     rfidNo: '',
-    prevRfidValue: '',
     filters: {
         periodDateRange: {
             from: null,
             to: null,
         },
     },
+    user: null,
     hasFilters: false,
 });
 
@@ -56,16 +56,19 @@ export const reducer = createReducer(
 
     // TIME LOG SUCCESS
     on(TimeLogActions.onTimeLogSuccess, (state, { timeLog }) => {
-        const { user, timeIn, timeOut, timeRendered } = timeLog;
+        const { user } = timeLog;
 
         return {
             ...state,
-            currentRfidValue: user?.rfidNo,
-            timeIn,
-            timeOut,
-            timeRendered,
+            rfidNo: user?.rfidNo,
+            user,
         };
-    })
+    }),
+
+    on(TimeLogActions.onShowTimeLogIDSuccess, (state, { user }) => ({
+        ...state,
+        user,
+    }))
 );
 
 // Selectors
@@ -78,3 +81,5 @@ export const selectCurrentRfidValue = createSelector(
     selectState,
     (state) => state.rfidNo
 );
+
+export const selectUser = createSelector(selectState, (state) => state.user);

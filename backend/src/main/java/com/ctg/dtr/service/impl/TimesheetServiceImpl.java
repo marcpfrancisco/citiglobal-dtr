@@ -175,34 +175,15 @@ public class TimesheetServiceImpl implements TimesheetService {
 	public Timesheet dailyTimeRecord(String rfidNo) {
 
         User checkStudentNo = userRepository.findByRfidNo(rfidNo);
+        SimpleDateFormat formatter = new SimpleDateFormat("EEEE");
+        String checkDay = formatter.format(new Date());
 
         if (checkStudentNo == null) {
             return null;
         }
 
         Timesheet currentTimesheet = timesheetRepository.findTimesheetByUserId(checkStudentNo.getId());
-
-        if (checkStudentNo.getSection() == null) {
-
-            if (currentTimesheet != null) {
-
-                Timesheet timesheet = setTimeOutRecord(rfidNo);
-
-                return timesheetRepository.save(timesheet);
-
-            } else {
-
-                Timesheet timesheet = setTimeInRecord(rfidNo);
-                timesheet.setStatus("LABORATORY");
-
-                return timesheetRepository.save(timesheet);
-            }
-        }
-
-        SimpleDateFormat formatter = new SimpleDateFormat("EEEE");
-        String checkDay = formatter.format(new Date());
-
-        Subject nextSubject = subjectRepository.findSubjectByDayAndSectionId(checkDay.toUpperCase(), checkStudentNo.getSection().getId());
+        Subject nextSubject = subjectRepository.findSubjectByDay(checkDay.toUpperCase());
 
         if (nextSubject != null) {
 
@@ -327,7 +308,7 @@ public class TimesheetServiceImpl implements TimesheetService {
             timesheet.setDate(new Date());
             timesheet.setTimeIn(new Date());
             timesheet.setTimeOut(null);
-            timesheet.setTimeRendered("00:00:00");
+            timesheet.setTimeRendered("00 hour(s) 00 minute(s) 00 second(s)");
             timesheet.setUser(checkStudentNo != null ? checkStudentNo : null);
 
             return timesheet;
@@ -351,8 +332,9 @@ public class TimesheetServiceImpl implements TimesheetService {
 
         currentTimesheet.setTimeOut(new Date());
         currentTimesheet.setTimeRendered(String.format("%02d", hoursDifference)
-        + ":" + String.format("%02d", minutesDifference)
-        + ":" + String.format("%02d", secondsDifference));
+        + " hour(s) " + String.format("%02d", minutesDifference)
+        + " minute(s) " + String.format("%02d", secondsDifference)
+        + " second(s)");
 
         return currentTimesheet;
     }

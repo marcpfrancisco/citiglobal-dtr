@@ -220,7 +220,6 @@ export class UsersListEffects {
                         )
                     ),
                     catchError((error) => {
-                        console.log(error, 'error');
                         return of(
                             UsersListActions.onUpdateUserFailure({ error })
                         );
@@ -264,8 +263,6 @@ export class UsersListEffects {
         loggedInUser: User,
         { id, role, isActive }: User
     ): boolean {
-        console.log(id, role, isActive);
-        console.log(loggedInUser);
         // when no user and not in editing self, no need to logout
         if (!loggedInUser?.id || `${loggedInUser?.id}` !== `${id}`) {
             return false;

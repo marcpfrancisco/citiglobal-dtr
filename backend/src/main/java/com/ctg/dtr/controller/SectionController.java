@@ -23,8 +23,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ctg.dtr.dto.SectionDto;
+import com.ctg.dtr.dto.UserDto;
 import com.ctg.dtr.model.Section;
 import com.ctg.dtr.service.SectionService;
+import com.ctg.dtr.service.UserService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -38,6 +40,9 @@ public class SectionController {
 
     @Autowired
     private SectionService sectionService;
+
+	@Autowired
+    private UserService userService;
 
 	@Operation(summary = "Add section")
 	@SecurityRequirement(name = "Bearer Authentication")
@@ -169,5 +174,55 @@ public class SectionController {
 		} else {
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).body(sectionInfo);
 		}
+	}
+
+	@Operation(summary = "Get user by section id")
+	@SecurityRequirement(name = "Bearer Authentication")
+	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
+	@GetMapping("/{sectionId}/students")
+	public ResponseEntity<?> getUserBySectionId(@RequestParam(value =  "page") int pageNo,
+	@RequestParam(value =  "limit") int pageSize,
+	@RequestParam(value =  "sort", required = false) String columnName,
+	@RequestParam(required = false) String sortDirection,
+	@PathVariable Long sectionId) {
+
+		List<UserDto> userInfo = userService.getUserBySectionId(pageNo, pageSize, columnName, sortDirection, sectionId);
+
+		if (userInfo != null) {
+
+			Map<String, Object> tempMap = new TreeMap<String, Object>();
+
+			tempMap.put("data", userInfo);
+			tempMap.put("page", pageNo);
+			tempMap.put("limit", pageSize);
+
+			if (columnName != null) {
+				tempMap.put("sort", columnName);
+			}
+			if (sortDirection != null) {
+				tempMap.put("sortDirection", sortDirection);
+			}
+
+			tempMap.put("total", userInfo.size());
+			tempMap.put("sectionId", sectionId);
+
+			return ResponseEntity.status(HttpStatus.OK).body(tempMap);
+		} else {
+			return ResponseEntity.status(HttpStatus.NO_CONTENT).body(userInfo);
+		}
+	}
+
+	@Operation(summary = "Remove user by section id")
+	@SecurityRequirement(name = "Bearer Authentication")
+	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
+	@DeleteMapping("/remove/{userIds}")
+	public ResponseEntity<?> removeUserBySectionId(@PathVariable Long[] userIds, HttpServletRequest request, HttpServletResponse response) {
+
+		Map<String, Object> tempMap = new HashMap<String, Object>();
+
+		userService.removeUserBySectionId(userIds);
+		tempMap.put("message", "Successfully Remove User by Section!");
+
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).body(tempMap);
 	}
 }

@@ -4,7 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 export interface Locale
 {
     lang: string;
-    // tslint:disable-next-line: ban-types
+    // eslint-disable-next-line @typescript-eslint/ban-types
     data: Object;
 }
 

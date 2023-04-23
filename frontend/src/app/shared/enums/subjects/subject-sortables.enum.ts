@@ -3,6 +3,6 @@ export enum SubjectSortables {
     DESCRIPTION = 'description',
     START_TIME = 'start-time',
     END_TIME = 'end-time',
-    PUBLISHED_AT = 'publishedAt',
+    CREATED_AT = 'createdAt',
     ACTIVE = 'isActive',
 }

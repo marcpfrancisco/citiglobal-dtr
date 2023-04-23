@@ -52,7 +52,8 @@ export class AdminLoginComponent implements OnInit {
 
     ngOnInit(): void {
         this.loginForm = this.formBuilder.group({
-            email: ['', [Validators.required]],
+            // Validators.email
+            username: ['', [Validators.required]],
             password: ['', Validators.required],
         });
 
@@ -61,8 +62,8 @@ export class AdminLoginComponent implements OnInit {
     }
 
     onSubmit(): void {
-        const { email, password } = this.loginForm.value;
-        this.store.dispatch(LoginActions.onLogin({ email, password }));
+        const { username, password } = this.loginForm.value;
+        this.store.dispatch(LoginActions.onLogin({ username, password }));
     }
 
     private setupObservables(): void {

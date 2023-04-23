@@ -31,6 +31,21 @@ spring:
     database-platform: org.hibernate.dialect.MySQL8Dialect
     show-sql: true
 
+# app password gmail
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: iamhitman15@gmail.com
+    password: jdytlluxfkekoohe
+    protocol: smtp
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+
 management:
   endpoints:
     web:

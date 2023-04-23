@@ -3,7 +3,7 @@
     "version": 1,
     "newProjectRoot": "projects",
     "projects": {
-        "fuse": {
+        "frontend": {
             "projectType": "application",
             "schematics": {
                 "@schematics/angular:component": {
@@ -17,7 +17,7 @@
                 "build": {
                     "builder": "@angular-devkit/build-angular:browser",
                     "options": {
-                        "outputPath": "dist/citiglobal",
+                        "outputPath": "dist",
                         "index": "src/index.html",
                         "main": "src/main.ts",
                         "polyfills": "src/polyfills.ts",
@@ -44,13 +44,22 @@
                         "styles": ["src/styles.scss"],
                         "scripts": []
                     },
-
                     "configurations": {
                         "production": {
-                            "optimization": true,
+                            "optimization": {
+                                "scripts": true,
+                                "styles": {
+                                    "minify": true,
+                                    "inlineCritical": false
+                                }
+                            },
                             "outputHashing": "all",
-                            "sourceMap": false,
-                            "extractCss": true,
+                            "sourceMap": {
+                                "scripts": true,
+                                "styles": false,
+                                "hidden": true,
+                                "vendor": true
+                            },
                             "namedChunks": false,
                             "extractLicenses": true,
                             "vendorChunk": false,
@@ -58,7 +67,7 @@
                             "budgets": [
                                 {
                                     "type": "initial",
-                                    "maximumWarning": "2mb",
+                                    "maximumWarning": "5mb",
                                     "maximumError": "8mb"
                                 },
                                 {
@@ -67,7 +76,6 @@
                                     "maximumError": "15kb"
                                 }
                             ],
-
                             "fileReplacements": [
                                 {
                                     "replace": "src/environments/environment.ts",
@@ -90,10 +98,10 @@
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "configurations": {
                         "production": {
-                            "browserTarget": "fuse:build:production"
+                            "browserTarget": "frontend:build:production"
                         },
                         "development": {
-                            "browserTarget": "fuse:build:development"
+                            "browserTarget": "frontend:build:development"
                         }
                     },
                     "defaultConfiguration": "development"
@@ -101,7 +109,7 @@
                 "extract-i18n": {
                     "builder": "@angular-devkit/build-angular:extract-i18n",
                     "options": {
-                        "browserTarget": "fuse:build"
+                        "browserTarget": "frontend:build"
                     }
                 },
                 "test": {
@@ -124,13 +132,18 @@
                 "lint": {
                     "builder": "@angular-eslint/builder:lint",
                     "options": {
+                        "tsConfig": [
+                            "src/tsconfig.app.json",
+                            "src/tsconfig.spec.json"
+                        ],
+                        "exclude": ["**/node_modules/**"],
                         "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
                     }
                 }
             }
         }
     },
-    "defaultProject": "fuse",
+    "defaultProject": "frontend",
     "cli": {
         "defaultCollection": "@angular-eslint/schematics"
     }

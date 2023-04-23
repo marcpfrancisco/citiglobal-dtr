@@ -26,6 +26,16 @@ export class FocusElementDirective {
 
         if (hiddenInput) {
             hiddenInput.focus();
+            hiddenInput.addEventListener('paste', this.handlePaste);
+        }
+    }
+
+    ngOnDestroy(): void {
+        const hiddenInput: HTMLInputElement =
+            this.elementRef.nativeElement.querySelector('#rfidNoField');
+
+        if (hiddenInput) {
+            hiddenInput.removeEventListener('paste', this.handlePaste);
         }
     }
 
@@ -37,5 +47,9 @@ export class FocusElementDirective {
         if (hiddenInput && !hiddenInput.contains(target)) {
             hiddenInput.focus();
         }
+    }
+
+    handlePaste(event: ClipboardEvent): void {
+        event.preventDefault();
     }
 }

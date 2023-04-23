@@ -25,10 +25,7 @@ export function adminAbility(subject: UserSubject): AbilityRule[] {
             action: ACTION_READ,
             subject: SUBJECT_USER,
         },
-        {
-            action: ACTION_CREATE,
-            subject: SUBJECT_USER,
-        },
+
         // update my own user only
         {
             action: ACTION_UPDATE,
@@ -44,25 +41,41 @@ export function adminAbility(subject: UserSubject): AbilityRule[] {
 
         // manage sections
         {
-            action: ACTION_MANAGE,
+            action: ACTION_LIST,
+            subject: SUBJECT_SECTIONS,
+        },
+        {
+            action: ACTION_READ,
             subject: SUBJECT_SECTIONS,
         },
 
         // manage students
         {
-            action: ACTION_MANAGE,
+            action: ACTION_LIST,
+            subject: SUBJECT_STUDENTS,
+        },
+        {
+            action: ACTION_READ,
             subject: SUBJECT_STUDENTS,
         },
 
         // manage subjects
         {
-            action: ACTION_MANAGE,
+            action: ACTION_READ,
+            subject: SUBJECT_SUBJECTS,
+        },
+        {
+            action: ACTION_LIST,
             subject: SUBJECT_SUBJECTS,
         },
 
         // manage logs
         {
-            action: ACTION_MANAGE,
+            action: ACTION_READ,
+            subject: SUBJECT_LOGS,
+        },
+        {
+            action: ACTION_LIST,
             subject: SUBJECT_LOGS,
         },
     ];

@@ -6,11 +6,11 @@ import {
     ViewEncapsulation,
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialogConfig } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
 import { Sort } from '@angular/material/sort';
 import { ActivatedRoute, Params } from '@angular/router';
-import { ACTION_UPDATE, mode, SUBJECT_SECTIONS } from '@constants';
+import { ACTION_UPDATE, mode, pagination, SUBJECT_SECTIONS } from '@constants';
 import { SectionSortables, SubjectSortables, UserRoles } from '@enums';
 import { fuseAnimations } from '@fuse/animations';
 import { FusePerfectScrollbarDirective } from '@fuse/directives/fuse-perfect-scrollbar/fuse-perfect-scrollbar.directive';
@@ -18,16 +18,42 @@ import { CreateUserDto } from '@interfaces';
 import { Section, SubjectModel, User } from '@models';
 import { Store } from '@ngrx/store';
 import { AblePipe } from '@pipes';
-import { RouterService, UsersService } from '@services';
+import { RouterService, SectionsService, UsersService } from '@services';
 import {
     AuthenticationReducer,
     RootState,
     UsersListReducer,
+    UserSubjectListReducer,
 } from '@stores/index';
+import { UserSubjectListActions } from '@stores/user-subjects-list';
 import { UsersListActions } from '@stores/users';
-import { getSortData, isNumericInteger } from '@utils';
-import { combineLatest, Observable, of, Subject, Subscription } from 'rxjs';
-import { catchError, switchMap, take } from 'rxjs/operators';
+import {
+    createSearchPaginationLimitOptions,
+    getSortData,
+    isNumericInteger,
+} from '@utils';
+import {
+    BehaviorSubject,
+    combineLatest,
+    Observable,
+    of,
+    Subject,
+    Subscription,
+} from 'rxjs';
+import {
+    catchError,
+    debounceTime,
+    map,
+    switchMap,
+    take,
+    tap,
+} from 'rxjs/operators';
+import {
+    AlertComponent,
+    ButtonTypes,
+} from 'src/app/shared/dialogs/alert/alert.component';
+import { FindAllSectionsDto } from 'src/app/shared/interfaces/section/find-all-sections-dto.interface';
+import { UserAssignSubjectComponent } from '../user-assign-subject/user-assign-subject.component';
 
 @Component({
     selector: 'citiglobal-user-edit',
@@ -37,24 +63,18 @@ import { catchError, switchMap, take } from 'rxjs/operators';
     encapsulation: ViewEncapsulation.None,
 })
 export class UserEditComponent implements OnInit, OnDestroy {
+    private searchSubject = new BehaviorSubject<string>('');
+
     readonly USER_ROLES = UserRoles;
     readonly COURSE_SECTION_SORTABLES = SectionSortables;
     readonly SUBJECT_SORTABLES = SubjectSortables;
-
-    COURSE_SECTION_DISPLAYED_COLUMNS = [
-        SectionSortables.SECTION,
-        SectionSortables.COURSE,
-        SectionSortables.PUBLISHED_AT,
-        SectionSortables.ACTIVE,
-        'options',
-    ];
 
     SUBJECT_DISPLAYED_COLUMNS = [
         SubjectSortables.SUBJECT_CODE,
         SubjectSortables.DESCRIPTION,
         SubjectSortables.START_TIME,
         SubjectSortables.END_TIME,
-        SubjectSortables.PUBLISHED_AT,
+        SubjectSortables.CREATED_AT,
         SubjectSortables.ACTIVE,
         'options',
     ];
@@ -70,9 +90,18 @@ export class UserEditComponent implements OnInit, OnDestroy {
     // options for roles
     userRoles: Array<UserRoles>;
 
-    userDetailSubscription: Subscription;
+    userDetailSubscription: Subscription | null;
+    assignSubjectDialogSubscription: Subscription | null;
+    unassignSubjectDialogSubscription: Subscription | null;
+
     userIdChanges$: Subject<number>;
     loggedInUser: User | null;
+
+    sectionOptions: Section[];
+    sectionId: number;
+    course: string;
+
+    dataSource$: Observable<SubjectModel[]>;
 
     /** Pagination */
     pageSizeOptions$: Observable<number[]>;
@@ -80,22 +109,14 @@ export class UserEditComponent implements OnInit, OnDestroy {
     pageIndex$: Observable<number>;
     total$: Observable<number>;
 
-    courseSubjectDateSource$: Observable<SubjectModel[]>;
-    studentDataSource$: Observable<Section[]>;
+    sectionList$: Observable<Section[]>;
+
+    listState$: Observable<UserSubjectListReducer.State>;
 
     @ViewChild(FusePerfectScrollbarDirective)
     directiveScroll: FusePerfectScrollbarDirective;
 
     userRecord: User;
-
-    get courseSectionDisplayedColumns(): Array<string> {
-        if (!this.ablePipe.transform(ACTION_UPDATE, SUBJECT_SECTIONS)) {
-            return this.COURSE_SECTION_DISPLAYED_COLUMNS.filter(
-                (column) => column !== 'options'
-            );
-        }
-        return this.COURSE_SECTION_DISPLAYED_COLUMNS;
-    }
 
     get subjectDisplayedColumns(): Array<string> {
         if (!this.ablePipe.transform(ACTION_UPDATE, SUBJECT_SECTIONS)) {
@@ -126,6 +147,10 @@ export class UserEditComponent implements OnInit, OnDestroy {
 
     get lastName(): string {
         return this.userForm?.get('lastName')?.value;
+    }
+
+    get hasAssignedSubject(): boolean {
+        return !!this.role;
     }
 
     get isEditMode(): boolean {
@@ -165,14 +190,6 @@ export class UserEditComponent implements OnInit, OnDestroy {
         return payload as CreateUserDto;
     }
 
-    get canAssignCourseAndSection(): boolean {
-        if (!this.role) {
-            return false;
-        }
-
-        return true;
-    }
-
     get canAssignSubject(): boolean {
         if (!this.role) {
             return false;
@@ -181,17 +198,45 @@ export class UserEditComponent implements OnInit, OnDestroy {
         return true;
     }
 
+    get currentSection(): Section | null {
+        return this.userForm?.get('section')?.value || null;
+    }
+
+    set currentSection(section: Section | null) {
+        this.userForm?.patchValue({
+            section: section || null,
+        });
+    }
+
     constructor(
         private route: ActivatedRoute,
         private routerService: RouterService,
         private usersService: UsersService,
+        private sectionsService: SectionsService,
         private store: Store<RootState>,
+        private dialog: MatDialog,
         private ablePipe: AblePipe
     ) {}
 
     ngOnInit(): void {
         this.loggedInUser = null;
         this.userRoles = Object.values(UserRoles);
+
+        this.sectionList$ = this.searchSubject.pipe(
+            debounceTime(500),
+            switchMap((search) => {
+                const params = createSearchPaginationLimitOptions({
+                    search,
+                    page: pagination.CURRENT_PAGE,
+                    limit: pagination.ITEMS_PER_PAGE,
+                });
+
+                return this.sectionsService.getSections(
+                    params as FindAllSectionsDto
+                );
+            }),
+            map((sections) => sections?.data || [])
+        );
 
         this.buildUserForm();
 
@@ -211,6 +256,10 @@ export class UserEditComponent implements OnInit, OnDestroy {
                         return of(null);
                     }
 
+                    this.store.dispatch(
+                        UserSubjectListActions.onInit({ userId: this.userId })
+                    );
+
                     return this.usersService
                         .getUserById(this.userId)
                         .pipe(catchError(() => of(null)));
@@ -218,31 +267,44 @@ export class UserEditComponent implements OnInit, OnDestroy {
             )
             .subscribe((user: User | null) => {
                 this.mode = user ? mode.EDIT_MODE : mode.CREATE_MODE;
-
                 this.userRecord = user;
 
                 if (user) {
-                    this.userForm.setValue({
-                        firstName: user[0]?.firstName || '',
-                        lastName: user[0]?.lastName || '',
-                        studentNo: user[0]?.studentNo || '',
-                        rfidNo: user[0]?.rfidNo || '',
-                        username: user[0]?.username || '',
-                        role: user[0]?.role || '',
-                        isActive: user[0]?.isActive || false,
+                    const {
+                        firstName,
+                        lastName,
+                        studentNo,
+                        section,
+                        rfidNo,
+                        email,
+                        username,
+                        role,
+                        isActive,
+                    } = user[0];
+
+                    this.userForm.patchValue({
+                        firstName,
+                        lastName,
+                        studentNo,
+                        section,
+                        rfidNo,
+                        email,
+                        username,
+                        role,
+                        isActive,
+                    });
+                } else {
+                    this.userForm.patchValue({
+                        firstName: '',
+                        lastName: '',
+                        studentNo: '',
+                        section: null,
+                        rfidNo: '',
+                        username: '',
+                        role: '',
+                        isActive: true,
                     });
                 }
-
-                // if (user) {
-                //     this.userForm.setValue({
-                //         firstName: user[0]?.firstName || '',
-                //         lastName: user[0]?.lastName || '',
-                //         studentId: user[0]?.studentId || '',
-                //         rfidNo: user[0]?.rfidNo || '',
-                //         role: user[0]?.role || '',
-                //         isActive: user[0]?.isActive || false,
-                //     });
-                // }
             });
 
         this.setupObservables();
@@ -253,7 +315,9 @@ export class UserEditComponent implements OnInit, OnDestroy {
             firstName: new FormControl('', [Validators.required]),
             lastName: new FormControl('', [Validators.required]),
             studentNo: new FormControl('', [Validators.required]),
+            section: new FormControl(null, [Validators.required]),
             rfidNo: new FormControl('', [Validators.required]),
+            email: new FormControl('', [Validators.required]),
             username: new FormControl('', [Validators.required]),
             role: new FormControl('', [Validators.required]),
             isActive: new FormControl(true, [Validators.required]),
@@ -266,33 +330,42 @@ export class UserEditComponent implements OnInit, OnDestroy {
     }
 
     onToggleSort(sort: Sort): void {
-        const sortData = getSortData<SectionSortables>(sort);
-        // this.store.dispatch(UsersFloristsActions.onToggleSort(sortData));
+        const sortData = getSortData<SubjectSortables>(sort);
+        this.store.dispatch(UserSubjectListActions.onToggleSort(sortData));
     }
 
-    // unsubscribeDialogbox(): void {
-    //   if (this.assignFloristDialogSubscription) {
-    //     this.assignFloristDialogSubscription.unsubscribe();
-    //     this.assignFloristDialogSubscription = null;
-    //   }
+    unsubscribeDialogbox(): void {
+        if (this.assignSubjectDialogSubscription) {
+            this.assignSubjectDialogSubscription.unsubscribe();
+            this.assignSubjectDialogSubscription = null;
+        }
 
-    //   if (this.unassignFloristDialogSubscription) {
-    //     this.unassignFloristDialogSubscription.unsubscribe();
-    //     this.unassignFloristDialogSubscription = null;
-    //   }
-    // }
+        if (this.unassignSubjectDialogSubscription) {
+            this.unassignSubjectDialogSubscription.unsubscribe();
+            this.unassignSubjectDialogSubscription = null;
+        }
+    }
 
     onChangePage(event: PageEvent): void {
-        // this.store.dispatch(
-        //   UsersFloristsActions.onLoadUsersFlorists({
-        //     limit: event.pageSize,
-        //     page: event.pageIndex,
-        //   })
-        // );
+        this.store.dispatch(
+            UserSubjectListActions.onLoadUsersSubjects({
+                limit: event.pageSize,
+                page: event.pageIndex,
+            })
+        );
     }
 
-    trackByFn(index, florist): number {
-        return florist?.id; // or item.id
+    isAssignedSubject(subjectId: number): boolean {
+        const user = this.userRecord;
+
+        if (!user) {
+            return false;
+        }
+
+        return (
+            !!user.subjects?.find((subject) => subject.id === subjectId) ||
+            false
+        );
     }
 
     /**
@@ -302,9 +375,13 @@ export class UserEditComponent implements OnInit, OnDestroy {
         const formData = this.formData;
 
         this.isLoading = true;
+
+        if (isNumericInteger(this.sectionId)) {
+            formData['sectionId'] = this.sectionId;
+        }
+
         // Edit User
         if (this.mode === mode.EDIT_MODE) {
-            console.log(formData, 'Update');
             // the id of the user to be edited
             this.store.dispatch(
                 UsersListActions.onUpdateUser({
@@ -324,52 +401,64 @@ export class UserEditComponent implements OnInit, OnDestroy {
         }
     }
 
-    assignCourseAndSection(): void {
-        const dialogConfig = new MatDialogConfig();
-        dialogConfig.disableClose = true;
-        dialogConfig.autoFocus = true;
-        dialogConfig.panelClass = 'citiglobal-user-assign-course-section';
-
-        // this.unsubscribeDialogbox();
-
-        // this.assignFloristDialogSubscription = this.dialog
-        //   .open(UserAssignFloristComponent, dialogConfig)
-        //   .afterClosed()
-        //   .pipe(take(1))
-        //   .subscribe((florist) => {
-        //     if (florist) {
-        //       // assign florist
-        //       if (this.canAssignCourseAndSection && !this.isAssignedFlorist(florist.id)) {
-        //         this.store.dispatch(
-        //           UsersFloristsActions.onAddUserFlorist({ floristId: florist.id })
-        //         );
-        //       }
-        //     }
-        //   });
-    }
-
     assignSubject(): void {
         const dialogConfig = new MatDialogConfig();
         dialogConfig.disableClose = true;
         dialogConfig.autoFocus = true;
         dialogConfig.panelClass = 'citiglobal-user-assign-subject';
 
-        // this.unsubscribeDialogbox();
+        this.unsubscribeDialogbox();
 
-        // this.assignFloristDialogSubscription = this.dialog
-        //   .open(UserAssignFloristComponent, dialogConfig)
-        //   .afterClosed()
-        //   .pipe(take(1))
-        //   .subscribe((florist) => {
-        //     if (florist) {
-        //       // assign florist
-        //       if (this.canAssignCourseAndSection && !this.isAssignedFlorist(florist.id)) {
-        //         this.store.dispatch(
-        //           UsersFloristsActions.onAddUserFlorist({ floristId: florist.id })
-        //         );
-        //       }
-        //     }
-        //   });
+        this.assignSubjectDialogSubscription = this.dialog
+            .open(UserAssignSubjectComponent, dialogConfig)
+            .afterClosed()
+            .pipe(take(1))
+            .subscribe((subject) => {
+                if (subject) {
+                    // assign subject
+                    if (
+                        this.canAssignSubject &&
+                        !this.isAssignedSubject(subject.id)
+                    ) {
+                        this.store.dispatch(
+                            UserSubjectListActions.onAddUserSubject({
+                                subjectId: subject.id,
+                            })
+                        );
+                    }
+                }
+            });
+    }
+
+    unassignSubject(subjectId: number): void {
+        this.unsubscribeDialogbox();
+
+        this.unassignSubjectDialogSubscription = this.dialog
+            .open(AlertComponent, {
+                disableClose: true,
+                minWidth: 280,
+                data: {
+                    title: 'Remove Assigned Subject',
+                    message: 'Are you sure you want to remove subject?',
+                    buttons: [
+                        { title: 'CANCEL', type: ButtonTypes.CANCEL },
+                        { title: 'REMOVE', type: ButtonTypes.CONFIRM },
+                    ],
+                },
+            })
+            .afterClosed()
+            .subscribe((result) => {
+                if (result === ButtonTypes.CONFIRM) {
+                    // remove assigned subject
+                    if (this.isAssignedSubject(subjectId)) {
+                        this.store.dispatch(
+                            UserSubjectListActions.onRemoveUserSubject({
+                                subjectId,
+                            })
+                        );
+                    }
+                }
+            });
     }
 
     /**
@@ -392,20 +481,35 @@ export class UserEditComponent implements OnInit, OnDestroy {
     }
 
     private setupObservables(): void {
-        // const listState$ = this.store.select(UsersFloristsListReducer.selectState);
-        // this.total$ = listState$.pipe(map((state) => state.total));
-        // this.pageSizeOptions$ = listState$.pipe(
-        //   map((state) => state.pageSizeOptions)
-        // );
-        // this.pageSize$ = listState$.pipe(map((state) => state.limit));
-        // this.pageIndex$ = listState$.pipe(map((state) => state.page));
-        // this.dataSource$ = this.store
-        //   .select(UsersFloristsListReducer.selectList)
-        //   .pipe(
-        //     tap((items) => {
-        //       this.directiveScroll?.scrollToTop();
-        //     })
-        //   );
-        // this.listState$ = listState$;
+        const listState$ = this.store.select(
+            UserSubjectListReducer.selectState
+        );
+        this.total$ = listState$.pipe(map((state) => state.total));
+        this.pageSizeOptions$ = listState$.pipe(
+            map((state) => state.pageSizeOptions)
+        );
+        this.pageSize$ = listState$.pipe(map((state) => state.limit));
+        this.pageIndex$ = listState$.pipe(map((state) => state.page));
+        this.dataSource$ = this.store
+            .select(UserSubjectListReducer.selectList)
+            .pipe(
+                tap((items) => {
+                    this.directiveScroll?.scrollToTop();
+                })
+            );
+        this.listState$ = listState$;
+    }
+
+    handleSearchSection(text: string): void {
+        this.searchSubject.next(text);
+    }
+
+    handleSelectedSection(section: Section): void {
+        this.currentSection = section || null;
+        this.sectionId = section?.id || null;
+    }
+
+    displayFn(section: Section): string {
+        return section?.name;
     }
 }

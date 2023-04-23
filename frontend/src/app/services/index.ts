@@ -9,3 +9,4 @@ export * from './snackbar.service';
 export * from './subjects.service';
 export * from './time-log.service';
 export * from './users.service';
+export * from './reports.service';

@@ -22,8 +22,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ctg.dtr.dto.SubjectDto;
 import com.ctg.dtr.dto.UserDto;
+import com.ctg.dtr.model.Subject;
 import com.ctg.dtr.model.User;
+import com.ctg.dtr.payload.request.PasswordRequest;
+import com.ctg.dtr.payload.request.SubjectIdRequest;
+import com.ctg.dtr.service.SubjectService;
 import com.ctg.dtr.service.UserService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -39,6 +44,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+	@Autowired
+	private SubjectService subjectService;
 
 	@Operation(summary = "Add user")
 	@PostMapping
@@ -196,6 +204,191 @@ public class UserController {
 			return ResponseEntity.status(HttpStatus.OK).body(tempMap);
 		} else {
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).body(userInfo);
+		}
+	}
+
+	@Operation(summary = "Add subject to user")
+	@SecurityRequirement(name = "Bearer Authentication")
+	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
+	@PostMapping(value = "/{userId}/subjects")
+	public ResponseEntity<?> addSubject(@PathVariable Long userId, @RequestBody SubjectIdRequest subjectIdRequest,
+										HttpServletRequest request, HttpServletResponse response) {
+
+		Optional<User> userOptional = userService.getById(userId);
+		Map<String, Object> tempMap = new HashMap<String, Object>();
+	
+		if (!userOptional.isPresent()) {
+
+			response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+
+			tempMap.put("status", HttpServletResponse.SC_NOT_FOUND);
+			tempMap.put("error", HttpStatus.NOT_FOUND);
+			tempMap.put("message", "Missing User ID: " + userId);
+			tempMap.put("path", request.getServletPath());
+
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(tempMap);
+		}
+	
+		User user = userOptional.get();
+		long subjectId = subjectIdRequest.getSubjectId();
+		Optional<Subject> subjectOptional = subjectService.getById(subjectId);
+	
+		if (subjectId != 0L) {
+
+			if (!subjectOptional.isPresent()) {
+
+				response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+				response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+	
+				tempMap.put("status", HttpServletResponse.SC_NOT_FOUND);
+				tempMap.put("error", HttpStatus.NOT_FOUND);
+				tempMap.put("message", "Missing Subject ID: " + subjectId);
+				tempMap.put("path", request.getServletPath());
+	
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(tempMap);
+			}
+	
+			Subject subject = subjectOptional.get();
+			user.addSubject(subject);
+			userService.saveUser(user);
+			return new ResponseEntity<>(subject, HttpStatus.CREATED);
+
+		} else {
+			user.addSubject(subjectOptional.get());
+			Subject subject = subjectService.saveSubject(subjectOptional.get());
+			return new ResponseEntity<>(subject, HttpStatus.CREATED);
+		}
+	}
+
+	@Operation(summary = "Delete subject from user")
+	@SecurityRequirement(name = "Bearer Authentication")
+	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
+	@DeleteMapping(value = "/{userId}/subjects/{subjectId}")
+	public ResponseEntity<?> deleteSubjectFromUser(@PathVariable Long userId, @PathVariable Long subjectId,
+															HttpServletRequest request, HttpServletResponse response) {
+
+		Map<String, Object> tempMap = new TreeMap<String, Object>();
+
+    	Optional<User> userOptional = userService.getById(userId);
+		Optional<Subject> subjectOptional = subjectService.getById(subjectId);
+
+    	if (!userOptional.isPresent()) {
+			response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+
+			tempMap.put("status", HttpServletResponse.SC_NOT_FOUND);
+			tempMap.put("error", HttpStatus.NOT_FOUND);
+			tempMap.put("message", "Missing User ID: " + userId);
+			tempMap.put("path", request.getServletPath());
+
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(tempMap);
+    	}
+		if (!subjectOptional.isPresent()) {
+
+			response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+
+			tempMap.put("status", HttpServletResponse.SC_NOT_FOUND);
+			tempMap.put("error", HttpStatus.NOT_FOUND);
+			tempMap.put("message", "Missing Subject ID: " + subjectId);
+			tempMap.put("path", request.getServletPath());
+
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(tempMap);
+		}
+
+    	User user = userOptional.get();
+    	user.removeSubject(subjectId);
+    	userService.saveUser(user);
+
+    	return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	}
+
+	@Operation(summary = "Get all subject from user")
+	@SecurityRequirement(name = "Bearer Authentication")
+	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
+	@GetMapping("/{userId}/subjects")
+	public ResponseEntity<?> getAllSubjectsByUserId(@PathVariable Long userId, HttpServletRequest request, HttpServletResponse response) {
+
+		Map<String, Object> tempMap = new TreeMap<String, Object>();
+		Optional<User> userOptional = userService.getById(userId);
+
+    	if (!userOptional.isPresent()) {
+			response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+
+			tempMap.put("status", HttpServletResponse.SC_NOT_FOUND);
+			tempMap.put("error", HttpStatus.NOT_FOUND);
+			tempMap.put("message", "Missing User ID: " + userId);
+			tempMap.put("path", request.getServletPath());
+
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(tempMap);
+    	} else {
+			List<SubjectDto> subjectInfo = subjectService.getAllSubjectsByUserId(userId);
+			return new ResponseEntity<List<SubjectDto>>(subjectInfo, HttpStatus.OK);
+		}
+	}
+
+	@Operation(summary = "Update user password")
+	@SecurityRequirement(name = "Bearer Authentication")
+	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
+	@PutMapping("/update-password/{userId}")
+	public ResponseEntity<?> updateUserPassword(@PathVariable Long userId, @RequestBody PasswordRequest passwordRequest, HttpServletRequest request, HttpServletResponse response) {
+
+		Optional<User> user = userService.getById(userId);
+		Map<String, Object> tempMap = new HashMap<String, Object>();
+
+		if (!user.isPresent()) {
+
+			response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+
+			tempMap.put("status", HttpServletResponse.SC_NOT_FOUND);
+			tempMap.put("error",  HttpStatus.NOT_FOUND);
+			tempMap.put("message", "Missing User ID: " + userId);
+			tempMap.put("path", request.getServletPath());
+
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(tempMap);
+
+		} else {
+			User currentUser = userService.updatePassword(passwordRequest.getNewPassword(), userId);
+			return new ResponseEntity<User>(currentUser, HttpStatus.OK);
+		}
+	}
+
+	@Operation(summary = "Reset user password")
+	@SecurityRequirement(name = "Bearer Authentication")
+	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
+	@PutMapping("/reset-password/{userId}")
+	public ResponseEntity<?> resetUserPassword(@PathVariable Long userId, @RequestBody PasswordRequest passwordRequest, HttpServletRequest request, HttpServletResponse response) {
+
+		Optional<User> user = userService.getById(userId);
+		Map<String, Object> tempMap = new HashMap<String, Object>();
+
+		if (!user.isPresent()) {
+
+			response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+
+			tempMap.put("status", HttpServletResponse.SC_NOT_FOUND);
+			tempMap.put("error",  HttpStatus.NOT_FOUND);
+			tempMap.put("message", "Missing User ID: " + userId);
+			tempMap.put("path", request.getServletPath());
+
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(tempMap);
+
+		} else {
+
+			response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+			response.setStatus(HttpServletResponse.SC_OK);
+
+			tempMap.put("status", HttpServletResponse.SC_OK);
+			tempMap.put("message", "Successfully!");
+			tempMap.put("path", request.getServletPath());
+
+			userService.resetPassword(userId);
+
+			return ResponseEntity.status(HttpStatus.OK).body(tempMap);
 		}
 	}
 }

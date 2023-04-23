@@ -5,7 +5,7 @@ import { takeUntil } from 'rxjs/operators';
 import { FuseMatchMediaService } from '@fuse/services/match-media.service';
 
 @Directive({
-    // tslint:disable-next-line: directive-selector
+    // eslint-disable-next-line @angular-eslint/directive-selector
     selector: '.inner-scroll'
 })
 export class FuseInnerScrollDirective implements OnInit, OnDestroy

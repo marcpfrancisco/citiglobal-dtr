@@ -31,6 +31,8 @@ public class UserDto {
 
     private String rfidNo;
 
+    private String email;
+
     private String username;
 
     private String password;
@@ -38,6 +40,8 @@ public class UserDto {
     private Long sectionId;
 
     private Object section;
+
+    private Object subject;
 
     // private Long roleId;
 
