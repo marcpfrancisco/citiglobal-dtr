@@ -43,17 +43,17 @@ export class RouterService {
         }
 
         // go back to home page if no URL
-        this.router.navigateByUrl('/dashboard');
+        this.router.navigateByUrl('/sections');
     }
 
     navigateToLandingPage(role: UserRoles): void {
         switch (role) {
             case UserRoles.SUPERADMIN:
-                this.router.navigate(['dashboard']);
+                this.router.navigate(['sections']);
                 break;
 
             case UserRoles.ADMINISTRATOR:
-                this.router.navigate(['dashboard']);
+                this.router.navigate(['sections']);
                 break;
 
             case UserRoles.STUDENT:

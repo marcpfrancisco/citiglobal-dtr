@@ -319,21 +319,21 @@ export class AuthenticationEffects {
     private updateMenuNavigation(sessionUser: User): void {
         const navigationItems: Array<RootToggleNavigationItem> = [
             // HOME
-            {
-                name: 'home',
-                children: [
-                    {
-                        name: 'dashboard',
-                        rules: [
-                            {
-                                actions: [ACTION_READ, ACTION_LIST],
-                                subject: SUBJECT_DASHBOARD,
-                            },
-                        ],
-                        condition: (user) => user.role !== UserRoles.STUDENT,
-                    },
-                ],
-            },
+            // {
+            //     name: 'home',
+            //     children: [
+            //         {
+            //             name: 'dashboard',
+            //             rules: [
+            //                 {
+            //                     actions: [ACTION_READ, ACTION_LIST],
+            //                     subject: SUBJECT_DASHBOARD,
+            //                 },
+            //             ],
+            //             condition: (user) => user.role !== UserRoles.STUDENT,
+            //         },
+            //     ],
+            // },
             // Management
             {
                 name: 'management',

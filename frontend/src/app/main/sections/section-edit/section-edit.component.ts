@@ -359,8 +359,6 @@ export class SectionEditComponent implements OnInit, OnDestroy {
                             userId,
                         })
                     );
-
-                    this.navigateBack();
                 }
             });
     }

@@ -6,16 +6,16 @@ export const navigation: FuseNavigation[] = [
         title: 'Home',
         translate: 'NAV.HOME',
         type: 'group',
-        children: [
-            {
-                id: 'dashboard',
-                title: 'Dashboard',
-                translate: 'NAV.DASHBOARD.TITLE',
-                type: 'item',
-                icon: 'dashboard',
-                url: '/dashboard',
-            },
-        ],
+        // children: [
+        //     {
+        //         id: 'dashboard',
+        //         title: 'Dashboard',
+        //         translate: 'NAV.DASHBOARD.TITLE',
+        //         type: 'item',
+        //         icon: 'dashboard',
+        //         url: '/dashboard',
+        //     },
+        // ],
     },
     {
         id: 'management',
