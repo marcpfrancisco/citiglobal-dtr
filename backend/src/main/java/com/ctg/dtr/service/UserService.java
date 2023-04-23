@@ -29,4 +29,9 @@ public interface UserService {
     User updatePassword(String password, Long userId);
 
     void resetPassword(Long userId);
+
+    List<UserDto> getUserBySectionId(int pageNo, int pageSize, String columnName, String sortDirection, Long sectionId);
+
+	void removeUserBySectionId(Long[] userIds);
+
 }

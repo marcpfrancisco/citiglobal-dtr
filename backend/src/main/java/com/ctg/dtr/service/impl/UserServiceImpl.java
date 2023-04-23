@@ -3,6 +3,7 @@ package com.ctg.dtr.service.impl;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +19,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 
@@ -409,6 +411,52 @@ public class UserServiceImpl implements UserService {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	@Override
+	public List<UserDto> getUserBySectionId(int pageNo, int pageSize, String columnName, String sortDirection, Long sectionId) {
+
+		Pageable paging;
+		Page<User> pagedResult = null;
+
+		if (columnName != null) {
+			if (sortDirection != null) {
+				if (sortDirection.toLowerCase().equals("asc")) {
+					paging = PageRequest.of(pageNo, pageSize, Sort.by(columnName).ascending());
+				} else if (sortDirection.toLowerCase().equals("desc")) {
+					paging = PageRequest.of(pageNo, pageSize, Sort.by(columnName).descending());
+				} else {
+					paging = PageRequest.of(pageNo, pageSize, Sort.by(columnName));
+				}
+			} else {
+				paging = PageRequest.of(pageNo, pageSize, Sort.by(columnName));
+			}
+		} else {
+			paging = PageRequest.of(pageNo, pageSize);
+		}
+
+		pagedResult = userRepository.findBySectionId(sectionId, paging);
+
+		List<User> lUsers = pagedResult.getContent();
+
+		List<UserDto> lUserDto = new ArrayList<UserDto>();
+
+		for (User user : lUsers) {
+
+			UserDto tmpUser = new UserDto();
+
+			buildUserDto(user, tmpUser);
+
+			lUserDto.add(tmpUser);
+
+		}
+		return lUserDto;
+	}
+
+	@Override
+	@Transactional
+	public void removeUserBySectionId(Long[] userIds) {
+		userRepository.removeSectionByUserId(Arrays.asList(userIds));
 	}
 
 	private void buildUserDto(User user, UserDto userDto) {

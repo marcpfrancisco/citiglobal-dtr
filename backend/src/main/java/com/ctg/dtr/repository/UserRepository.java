@@ -2,6 +2,8 @@ package com.ctg.dtr.repository;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
@@ -28,8 +30,7 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     @Query(value = "SELECT * FROM user WHERE id = ?1", nativeQuery = true)
     List<User> findUserById(Long id);
 
-    @Query(value = "SELECT * FROM user WHERE section_id = ?1", nativeQuery = true)
-    List<User> findUserBySectionId(Long sectionId);
+    Page<User> findBySectionId(Long sectionId, Pageable pageable);
 
     @Modifying
     @Query(value = "UPDATE user SET section_id = NULL WHERE id IN (:ids)", nativeQuery = true)
