@@ -2,17 +2,19 @@ import { HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { isBoolean, isString } from 'lodash';
 import { Observable } from 'rxjs';
+
 import {
-    Course,
-    CourseSortables,
+    CreateSectionDto,
+    EditSectionDto,
+    FindAllSectionsDto,
+    FindAllSectionUsersDto,
+    isNumericInteger,
     PaginationResult,
     Section,
     SectionSortables,
     User,
+    UserSortables,
 } from '../shared';
-import { CreateSectionDto } from '../shared/interfaces/section/create-section-dto.interface';
-import { EditSectionDto } from '../shared/interfaces/section/edit-section-dto.interface';
-import { FindAllSectionsDto } from '../shared/interfaces/section/find-all-sections-dto.interface';
 import { ApiService } from './api.service';
 
 @Injectable({ providedIn: 'root' })
@@ -33,8 +35,13 @@ export class SectionsService {
         return this.apiService.get(`${this.SECTION_URL}/${sectionId}`);
     }
 
-    getSectionUsers(sectionId: number): Observable<Array<User>> {
-        return this.apiService.get(`${this.SECTION_URL}/${sectionId}/students`);
+    getSectionUsers(
+        options: FindAllSectionUsersDto
+    ): Observable<PaginationResult<User>> {
+        return this.apiService.get(
+            `${this.SECTION_URL}/${options.sectionId}/students`,
+            { params: this.createOptions(options) }
+        );
     }
 
     create(payload: CreateSectionDto): Observable<Section> {
@@ -47,6 +54,27 @@ export class SectionsService {
 
     deleteUserFromSetion(userIds: number): Observable<User> {
         return this.apiService.delete(`${this.SECTION_URL}/remove/${userIds}`);
+    }
+
+    createOptions(options: FindAllSectionUsersDto): HttpParams {
+        const { name, sectionId, isActive } = options;
+        let params = this.apiService.createListRecordParameters(options, {
+            sortables: UserSortables,
+        });
+
+        if (isString(name)) {
+            params = params.append('firstName', name);
+        }
+
+        if (isNumericInteger(sectionId)) {
+            params = params.append('sectionId', sectionId);
+        }
+
+        if (isBoolean(isActive)) {
+            params = params.append('isActive', isActive ? 'true' : 'false');
+        }
+
+        return params;
     }
 
     createListOptions(options: FindAllSectionsDto): HttpParams {

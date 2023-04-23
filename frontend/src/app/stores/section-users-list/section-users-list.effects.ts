@@ -21,6 +21,8 @@ import {
 
 import { SectionUserListActions } from '.';
 import { RootState, SectionUserListReducer } from '..';
+import { FindAllSectionUsersDto } from '@interfaces';
+import { getParamFromListState } from '@utils';
 
 @Injectable()
 export class SectionUserListEffects {
@@ -49,24 +51,25 @@ export class SectionUserListEffects {
                 )
             ),
             switchMap(([action, listState]) => {
-                return this.sectionService
-                    .getSectionUsers(listState.sectionId)
-                    .pipe(
-                        map((result) =>
-                            SectionUserListActions.onLoadSectionUsersSuccess({
-                                result,
+                const param: FindAllSectionUsersDto =
+                    getParamFromListState(listState);
+
+                param.sectionId = listState.sectionId;
+
+                return this.sectionService.getSectionUsers(param).pipe(
+                    map((result) =>
+                        SectionUserListActions.onLoadSectionUsersSuccess({
+                            result,
+                        })
+                    ),
+                    catchError((error) =>
+                        of(
+                            SectionUserListActions.onLoadSectionUsersFailure({
+                                error,
                             })
-                        ),
-                        catchError((error) =>
-                            of(
-                                SectionUserListActions.onLoadSectionUsersFailure(
-                                    {
-                                        error,
-                                    }
-                                )
-                            )
                         )
-                    );
+                    )
+                );
             })
         );
     });

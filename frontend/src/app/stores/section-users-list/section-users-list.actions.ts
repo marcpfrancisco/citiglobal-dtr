@@ -1,6 +1,6 @@
 import { SortDirection, UserSortables } from '@enums';
 import { PaginationResult } from '@interfaces';
-import { User } from '@models';
+import { Pagination, User } from '@models';
 import { createAction, props } from '@ngrx/store';
 
 // User Subject Component
@@ -40,7 +40,7 @@ export const onToggleSort = createAction(
 // API Actions
 export const onLoadSectionUsersSuccess = createAction(
     '[Subjects API] On Load Users Subjects Success',
-    props<{ result: Array<User> }>()
+    props<{ result: PaginationResult<User> }>()
 );
 
 export const onLoadSectionUsersFailure = createAction(

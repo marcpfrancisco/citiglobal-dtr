@@ -85,7 +85,7 @@ export class SectionEditComponent implements OnInit, OnDestroy {
     courseId: number;
     courseList$: Observable<Course[]>;
 
-    dataSource: Array<User>;
+    dataSource$: Observable<User[]>;
 
     /** Pagination */
     pageSizeOptions$: Observable<number[]>;
@@ -260,8 +260,10 @@ export class SectionEditComponent implements OnInit, OnDestroy {
                 }
             });
 
+        this.store.dispatch(
+            SectionUserListActions.onInit({ sectionId: this.sectionId })
+        );
         this.setupObservables();
-        this.onLoadSectionUsers();
     }
 
     private buildSubjectForm(): void {
@@ -377,20 +379,14 @@ export class SectionEditComponent implements OnInit, OnDestroy {
         );
         this.pageSize$ = listState$.pipe(map((state) => state.limit));
         this.pageIndex$ = listState$.pipe(map((state) => state.page));
-        // this.dataSource$ = this.store
-        //     .select(SectionUserListReducer.selectList)
-        //     .pipe(
-        //         tap((items) => {
-        //             this.directiveScroll?.scrollToTop();
-        //         })
-        //     );
+        this.dataSource$ = this.store
+            .select(SectionUserListReducer.selectList)
+            .pipe(
+                tap((items) => {
+                    this.directiveScroll?.scrollToTop();
+                })
+            );
         this.listState$ = listState$;
-    }
-
-    onLoadSectionUsers() {
-        this.sectionService
-            .getSectionUsers(this.sectionId)
-            .subscribe((response: Array<User>) => (this.dataSource = response));
     }
 
     handleSearchCourse(text: string): void {
