@@ -161,7 +161,7 @@ public class TimesheetController {
 
 	@Operation(summary = "Get all timesheet")
 	@SecurityRequirement(name = "Bearer Authentication")
-	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
+	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN') or hasRole('USER')")
 	@GetMapping("/all")
 	public ResponseEntity<?> getAllTimesheet(@RequestParam(value =  "page") int pageNo, @RequestParam(value =  "limit") int pageSize,
 	@RequestParam(value =  "sort", required = false) String columnName,
