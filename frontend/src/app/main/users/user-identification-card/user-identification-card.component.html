@@ -5,7 +5,7 @@
         fxFlex
         fxLayout="column"
         fxLayoutAlign="space-between"
-        *ngIf="{ user: user$ | async } as data"
+        *ngIf="user$ | async as data"
     >
         <header class="id-card__header">
             <h4 class="header__title">CITI GLOBAL COLLEGE INC.</h4>
@@ -29,15 +29,12 @@
 
         <footer class="id-card__footer" fxFlex fxLayout="column">
             <h1 class="status">
-                <ng-container
-                    *ngIf="data?.timeIn === null && data?.timeOut === null"
+                <ng-container *ngIf="data?.timeIn && !data.timeOut"
+                    >TIME IN</ng-container
                 >
-                    <span>TIME IN</span>
-                </ng-container>
-
-                <ng-container *ngIf="data?.timeIn !== null">
-                    <span>TIME OUT</span>
-                </ng-container>
+                <ng-container *ngIf="data?.timeIn && data?.timeOut"
+                    >TIME OUT</ng-container
+                >
             </h1>
             <h2 class="fullname">{{ data?.user | userFullName }}</h2>
             <h3 class="student_id">STUDENT ID: {{ data?.user?.studentNo }}</h3>

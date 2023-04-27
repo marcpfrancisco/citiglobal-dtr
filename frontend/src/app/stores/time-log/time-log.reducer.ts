@@ -26,6 +26,8 @@ export interface State
         };
     };
     user: User;
+    timeIn: string;
+    timeOut: string;
     hasFilters: boolean;
 }
 
@@ -43,6 +45,8 @@ export const initialState = adapter.getInitialState({
         },
     },
     user: null,
+    timeIn: null,
+    timeOut: null,
     hasFilters: false,
 });
 
@@ -56,11 +60,13 @@ export const reducer = createReducer(
 
     // TIME LOG SUCCESS
     on(TimeLogActions.onTimeLogSuccess, (state, { timeLog }) => {
-        const { user } = timeLog;
+        const { user, timeIn, timeOut } = timeLog;
 
         return {
             ...state,
             rfidNo: user?.rfidNo,
+            timeIn,
+            timeOut,
             user,
         };
     }),

@@ -14,7 +14,7 @@ import { Observable } from 'rxjs';
 export class UserIdentifcationCardComponent implements OnInit {
     static panelClass = 'citiglobal-user-identification-card';
 
-    user$: Observable<User>;
+    user$: Observable<any>;
 
     constructor(
         public matDialogRef: MatDialogRef<UserIdentifcationCardComponent>,
@@ -23,6 +23,6 @@ export class UserIdentifcationCardComponent implements OnInit {
 
     ngOnInit(): void {
         // Set user
-        this.user$ = this.store.select(TimeLogReducer.selectUser);
+        this.user$ = this.store.select(TimeLogReducer.selectState);
     }
 }
