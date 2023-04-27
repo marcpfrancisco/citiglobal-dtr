@@ -34,4 +34,5 @@ public interface UserService {
 
 	void removeUserBySectionId(Long[] userIds);
 
+	void adminResetUserPassword(Long userId);
 }

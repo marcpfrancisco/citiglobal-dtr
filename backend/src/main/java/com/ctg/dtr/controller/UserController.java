@@ -360,7 +360,7 @@ public class UserController {
 	@SecurityRequirement(name = "Bearer Authentication")
 	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
 	@PutMapping("/reset-password/{userId}")
-	public ResponseEntity<?> resetUserPassword(@PathVariable Long userId, @RequestBody PasswordRequest passwordRequest, HttpServletRequest request, HttpServletResponse response) {
+	public ResponseEntity<?> resetUserPassword(@PathVariable Long userId, HttpServletRequest request, HttpServletResponse response) {
 
 		Optional<User> user = userService.getById(userId);
 		Map<String, Object> tempMap = new HashMap<String, Object>();
@@ -387,6 +387,42 @@ public class UserController {
 			tempMap.put("path", request.getServletPath());
 
 			userService.resetPassword(userId);
+
+			return ResponseEntity.status(HttpStatus.OK).body(tempMap);
+		}
+	}
+
+	@Operation(summary = "Admin reset user password")
+	@SecurityRequirement(name = "Bearer Authentication")
+	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
+	@PutMapping("/admin-reset-password/{userId}")
+	public ResponseEntity<?> adminResetUserPassword(@PathVariable Long userId, HttpServletRequest request, HttpServletResponse response) {
+
+		Optional<User> user = userService.getById(userId);
+		Map<String, Object> tempMap = new HashMap<String, Object>();
+
+		if (!user.isPresent()) {
+
+			response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+
+			tempMap.put("status", HttpServletResponse.SC_NOT_FOUND);
+			tempMap.put("error",  HttpStatus.NOT_FOUND);
+			tempMap.put("message", "Missing User ID: " + userId);
+			tempMap.put("path", request.getServletPath());
+
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(tempMap);
+
+		} else {
+
+			response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+			response.setStatus(HttpServletResponse.SC_OK);
+
+			tempMap.put("status", HttpServletResponse.SC_OK);
+			tempMap.put("message", "Successfully!");
+			tempMap.put("path", request.getServletPath());
+
+			userService.adminResetUserPassword(userId);
 
 			return ResponseEntity.status(HttpStatus.OK).body(tempMap);
 		}

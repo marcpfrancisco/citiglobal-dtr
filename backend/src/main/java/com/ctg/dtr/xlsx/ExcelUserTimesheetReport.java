@@ -61,28 +61,44 @@ public class ExcelUserTimesheetReport {
             SimpleDateFormat timestampFormat = new SimpleDateFormat("HH:mm:ss aa");
             SimpleDateFormat dayFormat = new SimpleDateFormat("EEEEE");
 
+            Row nameRow = sheet.createRow(0);
+            Cell labelNameCell = nameRow.createCell(0);
+            labelNameCell.setCellValue("Name:");
+            labelNameCell.setCellStyle(tableHeadStyle);
+
+            Row studentNoRow = sheet.createRow(1);
+            Cell labelStudentNoCell = studentNoRow.createCell(0);
+            labelStudentNoCell.setCellValue("Student ID:");
+            labelStudentNoCell.setCellStyle(tableHeadStyle);
+
+            Cell labelSectionCell = nameRow.createCell(3);
+            labelSectionCell.setCellValue("Section:");
+            labelSectionCell.setCellStyle(tableHeadStyle);
+
+            Cell labelCourseCell = studentNoRow.createCell(3);
+            labelCourseCell.setCellValue("Course: ");
+            labelCourseCell.setCellStyle(tableHeadStyle);
+
             int rowCount = 6;
 
             for (Timesheet timesheet : timesheets) {
 
-                Row companyRow = sheet.createRow(0);
-			    Cell labelNameCell = companyRow.createCell(0);
-			    labelNameCell.setCellValue("Name:");
-			    labelNameCell.setCellStyle(tableHeadStyle);
-
-                Row employeeRow = sheet.createRow(1);
-			    Cell labelStudentNoCell = employeeRow.createCell(0);
-			    labelStudentNoCell.setCellValue("Student ID: ");
-			    labelStudentNoCell.setCellStyle(tableHeadStyle);
-
                 if (timesheet.getUser() != null) {
 
-                    Cell cellCompany = companyRow.createCell(1);
-                    cellCompany.setCellValue(timesheet.getUser().getLastName() + ", "
+                    Cell cellName = nameRow.createCell(1);
+                    cellName.setCellValue(timesheet.getUser().getLastName() + ", "
                     + timesheet.getUser().getFirstName() + ((timesheet.getUser().getMiddleName() == null ? "" : " " + timesheet.getUser().getMiddleName())));
 
-                    Cell cellEmployee = employeeRow.createCell(1);
-                    cellEmployee.setCellValue(timesheet.getUser().getStudentNo());
+                    Cell cellStudentNo = studentNoRow.createCell(1);
+                    cellStudentNo.setCellValue(timesheet.getUser().getStudentNo());
+
+                    if (timesheet.getUser().getSection() != null) {
+                        Cell cellSection = nameRow.createCell(4);
+                        cellSection.setCellValue(timesheet.getUser().getSection().getName());
+
+                        Cell cellCourse = studentNoRow.createCell(4);
+                        cellCourse.setCellValue(timesheet.getUser().getSection().getCourse().getName());
+                    }
                 }
 
                 Row row = sheet.createRow(rowCount++);

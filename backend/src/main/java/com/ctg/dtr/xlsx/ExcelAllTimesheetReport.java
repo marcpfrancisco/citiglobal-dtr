@@ -20,7 +20,7 @@ import java.util.List;
 @Component
 public class ExcelAllTimesheetReport {
 
-    private static String[] columnHeader = {"Date", "Day", "Time In", "Time Out", "Time Rendered", "Name", "Student ID"};
+    private static String[] columnHeader = {"Date", "Day", "Time In", "Time Out", "Time Rendered", "Name", "Student ID", "Section", "Course"};
 
     public ByteArrayInputStream generateAllTimesheetReport(List<Timesheet> timesheets) {
 
@@ -36,6 +36,8 @@ public class ExcelAllTimesheetReport {
             sheet.setColumnWidth(4, 25 * 256);
             sheet.setColumnWidth(5, 25 * 256);
             sheet.setColumnWidth(6, 25 * 256);
+            sheet.setColumnWidth(7, 25 * 256);
+            sheet.setColumnWidth(8, 25 * 256);
 
             // CREATE HEADER
             CellStyle tableHeadStyle = workbook.createCellStyle();
@@ -96,6 +98,14 @@ public class ExcelAllTimesheetReport {
 
                     row.createCell(6).setCellValue(timesheet.getUser().getStudentNo());
                     row.getCell(6).setCellStyle(horizontalRowLeft);
+                }
+                if (timesheet.getUser().getSection() != null) {
+
+                    row.createCell(7).setCellValue(timesheet.getUser().getSection().getName());
+                    row.getCell(7).setCellStyle(horizontalRowLeft);
+
+                    row.createCell(8).setCellValue(timesheet.getUser().getSection().getCourse().getName());
+                    row.getCell(8).setCellStyle(horizontalRowLeft);
                 }
             }
 
