@@ -47,24 +47,49 @@ export class ReportsService {
         );
     }
 
-    downloadStudentTimeSheet(studentNo: string): void {
-        this.store.select(selectAuthToken).subscribe((token) => {
-            const headers = new HttpHeaders().set(
-                'Authorization',
-                `Bearer ${token}`
-            );
-            this.apiService
-                .get(this.REPORTS_URL, {
-                    params: studentNo,
-                    headers,
-                    responseType: 'blob',
-                })
-                .subscribe((blob: Blob) => {
-                    const url = window.URL.createObjectURL(blob);
-                    window.open(url, '_blank');
+    downloadStudentTimeSheet(studentNo: string): Observable<string> {
+        return this.store.select(selectAuthToken).pipe(
+            switchMap((token) => {
+                const headers = {
+                    Authorization: `Bearer ${token}`,
+                };
+
+                return this.apiService.get(
+                    `${this.REPORTS_URL}/${studentNo}?startDate=01-01-1979&endDate=01-01-2050`,
+                    {
+                        headers,
+                        responseType: 'blob',
+                        observe: 'response',
+                    }
+                );
+            }),
+            map((response: any) => {
+                const contentDisposition = response.headers.get(
+                    'Content-Disposition'
+                );
+                console.log(contentDisposition);
+                const filename =
+                    this.getFilenameFromContentDisposition(contentDisposition);
+                const blob = new Blob([response.body], {
+                    type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
                 });
-        });
+                const blobUrl = window.URL.createObjectURL(blob);
+
+                return `${blobUrl}`;
+            })
+        );
     }
+
+    // this.apiService
+    // .get(`${this.REPORTS_URL}/${studentNo}?startDate=01-01-1979&endDate=01-01-2050`, {
+    //     headers,
+    //     responseType: 'blob',
+    //     observe: 'response',
+    // })
+    // .subscribe((blob: Blob) => {
+    //     const url = window.URL.createObjectURL(blob);
+    //     window.open(url, '_blank');
+    // });
 
     private getFilenameFromContentDisposition(
         contentDisposition: string | null | undefined

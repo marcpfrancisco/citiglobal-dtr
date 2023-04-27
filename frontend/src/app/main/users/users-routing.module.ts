@@ -26,6 +26,12 @@ const routes: Routes = [
         canActivate: [PermissionsGuard],
     },
     {
+        path: 'create/:sectionId',
+        component: UserEditComponent,
+        data: { actions: [ACTION_CREATE], subject: SUBJECT_USER },
+        canActivate: [PermissionsGuard],
+    },
+    {
         path: 'edit/:userId',
         component: UserEditComponent,
         data: { actions: [ACTION_READ], subject: SUBJECT_USER },

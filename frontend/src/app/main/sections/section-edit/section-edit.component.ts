@@ -395,8 +395,8 @@ export class SectionEditComponent implements OnInit, OnDestroy {
         this.courseId = course?.id || null;
     }
 
-    assignSubject() {
-        this.router.navigateByUrl('/users/create');
+    assignUser() {
+        this.router.navigate(['users/create', this.sectionId]);
     }
 
     displayFn(course: Course): string {

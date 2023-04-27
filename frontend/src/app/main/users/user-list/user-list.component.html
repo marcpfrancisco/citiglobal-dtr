@@ -19,14 +19,6 @@
             <ng-template #actions>
                 <button
                     mat-raised-button
-                    class="buttons white mt-24 mt-md-0 mr-12"
-                    *ngIf="'exportList' | able : 'Users'"
-                    (click)="exportUsers()"
-                >
-                    <span>EXPORT</span>
-                </button>
-                <button
-                    mat-raised-button
                     class="buttons warn mt-24 mt-md-0"
                     (click)="onCreate()"
                 >

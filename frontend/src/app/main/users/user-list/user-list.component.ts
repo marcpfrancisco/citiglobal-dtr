@@ -94,10 +94,6 @@ export class UsersListComponent implements OnInit {
         this.router.navigate(['create'], { relativeTo: this.activatedRoute });
     }
 
-    exportUsers(): void {
-        //  TODO: download report from specific user
-    }
-
     isDeleted(user: User): boolean {
         return !isObjectLike(user) || !!user.deletedAt;
     }

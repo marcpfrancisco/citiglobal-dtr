@@ -23,6 +23,7 @@ import { SectionUserListActions } from '.';
 import { RootState, SectionUserListReducer } from '..';
 import { FindAllSectionUsersDto } from '@interfaces';
 import { getParamFromListState } from '@utils';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Injectable()
 export class SectionUserListEffects {
@@ -31,7 +32,9 @@ export class SectionUserListEffects {
         private store: Store<RootState>,
         private sectionService: SectionsService,
         private snackbarService: SnackbarService,
-        private dialog: MatDialog
+        private dialog: MatDialog,
+        private router: Router,
+        private activatedRoute: ActivatedRoute
     ) {}
 
     onLoadUserSubjects$ = createEffect(() => {
@@ -88,11 +91,13 @@ export class SectionUserListEffects {
                 return this.sectionService
                     .deleteUserFromSetion(action?.userId)
                     .pipe(
-                        map(() =>
-                            SectionUserListActions.onRemoveSectionUsersSuccess({
-                                id: action?.userId,
-                            })
-                        ),
+                        map(() => {
+                            return SectionUserListActions.onRemoveSectionUsersSuccess(
+                                {
+                                    id: action?.userId,
+                                }
+                            );
+                        }),
                         tap(() =>
                             this.snackbarService.openSuccess(
                                 SECTION_UNASSIGN_USER_SUCCESS_MESSAGE

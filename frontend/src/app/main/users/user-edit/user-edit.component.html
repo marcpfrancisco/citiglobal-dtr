@@ -13,6 +13,18 @@
             <ng-template #title> {{ firstName }} {{ lastName }} </ng-template>
             <ng-template #subTitle> User Detail </ng-template>
             <ng-template #actions>
+                <ng-container *ngIf="userRecord || mode == 'edit'">
+                    <a
+                        mat-raised-button
+                        class="buttons white mt-24 mt-md-0 mr-12"
+                        *ngIf="'exportList' | able : 'Logs'"
+                        target="_blank"
+                        (click)="exportUsers()"
+                    >
+                        <span>EXPORT</span>
+                    </a>
+                </ng-container>
+
                 <ng-container *ngIf="userRecord || mode == 'create'">
                     <button
                         *ngIf="'update' | able : 'Users' : userRecord"
@@ -150,7 +162,13 @@
                                         >account_circle</mat-icon
                                     >
                                     <mat-error
+                                        *ngIf="hasError('email', 'required')"
                                         >Email Adress is required!</mat-error
+                                    >
+                                    <mat-error
+                                        *ngIf="hasError('email', 'email')"
+                                        >This is not a valid email
+                                        address!</mat-error
                                     >
                                 </mat-form-field>
 
@@ -215,7 +233,7 @@
                                     >
                                     <mat-error>Status is required!</mat-error>
                                 </mat-form-field>
-                                <div
+                                <!-- <div
                                     fxLayout="row"
                                     fxLayoutAlign="end center"
                                     *ngIf="mode === 'edit'"
@@ -237,7 +255,7 @@
                                             <span>Reset Password</span>
                                         </button>
                                     </ng-container>
-                                </div>
+                                </div> -->
                             </form>
                         </div>
                     </mat-tab>

@@ -18,7 +18,12 @@ import { CreateUserDto } from '@interfaces';
 import { Section, SubjectModel, User } from '@models';
 import { Store } from '@ngrx/store';
 import { AblePipe } from '@pipes';
-import { RouterService, SectionsService, UsersService } from '@services';
+import {
+    ReportsService,
+    RouterService,
+    SectionsService,
+    UsersService,
+} from '@services';
 import {
     AuthenticationReducer,
     RootState,
@@ -85,6 +90,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
     mode: string = mode.CREATE_MODE;
 
     userId: number | null;
+
     isLoading: boolean;
 
     // options for roles
@@ -117,6 +123,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
     directiveScroll: FusePerfectScrollbarDirective;
 
     userRecord: User;
+    sectionRecord: Section[];
 
     get subjectDisplayedColumns(): Array<string> {
         if (!this.ablePipe.transform(ACTION_UPDATE, SUBJECT_SECTIONS)) {
@@ -147,6 +154,10 @@ export class UserEditComponent implements OnInit, OnDestroy {
 
     get lastName(): string {
         return this.userForm?.get('lastName')?.value;
+    }
+
+    get studentNo(): string {
+        return this.userForm?.get('studentNo')?.value;
     }
 
     get hasAssignedSubject(): boolean {
@@ -203,6 +214,18 @@ export class UserEditComponent implements OnInit, OnDestroy {
     }
 
     set currentSection(section: Section | null) {
+        const sectionRecord = this.sectionRecord;
+
+        if (this.sectionId) {
+            console.log(this.sectionId);
+            const filteredSection = sectionRecord.filter(
+                (section) => section.id === this.sectionId
+            );
+            this.userForm?.patchValue({
+                section: filteredSection || null,
+            });
+        }
+
         this.userForm?.patchValue({
             section: section || null,
         });
@@ -215,7 +238,8 @@ export class UserEditComponent implements OnInit, OnDestroy {
         private sectionsService: SectionsService,
         private store: Store<RootState>,
         private dialog: MatDialog,
-        private ablePipe: AblePipe
+        private ablePipe: AblePipe,
+        private reportsService: ReportsService
     ) {}
 
     ngOnInit(): void {
@@ -235,7 +259,10 @@ export class UserEditComponent implements OnInit, OnDestroy {
                     params as FindAllSectionsDto
                 );
             }),
-            map((sections) => sections?.data || [])
+            map((sections) => {
+                this.sectionRecord = sections?.data;
+                return sections?.data || [];
+            })
         );
 
         this.buildUserForm();
@@ -248,9 +275,15 @@ export class UserEditComponent implements OnInit, OnDestroy {
             .pipe(
                 switchMap(([params, currentUser]: [Params, User, number]) => {
                     const userId = currentUser ? params.get('userId') : null;
+                    const sectionId = params.has('sectionId')
+                        ? params.get('sectionId')
+                        : null;
 
                     this.loggedInUser = currentUser || null;
                     this.userId = isNumericInteger(userId) ? +userId : null;
+                    this.sectionId = isNumericInteger(sectionId)
+                        ? +sectionId
+                        : null;
 
                     if (!this.userId) {
                         return of(null);
@@ -317,7 +350,10 @@ export class UserEditComponent implements OnInit, OnDestroy {
             studentNo: new FormControl('', [Validators.required]),
             section: new FormControl(null, [Validators.required]),
             rfidNo: new FormControl('', [Validators.required]),
-            email: new FormControl('', [Validators.required]),
+            email: new FormControl(
+                { value: '', disabled: this.mode === mode.EDIT_MODE },
+                [Validators.required, Validators.email]
+            ),
             username: new FormControl('', [Validators.required]),
             role: new FormControl('', [Validators.required]),
             isActive: new FormControl(true, [Validators.required]),
@@ -369,6 +405,15 @@ export class UserEditComponent implements OnInit, OnDestroy {
     }
 
     /**
+     * Handles specific error in forms
+     * @param controlName  the name of the field
+     * @param errorName the error name
+     */
+    hasError(controlName: string, errorName: string): boolean {
+        return this.userForm.controls[controlName].hasError(errorName);
+    }
+
+    /**
      * Handles the Edit and Create user
      */
     handleUser(): void {
@@ -399,6 +444,14 @@ export class UserEditComponent implements OnInit, OnDestroy {
                 })
             );
         }
+    }
+
+    exportUsers(): void {
+        this.reportsService
+            .downloadStudentTimeSheet(this.studentNo)
+            .subscribe((url) => {
+                window.open(url, '_blank');
+            });
     }
 
     assignSubject(): void {
