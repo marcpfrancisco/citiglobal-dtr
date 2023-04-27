@@ -46,7 +46,7 @@ public class SectionController {
 
 	@Operation(summary = "Add section")
 	@SecurityRequirement(name = "Bearer Authentication")
-	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
+	@PreAuthorize("hasRole('ADMIN') or hasRole('FACULTY')")
 	@PostMapping
 	public ResponseEntity<Section> createSection(@RequestBody SectionDto sectionDto) {
 
@@ -57,7 +57,7 @@ public class SectionController {
 
 	@Operation(summary = "Update section")
 	@SecurityRequirement(name = "Bearer Authentication")
-	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
+	@PreAuthorize("hasRole('ADMIN') or hasRole('FACULTY')")
 	@PutMapping("/{id}")
 	public ResponseEntity<?> updateSection(@PathVariable Long id, @RequestBody SectionDto sectionDto, HttpServletRequest request, HttpServletResponse response) {
 
@@ -84,7 +84,7 @@ public class SectionController {
 
 	@Operation(summary = "Delete section")
 	@SecurityRequirement(name = "Bearer Authentication")
-	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
+	@PreAuthorize("hasRole('ADMIN') or hasRole('FACULTY')")
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> deleteSection(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
 
@@ -114,7 +114,7 @@ public class SectionController {
 
 	@Operation(summary = "Get section by id")
 	@SecurityRequirement(name = "Bearer Authentication")
-	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
+	@PreAuthorize("hasRole('ADMIN') or hasRole('FACULTY')")
 	@GetMapping("/{id}")
 	public ResponseEntity<?> getSectionById(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
 
@@ -141,7 +141,7 @@ public class SectionController {
 
 	@Operation(summary = "Get all section")
 	@SecurityRequirement(name = "Bearer Authentication")
-	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
+	@PreAuthorize("hasRole('ADMIN') or hasRole('FACULTY')")
 	@GetMapping("/all")
 	public ResponseEntity<?> getAllSection(@RequestParam(value =  "page") int pageNo, @RequestParam(value =  "limit") int pageSize,
 	@RequestParam(value =  "sort", required = false) String columnName,
@@ -178,7 +178,7 @@ public class SectionController {
 
 	@Operation(summary = "Get user by section id")
 	@SecurityRequirement(name = "Bearer Authentication")
-	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
+	@PreAuthorize("hasRole('ADMIN') or hasRole('FACULTY')")
 	@GetMapping("/{sectionId}/students")
 	public ResponseEntity<?> getUserBySectionId(@RequestParam(value =  "page") int pageNo,
 	@RequestParam(value =  "limit") int pageSize,
@@ -214,7 +214,7 @@ public class SectionController {
 
 	@Operation(summary = "Remove user by section id")
 	@SecurityRequirement(name = "Bearer Authentication")
-	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
+	@PreAuthorize("hasRole('ADMIN') or hasRole('FACULTY')")
 	@DeleteMapping("/remove/{userIds}")
 	public ResponseEntity<?> removeUserBySectionId(@PathVariable Long[] userIds, HttpServletRequest request, HttpServletResponse response) {
 

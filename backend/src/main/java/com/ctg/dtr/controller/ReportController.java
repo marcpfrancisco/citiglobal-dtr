@@ -35,7 +35,7 @@ public class ReportController {
 
     @Operation(summary = "Get user timesheet report by student number")
     @SecurityRequirement(name = "Bearer Authentication")
-	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN') or hasRole('USER')")
+	@PreAuthorize("hasRole('ADMIN') or hasRole('FACULTY') or hasRole('STUDENT')")
     @GetMapping("/{studentNo}")
     public ResponseEntity<Resource> genereateUserTimesheetReport(@PathVariable String studentNo,
          @Parameter(description = "Date format: <i>MM-DD-YYYY</i>") @RequestParam String startDate,
@@ -60,7 +60,7 @@ public class ReportController {
 
     @Operation(summary = "Get all user timesheet report")
     @SecurityRequirement(name = "Bearer Authentication")
-	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
+	@PreAuthorize("hasRole('ADMIN') or hasRole('FACULTY')")
     @GetMapping("/all")
     public ResponseEntity<Resource> genereateAllTimesheetReport() {
 

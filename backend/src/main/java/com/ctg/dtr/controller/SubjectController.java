@@ -41,7 +41,7 @@ public class SubjectController {
 
 	@Operation(summary = "Add subject")
 	@SecurityRequirement(name = "Bearer Authentication")
-	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
+	@PreAuthorize("hasRole('ADMIN') or hasRole('FACULTY')")
 	@PostMapping
 	public ResponseEntity<Subject> createSubject(@RequestBody SubjectDto subjectDto) {
 
@@ -52,7 +52,7 @@ public class SubjectController {
 
 	@Operation(summary = "Update subject")
 	@SecurityRequirement(name = "Bearer Authentication")
-	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
+	@PreAuthorize("hasRole('ADMIN') or hasRole('FACULTY')")
 	@PutMapping("/{id}")
 	public ResponseEntity<?> updateSubject(@PathVariable Long id, @RequestBody SubjectDto subjectDto, HttpServletRequest request, HttpServletResponse response) {
 
@@ -79,7 +79,7 @@ public class SubjectController {
 
 	@Operation(summary = "Delete subject")
 	@SecurityRequirement(name = "Bearer Authentication")
-	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
+	@PreAuthorize("hasRole('ADMIN') or hasRole('FACULTY')")
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> deleteSubject(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
 
@@ -109,7 +109,7 @@ public class SubjectController {
 
 	@Operation(summary = "Get subject by id")
 	@SecurityRequirement(name = "Bearer Authentication")
-	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
+	@PreAuthorize("hasRole('ADMIN') or hasRole('FACULTY')")
 	@GetMapping("/{id}")
 	public ResponseEntity<?> getSubjectById(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
 
@@ -136,7 +136,7 @@ public class SubjectController {
 
 	@Operation(summary = "Get all subject")
 	@SecurityRequirement(name = "Bearer Authentication")
-	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
+	@PreAuthorize("hasRole('ADMIN') or hasRole('FACULTY')")
 	@GetMapping("/all")
 	public ResponseEntity<?> getAllSubject(@RequestParam(value =  "page") int pageNo, @RequestParam(value =  "limit") int pageSize,
 	@RequestParam(value =  "sort", required = false) String columnName,

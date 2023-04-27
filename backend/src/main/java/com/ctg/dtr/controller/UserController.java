@@ -74,7 +74,7 @@ public class UserController {
 
 	@Operation(summary = "Update user")
 	@SecurityRequirement(name = "Bearer Authentication")
-	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
+	@PreAuthorize("hasRole('ADMIN') or hasRole('FACULTY')")
 	@PutMapping("/{id}")
 	public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody UserDto userDto, HttpServletRequest request, HttpServletResponse response) {
 
@@ -101,7 +101,7 @@ public class UserController {
 
 	@Operation(summary = "Delete user")
 	@SecurityRequirement(name = "Bearer Authentication")
-	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
+	@PreAuthorize("hasRole('ADMIN') or hasRole('FACULTY')")
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> deleteUser(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
 
@@ -157,7 +157,7 @@ public class UserController {
 
 	@Operation(summary = "Get user by student number")
 	@SecurityRequirement(name = "Bearer Authentication")
-	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN') or hasRole('USER')")
+	@PreAuthorize("hasRole('ADMIN') or hasRole('FACULTY') or hasRole('STUDENT')")
 	@GetMapping("/student-no/{studentNo}")
 	public ResponseEntity<?> getUserByStudentNo(@PathVariable String studentNo) {
 
@@ -172,7 +172,7 @@ public class UserController {
 
 	@Operation(summary = "Get all user")
 	@SecurityRequirement(name = "Bearer Authentication")
-	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
+	@PreAuthorize("hasRole('ADMIN') or hasRole('FACULTY')")
 	@GetMapping("/all")
 	public ResponseEntity<?> getAllUser(@RequestParam(value =  "page") int pageNo, @RequestParam(value =  "limit") int pageSize,
 	@RequestParam(value =  "sort", required = false) String columnName,
@@ -209,7 +209,7 @@ public class UserController {
 
 	@Operation(summary = "Add subject to user")
 	@SecurityRequirement(name = "Bearer Authentication")
-	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
+	@PreAuthorize("hasRole('ADMIN') or hasRole('FACULTY')")
 	@PostMapping(value = "/{userId}/subjects")
 	public ResponseEntity<?> addSubject(@PathVariable Long userId, @RequestBody SubjectIdRequest subjectIdRequest,
 										HttpServletRequest request, HttpServletResponse response) {
@@ -263,7 +263,7 @@ public class UserController {
 
 	@Operation(summary = "Delete subject from user")
 	@SecurityRequirement(name = "Bearer Authentication")
-	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
+	@PreAuthorize("hasRole('ADMIN') or hasRole('FACULTY')")
 	@DeleteMapping(value = "/{userId}/subjects/{subjectId}")
 	public ResponseEntity<?> deleteSubjectFromUser(@PathVariable Long userId, @PathVariable Long subjectId,
 															HttpServletRequest request, HttpServletResponse response) {
@@ -306,7 +306,7 @@ public class UserController {
 
 	@Operation(summary = "Get all subject from user")
 	@SecurityRequirement(name = "Bearer Authentication")
-	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
+	@PreAuthorize("hasRole('ADMIN') or hasRole('FACULTY')")
 	@GetMapping("/{userId}/subjects")
 	public ResponseEntity<?> getAllSubjectsByUserId(@PathVariable Long userId, HttpServletRequest request, HttpServletResponse response) {
 
@@ -331,7 +331,7 @@ public class UserController {
 
 	@Operation(summary = "Update user password")
 	@SecurityRequirement(name = "Bearer Authentication")
-	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
+	@PreAuthorize("hasRole('ADMIN') or hasRole('FACULTY')")
 	@PutMapping("/update-password/{userId}")
 	public ResponseEntity<?> updateUserPassword(@PathVariable Long userId, @RequestBody PasswordRequest passwordRequest, HttpServletRequest request, HttpServletResponse response) {
 
@@ -358,7 +358,7 @@ public class UserController {
 
 	@Operation(summary = "Reset user password")
 	@SecurityRequirement(name = "Bearer Authentication")
-	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
+	@PreAuthorize("hasRole('ADMIN') or hasRole('FACULTY')")
 	@PutMapping("/reset-password/{userId}")
 	public ResponseEntity<?> resetUserPassword(@PathVariable Long userId, HttpServletRequest request, HttpServletResponse response) {
 
@@ -394,7 +394,7 @@ public class UserController {
 
 	@Operation(summary = "Admin reset user password")
 	@SecurityRequirement(name = "Bearer Authentication")
-	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
+	@PreAuthorize("hasRole('ADMIN') or hasRole('FACULTY')")
 	@PutMapping("/admin-reset-password/{userId}")
 	public ResponseEntity<?> adminResetUserPassword(@PathVariable Long userId, HttpServletRequest request, HttpServletResponse response) {
 

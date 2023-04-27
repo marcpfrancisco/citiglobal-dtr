@@ -41,7 +41,7 @@ public class RoleController {
 
     @Operation(summary = "Add role")
 	@SecurityRequirement(name = "Bearer Authentication")
-	@PreAuthorize("hasRole('SUPER_ADMIN')")
+	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping
 	public ResponseEntity<Role> createRole(@RequestBody RoleDto roleDto) {
 
@@ -52,7 +52,7 @@ public class RoleController {
 
     @Operation(summary = "Update role")
 	@SecurityRequirement(name = "Bearer Authentication")
-	@PreAuthorize("hasRole('SUPER_ADMIN')")
+	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/{id}")
 	public ResponseEntity<?> updateRole(@PathVariable Long id, @RequestBody RoleDto roleDto, HttpServletRequest request, HttpServletResponse response) {
 
@@ -79,7 +79,7 @@ public class RoleController {
 
     @Operation(summary = "Delete role")
 	@SecurityRequirement(name = "Bearer Authentication")
-	@PreAuthorize("hasRole('SUPER_ADMIN')")
+	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> deleteRole(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
 
@@ -109,7 +109,7 @@ public class RoleController {
 
     @Operation(summary = "Get role by id")
 	@SecurityRequirement(name = "Bearer Authentication")
-	@PreAuthorize("hasRole('SUPER_ADMIN')")
+	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/{id}")
 	public ResponseEntity<?> getRoleById(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
 
@@ -136,7 +136,7 @@ public class RoleController {
 
     @Operation(summary = "Get all role")
 	@SecurityRequirement(name = "Bearer Authentication")
-	@PreAuthorize("hasRole('SUPER_ADMIN')")
+	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/all")
 	public ResponseEntity<?> getAllRole(@RequestParam(value =  "page") int pageNo, @RequestParam(value =  "limit") int pageSize,
 	@RequestParam(value =  "sort", required = false) String columnName,

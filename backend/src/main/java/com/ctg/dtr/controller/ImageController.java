@@ -40,7 +40,7 @@ public class ImageController {
 
     @Operation(summary = "Upload image")
     @SecurityRequirement(name = "Bearer Authentication")
-	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN') or hasRole('USER')")
+	@PreAuthorize("hasRole('ADMIN') or hasRole('FACULTY') or hasRole('STUDENT')")
     @PostMapping(value = "/{userId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> uploadImage(@RequestPart MultipartFile file, @PathVariable Long userId, HttpServletRequest request, HttpServletResponse response) {
 
@@ -67,7 +67,7 @@ public class ImageController {
 
     @Operation(summary = "Get user image by student number")
     @SecurityRequirement(name = "Bearer Authentication")
-	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN') or hasRole('USER')")
+	@PreAuthorize("hasRole('ADMIN') or hasRole('FACULTY') or hasRole('STUDENT')")
     @GetMapping("/{studentNo}")
 	public void getUserImage(@PathVariable String studentNo, HttpServletResponse response) {
 

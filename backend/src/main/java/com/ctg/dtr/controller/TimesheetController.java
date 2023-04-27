@@ -42,7 +42,7 @@ public class TimesheetController {
 
 	@Operation(summary = "Add timesheet")
 	@SecurityRequirement(name = "Bearer Authentication")
-	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
+	@PreAuthorize("hasRole('ADMIN') or hasRole('FACULTY')")
 	@PostMapping
 	public ResponseEntity<Timesheet> createTimesheet(@RequestBody TimesheetDto timesheetDto) {
 
@@ -77,7 +77,7 @@ public class TimesheetController {
 
 	@Operation(summary = "Update timesheet")
 	@SecurityRequirement(name = "Bearer Authentication")
-	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
+	@PreAuthorize("hasRole('ADMIN') or hasRole('FACULTY')")
 	@PutMapping("/{id}")
 	public ResponseEntity<?> updateTimesheet(@PathVariable Long id, @RequestBody TimesheetDto timesheetDto,  HttpServletRequest request, HttpServletResponse response) {
 
@@ -104,7 +104,7 @@ public class TimesheetController {
 
 	@Operation(summary = "Delete timesheet")
 	@SecurityRequirement(name = "Bearer Authentication")
-	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
+	@PreAuthorize("hasRole('ADMIN') or hasRole('FACULTY')")
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> deleteTimesheet(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
 
@@ -134,7 +134,7 @@ public class TimesheetController {
 
 	@Operation(summary = "Get timesheet by id")
 	@SecurityRequirement(name = "Bearer Authentication")
-	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
+	@PreAuthorize("hasRole('ADMIN') or hasRole('FACULTY')")
 	@GetMapping("/{id}")
 	public ResponseEntity<?> getTimesheetById(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
 
@@ -161,7 +161,7 @@ public class TimesheetController {
 
 	@Operation(summary = "Get all timesheet")
 	@SecurityRequirement(name = "Bearer Authentication")
-	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN') or hasRole('USER')")
+	@PreAuthorize("hasRole('ADMIN') or hasRole('FACULTY') or hasRole('STUDENT')")
 	@GetMapping("/all")
 	public ResponseEntity<?> getAllTimesheet(@RequestParam(value =  "page") int pageNo, @RequestParam(value =  "limit") int pageSize,
 	@RequestParam(value =  "sort", required = false) String columnName,
