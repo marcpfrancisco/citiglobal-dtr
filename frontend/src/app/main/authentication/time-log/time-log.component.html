@@ -1,6 +1,21 @@
 <div id="time-log" fxLayout="column">
-    <div class="logo">
+    <div
+        class="logo"
+        fxLayout="row"
+        fxLayout.lt-md="column"
+        fxLayoutAlign="center center"
+    >
         <img src="assets/images/logo/citiglobal-logo.png" />
+
+        <marquee
+            class="citiglobal-marquee"
+            width="100%"
+            direction="left"
+            height="100px"
+            scrollamount="13"
+        >
+            CITI GLOBAL COLLEGE MONITORING SYSTEM
+        </marquee>
     </div>
 
     <div
@@ -28,7 +43,7 @@
 
         <div class="time-log-footer">
             <a class="footer-title" routerLink="/auth/admin-login"
-                >Administrator Login</a
+                >Administrator or Student Login</a
             >
         </div>
     </div>
