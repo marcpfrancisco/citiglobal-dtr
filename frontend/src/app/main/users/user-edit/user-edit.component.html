@@ -27,7 +27,7 @@
 
                 <ng-container *ngIf="userRecord || mode == 'create'">
                     <button
-                        *ngIf="'update' | able : 'Users' : userRecord"
+                        *ngIf="'update' | able : 'User' : userRecord"
                         [disabled]="userForm.invalid"
                         mat-raised-button
                         class="buttons fuse-white mt-24 mt-md-0"
@@ -279,7 +279,7 @@
                                         class="mat-accent"
                                         type="button"
                                         *ngIf="
-                                            ('update' | able : 'Users') &&
+                                            ('update' | able : 'User') &&
                                             canAssignSubject
                                         "
                                         (click)="assignSubject()"

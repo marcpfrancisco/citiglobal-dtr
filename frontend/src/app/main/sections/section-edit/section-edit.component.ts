@@ -235,6 +235,12 @@ export class SectionEditComponent implements OnInit, OnDestroy {
 
                     this.editMode = true;
 
+                    this.store.dispatch(
+                        SectionUserListActions.onInit({
+                            sectionId: this.sectionId,
+                        })
+                    );
+
                     return this.sectionService
                         .getSectionById(this.sectionId)
                         .pipe(catchError(() => of(null)));
@@ -260,9 +266,6 @@ export class SectionEditComponent implements OnInit, OnDestroy {
                 }
             });
 
-        this.store.dispatch(
-            SectionUserListActions.onInit({ sectionId: this.sectionId })
-        );
         this.setupObservables();
     }
 

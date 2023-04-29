@@ -1,6 +1,6 @@
 import {
     AbilityRule,
-    ACTION_CREATE,
+    ACTION_EXPORT_LIST,
     ACTION_LIST,
     ACTION_MANAGE,
     ACTION_READ,
@@ -44,19 +44,20 @@ export function adminAbility(subject: UserSubject): AbilityRule[] {
             action: ACTION_LIST,
             subject: SUBJECT_SECTIONS,
         },
+
         {
             action: ACTION_READ,
             subject: SUBJECT_SECTIONS,
         },
 
-        // manage students
+        // manage users
         {
             action: ACTION_LIST,
-            subject: SUBJECT_STUDENTS,
+            subject: SUBJECT_USER,
         },
         {
             action: ACTION_READ,
-            subject: SUBJECT_STUDENTS,
+            subject: SUBJECT_USER,
         },
 
         // manage subjects
@@ -76,6 +77,10 @@ export function adminAbility(subject: UserSubject): AbilityRule[] {
         },
         {
             action: ACTION_LIST,
+            subject: SUBJECT_LOGS,
+        },
+        {
+            action: ACTION_EXPORT_LIST,
             subject: SUBJECT_LOGS,
         },
     ];
