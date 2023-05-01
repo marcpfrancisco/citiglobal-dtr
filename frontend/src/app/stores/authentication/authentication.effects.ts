@@ -349,7 +349,7 @@ export class AuthenticationEffects {
                         condition: (user) => user.role !== UserRoles.STUDENT,
                     },
                     {
-                        name: 'students',
+                        name: 'users',
                         rules: [
                             {
                                 actions: [ACTION_READ, ACTION_LIST],

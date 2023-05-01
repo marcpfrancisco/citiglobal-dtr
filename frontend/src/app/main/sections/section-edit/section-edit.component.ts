@@ -1,7 +1,9 @@
 import {
     Component,
+    OnChanges,
     OnDestroy,
     OnInit,
+    SimpleChanges,
     ViewChild,
     ViewEncapsulation,
 } from '@angular/core';
@@ -85,6 +87,8 @@ export class SectionEditComponent implements OnInit, OnDestroy {
     courseId: number;
     courseList$: Observable<Course[]>;
 
+    courseRecord: Course[];
+
     dataSource$: Observable<User[]>;
 
     /** Pagination */
@@ -160,9 +164,21 @@ export class SectionEditComponent implements OnInit, OnDestroy {
         return this.form?.get('course')?.value || null;
     }
 
-    set currentSection(course: Course | null) {
+    set currentCourse(course: Course | null) {
+        const courseRecord = this.courseRecord;
+
+        if (this.sectionId) {
+            console.log(this.sectionId);
+            const filteredCourse = courseRecord.filter(
+                (course) => course?.id === this.courseId
+            );
+
+            this.form?.patchValue({
+                course: filteredCourse || null,
+            });
+        }
         this.form?.patchValue({
-            section: course || null,
+            course: course || null,
         });
     }
 
@@ -195,10 +211,13 @@ export class SectionEditComponent implements OnInit, OnDestroy {
                     params as FindAllCoursesDto
                 );
             }),
-            map((sections) => sections?.data || [])
+            map((courses) => {
+                this.courseRecord = courses?.data;
+                return courses?.data || [];
+            })
         );
 
-        this.buildSubjectForm();
+        this.buildSectionForm();
 
         this.formSubmit$ = new Subject();
         this.formSubmitSubscription = this.formSubmit$
@@ -254,14 +273,14 @@ export class SectionEditComponent implements OnInit, OnDestroy {
 
                     this.form.patchValue({
                         name,
-                        isActive,
                         course,
+                        isActive,
                     });
                 } else {
                     this.form.patchValue({
                         name: '',
-                        isActive: true,
                         course: null,
+                        isActive: true,
                     });
                 }
             });
@@ -269,7 +288,7 @@ export class SectionEditComponent implements OnInit, OnDestroy {
         this.setupObservables();
     }
 
-    private buildSubjectForm(): void {
+    private buildSectionForm(): void {
         this.form = new FormGroup({
             name: new FormControl('', [Validators.required]),
             course: new FormControl(null, [Validators.required]),
@@ -396,6 +415,7 @@ export class SectionEditComponent implements OnInit, OnDestroy {
 
     handleSelectedCourse(course: Course): void {
         this.courseId = course?.id || null;
+        this.currentCourse = course || null;
     }
 
     assignUser() {

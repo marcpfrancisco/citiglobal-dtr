@@ -217,7 +217,6 @@ export class UserEditComponent implements OnInit, OnDestroy {
         const sectionRecord = this.sectionRecord;
 
         if (this.sectionId) {
-            console.log(this.sectionId);
             const filteredSection = sectionRecord.filter(
                 (section) => section.id === this.sectionId
             );
