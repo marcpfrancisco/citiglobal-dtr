@@ -2,18 +2,26 @@ package com.ctg.dtr.xlsx;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.ClientAnchor;
+import org.apache.poi.ss.usermodel.Drawing;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
+import org.apache.poi.util.IOUtils;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFClientAnchor;
 import org.springframework.stereotype.Component;
 
 import com.ctg.dtr.model.Timesheet;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
@@ -48,7 +56,7 @@ public class ExcelAllTimesheetReport {
             tableHeadFont.setBold(true);
             tableHeadStyle.setFont(tableHeadFont);
 
-            Row header = sheet.createRow(0);
+            Row header = sheet.createRow(2);
 
             // HEADERS ROW
             for (int col = 0; col < columnHeader.length; col++) {
@@ -65,7 +73,20 @@ public class ExcelAllTimesheetReport {
             SimpleDateFormat timestampFormat = new SimpleDateFormat("HH:mm:ss aa");
             SimpleDateFormat dayFormat = new SimpleDateFormat("EEEEE");
 
-            int rowCount = 1;
+            Drawing<?> drawing = sheet.createDrawingPatriarch();
+            insertImageToCell(workbook, "xlsx", drawing);
+
+            CellStyle horizontalRowCenter = workbook.createCellStyle();
+            horizontalRowCenter.setAlignment(HorizontalAlignment.LEFT);
+            horizontalRowCenter.setVerticalAlignment(VerticalAlignment.CENTER);
+
+            Row row1 = sheet.createRow(0);
+            row1.setHeight((short) 1500);
+            Cell pictureCell = row1.createCell(1);
+            pictureCell.setCellValue("13 JP. Rizal St., Bayan Walk Arcade, Poblacion Dos, City of Cabuyao, Laguna");
+            pictureCell.setCellStyle(horizontalRowCenter);
+
+            int rowCount = 3;
 
             for (Timesheet timesheet : timesheets) {
 
@@ -117,5 +138,25 @@ public class ExcelAllTimesheetReport {
             e.printStackTrace();
             throw new RuntimeException("Failed to import data to Excel file: " + e.getMessage());
         }
+    }
+
+    public void insertImageToCell(SXSSFWorkbook workbook, String fileType, Drawing<?> drawing) throws IOException {
+ 
+        //Loading image from application
+        File file = new File("asset/img/logo/school_logo.png");
+        InputStream is = new FileInputStream(file);
+ 
+        //Converting input stream into byte array
+        byte[] inputImageBytes = IOUtils.toByteArray(is);
+        int inputImagePictureID = workbook.addPicture(inputImageBytes, SXSSFWorkbook.PICTURE_TYPE_PNG);
+        is.close();
+
+        ClientAnchor anchor = new XSSFClientAnchor();
+
+        anchor.setCol1(0);
+        anchor.setCol2(1);
+        anchor.setRow1(0);
+        anchor.setRow2(1);
+        drawing.createPicture(anchor, inputImagePictureID);
     }
 }
