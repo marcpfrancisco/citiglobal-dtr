@@ -74,6 +74,11 @@ public class TimesheetServiceImpl implements TimesheetService {
     }
 
     @Override
+    public Optional<Timesheet> getByUserId(Long userId) {
+        return timesheetRepository.getTimesheetByUserId(userId);
+    }
+
+    @Override
 	public Timesheet createTimesheet(TimesheetDto timesheetDto) {
 
 		Optional<User> user = userRepository.findById(timesheetDto.getUserId() != null ? timesheetDto.getUserId() : 0);
@@ -114,6 +119,24 @@ public class TimesheetServiceImpl implements TimesheetService {
 	public List<TimesheetDto> getTimesheetById(Long id) {
 
 		List<Timesheet> lTimesheets = timesheetRepository.findTimesheetById(id);
+
+		List<TimesheetDto> lTimesheetDto = new ArrayList<TimesheetDto>();
+
+		for (Timesheet timesheet : lTimesheets) {
+
+			TimesheetDto tmpTimesheet = new TimesheetDto();
+
+			buildTimesheetDto(timesheet, tmpTimesheet);
+
+			lTimesheetDto.add(tmpTimesheet);
+		}
+		return lTimesheetDto;
+	}
+
+    @Override
+	public List<TimesheetDto> getTimesheetByUserId(Long userId) {
+
+		List<Timesheet> lTimesheets = timesheetRepository.findByUserId(userId);
 
 		List<TimesheetDto> lTimesheetDto = new ArrayList<TimesheetDto>();
 

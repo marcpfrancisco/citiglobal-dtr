@@ -10,6 +10,8 @@ public interface TimesheetService {
 
     Optional<Timesheet> getById(Long id);
 
+    Optional<Timesheet> getByUserId(Long userId);
+
     Timesheet createTimesheet(TimesheetDto timesheetDto);
 
     Timesheet updateTimesheet(Timesheet currentTimesheet, TimesheetDto timesheetDto);
@@ -17,6 +19,8 @@ public interface TimesheetService {
 	void deleteTimesheet(Long id);
 
 	List<TimesheetDto> getTimesheetById(Long id);
+
+    List<TimesheetDto> getTimesheetByUserId(Long userId);
 
     List<TimesheetDto> getPaginatedTimesheetSort(int pageNo, int pageSize, String columnName, String value, String asc);
 

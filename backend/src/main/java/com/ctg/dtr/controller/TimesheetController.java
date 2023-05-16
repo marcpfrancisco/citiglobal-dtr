@@ -159,6 +159,33 @@ public class TimesheetController {
 		}
 	}
 
+	@Operation(summary = "Get timesheet by user id")
+	@SecurityRequirement(name = "Bearer Authentication")
+	@PreAuthorize("hasRole('ADMIN') or hasRole('FACULTY')")
+	@GetMapping("/user/{userId}")
+	public ResponseEntity<?> getTimesheetByUserId(@PathVariable Long userId, HttpServletRequest request, HttpServletResponse response) {
+
+		Optional<Timesheet> timesheet = timesheetService.getByUserId(userId);
+		Map<String, Object> tempMap = new HashMap<String, Object>();
+
+		if (!timesheet.isPresent()) {
+
+			response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+
+			tempMap.put("status", HttpServletResponse.SC_NOT_FOUND);
+			tempMap.put("error", HttpStatus.NOT_FOUND);
+			tempMap.put("message", "Missing Timesheet User ID: " + userId);
+			tempMap.put("path", request.getServletPath());
+
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(tempMap);
+
+		} else {
+			List<TimesheetDto> timesheetInfo = timesheetService.getTimesheetByUserId(userId);
+			return new ResponseEntity<List<TimesheetDto>>(timesheetInfo, HttpStatus.OK);
+		}
+	}
+
 	@Operation(summary = "Get all timesheet")
 	@SecurityRequirement(name = "Bearer Authentication")
 	@PreAuthorize("hasRole('ADMIN') or hasRole('FACULTY') or hasRole('STUDENT')")

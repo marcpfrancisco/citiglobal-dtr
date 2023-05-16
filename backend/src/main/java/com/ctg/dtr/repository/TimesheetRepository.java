@@ -2,6 +2,7 @@ package com.ctg.dtr.repository;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -13,7 +14,11 @@ import com.ctg.dtr.model.Timesheet;
 @Repository
 public interface TimesheetRepository extends JpaRepository<Timesheet, Long>, JpaSpecificationExecutor<Timesheet> {
 
-    Timesheet findByUserId(Long userId);
+    List<Timesheet> findByUserId(Long userId);
+
+    @Query(value = "SELECT * FROM timesheet WHERE user_id = ?1", nativeQuery = true)
+    Optional<Timesheet> getTimesheetByUserId(Long userId);
+
 
     @Query(value = "SELECT * FROM timesheet WHERE id = ?1", nativeQuery = true)
     List<Timesheet> findTimesheetById(Long id);
