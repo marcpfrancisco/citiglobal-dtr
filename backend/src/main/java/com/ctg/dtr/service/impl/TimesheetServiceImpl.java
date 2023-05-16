@@ -133,24 +133,6 @@ public class TimesheetServiceImpl implements TimesheetService {
 		return lTimesheetDto;
 	}
 
-    @Override
-	public List<TimesheetDto> getTimesheetByUserId(Long userId) {
-
-		List<Timesheet> lTimesheets = timesheetRepository.findByUserId(userId);
-
-		List<TimesheetDto> lTimesheetDto = new ArrayList<TimesheetDto>();
-
-		for (Timesheet timesheet : lTimesheets) {
-
-			TimesheetDto tmpTimesheet = new TimesheetDto();
-
-			buildTimesheetDto(timesheet, tmpTimesheet);
-
-			lTimesheetDto.add(tmpTimesheet);
-		}
-		return lTimesheetDto;
-	}
-
 	@Override
 	public List<TimesheetDto> getPaginatedTimesheetSort(int pageNo, int pageSize, String columnName, String value, String sortDirection) {
 
@@ -361,6 +343,45 @@ public class TimesheetServiceImpl implements TimesheetService {
 
         return currentTimesheet;
     }
+
+    @Override
+	public List<TimesheetDto> getTimesheetByUserIdPaginatedSort(int pageNo, int pageSize, String columnName, String sortDirection, Long userId) {
+
+		Pageable paging;
+		Page<Timesheet> pagedResult = null;
+
+		if (columnName != null) {
+			if (sortDirection != null) {
+				if (sortDirection.toLowerCase().equals("asc")) {
+					paging = PageRequest.of(pageNo, pageSize, Sort.by(columnName).ascending());
+				} else if (sortDirection.toLowerCase().equals("desc")) {
+					paging = PageRequest.of(pageNo, pageSize, Sort.by(columnName).descending());
+				} else {
+					paging = PageRequest.of(pageNo, pageSize, Sort.by(columnName));
+				}
+			} else {
+				paging = PageRequest.of(pageNo, pageSize, Sort.by(columnName));
+			}
+		} else {
+			paging = PageRequest.of(pageNo, pageSize);
+		}
+
+		pagedResult = timesheetRepository.findByUserId(userId, paging);
+
+        List<Timesheet> lTimesheets = pagedResult.getContent();
+
+		List<TimesheetDto> lTimesheetDto = new ArrayList<TimesheetDto>();
+
+		for (Timesheet timesheet : lTimesheets) {
+
+			TimesheetDto tmpTimesheet = new TimesheetDto();
+
+			buildTimesheetDto(timesheet, tmpTimesheet);
+
+			lTimesheetDto.add(tmpTimesheet);
+		}
+		return lTimesheetDto;
+	}
 
     private void buildTimesheetDto(Timesheet timesheet, TimesheetDto timesheetDto) {
 

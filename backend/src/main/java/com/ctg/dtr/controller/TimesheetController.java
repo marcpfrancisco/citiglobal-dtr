@@ -159,30 +159,40 @@ public class TimesheetController {
 		}
 	}
 
+
 	@Operation(summary = "Get timesheet by user id")
 	@SecurityRequirement(name = "Bearer Authentication")
-	@PreAuthorize("hasRole('ADMIN') or hasRole('FACULTY')")
-	@GetMapping("/user/{userId}")
-	public ResponseEntity<?> getTimesheetByUserId(@PathVariable Long userId, HttpServletRequest request, HttpServletResponse response) {
+	@PreAuthorize("hasRole('ADMIN') or hasRole('FACULTY') or hasRole('STUDENT')")
+	@GetMapping("/{userId}/users")
+	public ResponseEntity<?> getTimesheetByUserId(@RequestParam(value =  "page") int pageNo,
+	@RequestParam(value =  "limit") int pageSize,
+	@RequestParam(value =  "sort", required = false) String columnName,
+	@RequestParam(required = false) String sortDirection,
+	@PathVariable Long userId) {
 
-		Optional<Timesheet> timesheet = timesheetService.getByUserId(userId);
-		Map<String, Object> tempMap = new HashMap<String, Object>();
+		List<TimesheetDto> timesheetInfo = timesheetService.getTimesheetByUserIdPaginatedSort(pageNo, pageSize, columnName, sortDirection, userId);
 
-		if (!timesheet.isPresent()) {
+		if (timesheetInfo != null) {
 
-			response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+			Map<String, Object> tempMap = new TreeMap<String, Object>();
 
-			tempMap.put("status", HttpServletResponse.SC_NOT_FOUND);
-			tempMap.put("error", HttpStatus.NOT_FOUND);
-			tempMap.put("message", "Missing Timesheet User ID: " + userId);
-			tempMap.put("path", request.getServletPath());
+			tempMap.put("data", timesheetInfo);
+			tempMap.put("page", pageNo);
+			tempMap.put("limit", pageSize);
 
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(tempMap);
+			if (columnName != null) {
+				tempMap.put("sort", columnName);
+			}
+			if (sortDirection != null) {
+				tempMap.put("sortDirection", sortDirection);
+			}
 
+			tempMap.put("total", timesheetInfo.size());
+			tempMap.put("userId", userId);
+
+			return ResponseEntity.status(HttpStatus.OK).body(tempMap);
 		} else {
-			List<TimesheetDto> timesheetInfo = timesheetService.getTimesheetByUserId(userId);
-			return new ResponseEntity<List<TimesheetDto>>(timesheetInfo, HttpStatus.OK);
+			return ResponseEntity.status(HttpStatus.NO_CONTENT).body(timesheetInfo);
 		}
 	}
 

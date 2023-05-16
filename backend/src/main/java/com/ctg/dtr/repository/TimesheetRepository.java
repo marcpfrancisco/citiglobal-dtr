@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -14,11 +16,10 @@ import com.ctg.dtr.model.Timesheet;
 @Repository
 public interface TimesheetRepository extends JpaRepository<Timesheet, Long>, JpaSpecificationExecutor<Timesheet> {
 
-    List<Timesheet> findByUserId(Long userId);
+    Page<Timesheet> findByUserId(Long userId, Pageable pageable);
 
     @Query(value = "SELECT * FROM timesheet WHERE user_id = ?1", nativeQuery = true)
     Optional<Timesheet> getTimesheetByUserId(Long userId);
-
 
     @Query(value = "SELECT * FROM timesheet WHERE id = ?1", nativeQuery = true)
     List<Timesheet> findTimesheetById(Long id);

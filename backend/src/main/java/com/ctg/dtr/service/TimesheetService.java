@@ -20,7 +20,7 @@ public interface TimesheetService {
 
 	List<TimesheetDto> getTimesheetById(Long id);
 
-    List<TimesheetDto> getTimesheetByUserId(Long userId);
+    List<TimesheetDto> getTimesheetByUserIdPaginatedSort(int pageNo, int pageSize, String columnName, String sortDirection, Long userId);
 
     List<TimesheetDto> getPaginatedTimesheetSort(int pageNo, int pageSize, String columnName, String value, String asc);
 
