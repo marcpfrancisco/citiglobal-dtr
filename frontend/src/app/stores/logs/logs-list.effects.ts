@@ -71,9 +71,8 @@ export class LogsListEffects {
                     });
                 }
 
-                if (currentUser.role === UserRoles.STUDENT) {
+                if (currentUser.role !== UserRoles.SUPERADMIN) {
                     params.userId = currentUser.id;
-                    console.log(params);
 
                     return this.timeLogService
                         .getTimeSheetByUserId(params)
