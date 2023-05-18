@@ -1,10 +1,13 @@
-import { SortDirection, TimeLogSortables } from '@enums';
+import { SortDirection, TimeLogSortables, UserRoles } from '@enums';
 import { PaginationResult } from '@interfaces';
-import { TimeLog } from '@models';
+import { TimeLog, User } from '@models';
 import { createAction, props } from '@ngrx/store';
 
 //  Time Log List Component
-export const onInit = createAction('[Logs List Component] On Init');
+export const onInit = createAction(
+    '[Logs List Component] On Init',
+    props<{ currentUser: User }>()
+);
 
 export const onLoadTimeLogs = createAction(
     '[Logs List Component] On Load Logs',

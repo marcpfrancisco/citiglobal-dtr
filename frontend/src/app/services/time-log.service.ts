@@ -21,6 +21,17 @@ export class TimeLogService {
         });
     }
 
+    getTimeSheetByUserId(
+        options: FindAllTimeLogDto
+    ): Observable<PaginationResult<TimeLog>> {
+        return this.apiService.get(
+            `${this.TIMELOG_URL}/${options.userId}/users`,
+            {
+                params: this.createListOptions(options),
+            }
+        );
+    }
+
     postTimeRecord(rfidNo: string | number): Observable<TimeLog> {
         return this.apiService.post(`${this.TIMELOG_URL}/daily-time-record`, {
             rfidNo,

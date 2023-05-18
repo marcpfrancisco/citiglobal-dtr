@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { UserRoles } from '@enums';
 import { FindAllTimeLogDto } from '@interfaces';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { FiltersService, SnackbarService, TimeLogService } from '@services';
+import { FiltersService, TimeLogService } from '@services';
 import { getParamFromListState } from '@utils';
 import { isObjectLike } from 'lodash';
 import { of } from 'rxjs';
@@ -30,8 +31,7 @@ export class LogsListEffects {
         private store: Store<RootState>,
         private timeLogService: TimeLogService,
         private filtersService: FiltersService,
-        private dialog: MatDialog,
-        private snackbarService: SnackbarService
+        private dialog: MatDialog
     ) {}
 
     onLoadTimeLogs$ = createEffect(() => {
@@ -56,6 +56,9 @@ export class LogsListEffects {
                     getParamFromListState(listState);
                 params.search = listState.search;
 
+                const currentUser = listState.currentUser;
+                console.log(currentUser);
+
                 // apply not-null filter values
                 if (isObjectLike(listState.filters)) {
                     Object.keys(listState.filters).forEach((name) => {
@@ -66,6 +69,27 @@ export class LogsListEffects {
 
                         params[name] = listState.filters[name];
                     });
+                }
+
+                if (currentUser.role === UserRoles.STUDENT) {
+                    params.userId = currentUser.id;
+                    console.log(params);
+
+                    return this.timeLogService
+                        .getTimeSheetByUserId(params)
+                        .pipe(
+                            map((result) =>
+                                LogsListActions.onLoadLogsSuccess({ result })
+                            ),
+                            tap(() =>
+                                this.store.dispatch(
+                                    LogsListActions.onCheckForFilters()
+                                )
+                            ),
+                            catchError((error) =>
+                                of(LogsListActions.onLoadLogsFailure({ error }))
+                            )
+                        );
                 }
 
                 return this.timeLogService.getTimeSheet(params).pipe(

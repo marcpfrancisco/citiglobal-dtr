@@ -1,14 +1,12 @@
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
 import { Sort } from '@angular/material/sort';
-import { Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TimeLogSortables } from '@enums';
 import { fuseAnimations } from '@fuse/animations';
 import { FusePerfectScrollbarDirective } from '@fuse/directives/fuse-perfect-scrollbar/fuse-perfect-scrollbar.directive';
 import { Section, TimeLog } from '@models';
 import { Store } from '@ngrx/store';
-import { AblePipe } from '@pipes';
 import { ReportsService } from '@services';
 import { LogsListReducer, RootState } from '@stores/index';
 import { LogsListActions } from '@stores/logs';
@@ -56,8 +54,11 @@ export class LogListComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
+        const { currentUser } = JSON.parse(
+            localStorage.getItem('authentication')
+        );
         this.setupObservables();
-        this.store.dispatch(LogsListActions.onInit());
+        this.store.dispatch(LogsListActions.onInit({ currentUser }));
     }
 
     onToggleSort(sort: Sort): void {
@@ -111,6 +112,7 @@ export class LogListComponent implements OnInit {
                 this.directiveScroll?.scrollToTop();
             })
         );
+
         this.search$ = listState$.pipe(map((state) => state.search));
         this.hasFilters$ = this.store.select(LogsListReducer.selectHasFilters);
 

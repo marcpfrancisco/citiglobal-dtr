@@ -1,5 +1,5 @@
 import { TimeLogSortables, UserRoles } from '@enums';
-import { ListState, TimeLog, User } from '@models';
+import { AuthUser, ListState, TimeLog, User } from '@models';
 import { createEntityAdapter, EntityState } from '@ngrx/entity';
 import {
     createFeatureSelector,
@@ -28,6 +28,7 @@ export interface State
         };
         withDeleted: boolean | null;
     };
+    currentUser: User;
     hasFilters: boolean;
 }
 
@@ -46,11 +47,16 @@ export const initialState = adapter.getInitialState({
         },
         withDeleted: false,
     },
+    currentUser: null,
     hasFilters: false,
 });
 
 export const reducer = createReducer(
     initialState,
+    on(LogsListActions.onInit, (state, { currentUser }) => {
+        return { ...state, currentUser };
+    }),
+
     on(LogsListActions.onLoadTimeLogs, (state, { limit, page }) => {
         return { ...state, page, limit };
     }),
